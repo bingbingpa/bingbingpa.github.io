@@ -1,146 +1,844 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
+<!doctype html>
+<!--[if lt IE 7 ]><html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]><html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]><html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]><html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html lang="en" class="no-js" lang="ko-KR"> <!--<![endif]-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>가이아쓰리디(주) | The Geospatial Company    </title>
     
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
-    <title>Shapes and Symbols</title>
+<meta name="description" content="The Geospatial Company" />    <link rel="profile" href="http://gmpg.org/xfn/11" />
+    <link rel="pingback" href="http://www.gaia3d.com/2014/ko/xmlrpc.php" />
+    <style type="text/css">
+                    .text-orange {
+                        color: #1978c0 !important;
+                      }
+                      .color.btn_pink {
+                        background-color: #1978c0;
+                        background-image: -webkit-linear-gradient(bottom, #1978c0, #1978c0);
+                        background-image: -linear-gradient(bottom, #1978c0, #1978c0);
+                        background-image: -moz-linear-gradient(bottom, #1978c0, #1978c0);
+                        background-image: -o-linear-gradient(bottom, #1978c0, #1978c0);
+                        }
+                        .box_orange {
+                            background: #1978c0 !important;
+                          }
+                        #topmenu .dropdown li a:hover, #topmenu .dropdown li.current-menu-item a {
+                            color: #1978c0;
+                            border-bottom: 3px solid #1978c0;
+                          }
+                          #topmenu .dropdown li ul li.first {
+                            border-top: 3px solid #1978c0;
+                          }
+                        .middle-menu a:hover img,
+                        .middle-menu .active-menu img {
+                          background: #1978c0;
+                        }
 
-    <link rel="stylesheet" href="https://js.arcgis.com/3.22/esri/css/esri.css">
+                        * + html .middle-menu .active-menu img {
+                          background: #1978c0;
+                        }
+                        .middle-menu li:hover .tf-bottom-menu,
+                        .middle-menu .active-menu .tf-bottom-menu {
+                          background: #1978c0;
+                        }
+                        .work-item .work-title,
+                        .services-item .services-title {
+                          background: #1978c0;
+                        }
+                        .team-text {
+                        background: #1978c0;
+                      }
+                      #topmenu .dropdown li ul a:hover, #topmenu .dropdown li ul li.current-menu-item a {
+                        background: #1978c0;
+                        }
+                        
+                    .tf-header-slider .flex-control-paging li a.flex-active {
+                        background: #1978c0 !important;
+                        }
+                    .tf-header-slider .flex-control-paging li a:hover {
+                        background: #1978c0 !important;
+                        }
+                    a:hover, a:focus {
+                    color: #1978c0;
+                    }
+                    footer .widget-container li:hover a {
+                    color:  #1978c0 !important;
+                    }
+                    .widget-send-feedback input[type="submit"] {
+                    background: #1978c0;
+                    }
+                    footer ul li a:hover, .copyright a:hover {
+                    color: #1978c0;
+                    }
+                    .team-text {
+                    background: #1978c0 !important;
+                    }
+                    .widget-sharing li span span {
+                    color: #1978c0;
+                    }
+                    .content .widget-testimonials .testimonial-user .name-user, .sidebar .widget-testimonials .testimonial-user .name-user {
+                    color: #1978c0;
+                    }
+                    .bg-orange-1,.bg-orange-2,.bg-orange-3,.bg-orange-4,.bg-orange-5,.bg-orange-6 {
+                    background: #1978c0;
+                    }
+                    .services-text a, .services-text a:visited {
+                    color: #1978c0;
+                    }
+                    .post-meta-links a.link-comments:hover, .post-meta-links a.link-share:hover {
+                    color: #1978c0 !important;
+                    }
+                    .author-text h4, .entry .author-text h4 {
+                    color:#1978c0;
+                    }
+                    .author-box:hover {
+                    border: 1px dashed #1978c0;
+                    }
+                    .sidebar .widget-container li a:hover, .content .widget-container li a:hover, .sidebar .widget-content li a:hover, .content .widget-content li a:hover {
+                    color: #1978c0 !important;
+                    }
+                    .tabs_framed .tabs .current a, .tabs_framed .tabs .current a:hover {
+                    color: #1978c0 !important;
+                    }
+                    .tabs_framed .tabs .current a {
+                        border-top: 1px solid #1978c0;
+                        }
+                    .tabs_framed .tabs li a:hover {
+                    color: #1978c0;
+                    }
+                    .tabs_framed .tabs a:hover {
+                        border-top: 1px solid #1978c0;
+                        }
+                    .widget_categories ul li.selected a {
+                    color: #1978c0;
+                    }
+                    .widget_tag_cloud .tagcloud a:hover, .widget_tag_cloud .tagcloud a:focus {
+                    color: #1978c0;
+                    }
+                    .color.btn_orange {
+                    background-color: #1978c0;
+                    background-image: -linear-gradient(bottom, #1978c0, #1978c0);
+                    background-image: -webkit-linear-gradient(bottom, #1978c0, #1978c0);
+                    background-image: -moz-linear-gradient(bottom, #1978c0, #1978c0);
+                    background-image: -o-linear-gradient(bottom, #1978c0, #1978c0);
+                    }
+                    .widget_nav_menu .current-cat a, .widget_pages .current_page_item a, .widget_meta .current-menu-item a, .widget_archive .current-menu-item a, .widget_categories .current-cat a {
+                    color: #1978c0 !important;
+                    }
+                    .faq_question.active {
+                    color: #1978c0;
+                    }
+                    .widget_nav_menu .current-menu-item a, .widget_pages .current-menu-item a, .widget_meta .current-menu-item a, .widget_archive .current-menu-item a, .widget_categories .current-menu-item a {
+                        color: #1978c0 !important;
+                        }
+                    .slideshow.slideQuotes .slides_container .quote-author .name-user {
+                        color: #1978c0;
+                        }
+                    .post_list li a:hover {
+                    color: #1978c0;
+                    }
+                    .footer-content .f_col .widget_twitter .tweet_item .tweet_text .inner a {
+                    color: #1978c0;
+                    }
+                    .widget_twitter .tweet_list .tweet_item a:hover, .widget_twitter .tweet_list .tweet_item a:focus {
+                    color: #1978c0;
+                    }
+                    .widget_twitter .tweet_list .tweet_item a {
+                    color: #1978c0;
+                    }
+                    .widget_twitter .tweet_list .tweet_item a {
+                    color: #1978c0;
+                    }
+                    .widget_twitter .tweet_list .tweet_item a:hover, .widget_twitter .tweet_list .tweet_item a:focus {
+                    color: #1978c0;
+                    }
+                    .tweeter.widget-container.widget_twitter .toggle_content.boxed .tweet_item .tweet_text .inner a {
+                    color: #1978c0;
+                    }
+                    .tweeter.widget-container.widget_twitter .toggle_content.boxed .tweet_item .tweet_text .inner a:hover {
+                    color: #1978c0;
+                    }
+                    .widget_login .forget_password a {
+                    color:  #1978c0;
+                    }
+                    .widget_calendar table a {
+                    color: #1978c0;
+                    }
+                    .arrow-down {
+                        width: 0px;
+                        height: 0px;
+                        border-style: solid;
+                        border-width: 16px 16px 0 0;
+                        border-color: #1978c0 transparent transparent transparent;
+                        line-height: 0px;
+                        position: absolute;
+                        bottom: -16px;
+                        margin-left: 30px;
+                    }
+                    .arrow-top {
+                        width: 0px;
+                        height: 0px;
+                        border-style: solid;
+                        border-width: 17px 0 0 17px;
+                        border-color: transparent transparent transparent #1978c0;
+                        line-height: 0px;
+                        position: absolute;
+                        top: -17px;
+                        margin-left: 15px;
+                    }
+                    .work-item:hover  .arrow-top ,.services-item:hover .arrow-top{
+                        width: 0px;
+                        height: 0px;
+                        border-style: solid;
+                        border-width: 17px 0 0 17px;
+                        border-color: transparent transparent transparent hsl(0, 0%, 20%);
+                        line-height: 0px;
+                        position: absolute;
+                        top: -17px;
+                        margin-left: 15px;
+                    }
+                    .middle-menu li:hover .tf-top-menu, .middle-menu .active-menu .tf-top-menu {
+                        background: #1978c0;
+                        height: 21px ;
+                    }
+                    .middle-menu .active-menu .tf-top-menu .tf-top-menu-corner {
+                        width: 0px;
+                        height: 0px;
+                        border-style: solid;
+                        border-width: 10px 10px 0 10px;
+                        border-color: #1978c0 transparent transparent transparent;
+                        line-height: 0px;
+                        position: absolute;
+                        top: 21px;
+                        margin-left:52px;
+                    }
+                    .middle-menu li:hover .tf-top-menu .tf-top-menu-corner {
+                      width: 0px;
+                        height: 0px;
+                        border-style: solid;
+                        border-width: 10px 10px 0 10px;
+                        border-color: #1978c0 transparent transparent transparent;
+                        line-height: 0px;
+                        position: absolute;
+                        top: 21px;
+                        margin-left:52px;
+                      transition: height 0.3s;
+                      -webkit-transition: height 0.3s;
+                      -moz-transition: height 0.3s;
+                      -o-transition: height 0.3s;
+                    }
+                    .header-box.box_white
+                    {
+                        background:#1978c0!important ;
+                    }
+                    </style><link rel="alternate" type="application/rss+xml" title="가이아쓰리디(주) &raquo; 피드" href="http://www.gaia3d.com/ko/?feed=rss2" />
+<link rel="alternate" type="application/rss+xml" title="가이아쓰리디(주) &raquo; 댓글 피드" href="http://www.gaia3d.com/ko/?feed=comments-rss2" />
+<link rel='stylesheet' id='stylesheet-css'  href='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/style.css?ver=3.8.3' type='text/css' media='all' />
+<link rel='stylesheet' id='fonts-css'  href='http://fonts.googleapis.com/css?family=Open+Sans%3A300italic%2C400italic%2C600italic%2C700italic%2C800italic%2C400%2C800%2C700%2C600%2C300&#038;ver=3.8.3' type='text/css' media='all' />
+<link rel='stylesheet' id='screen_css-css'  href='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/screen.css?ver=3.8.3' type='text/css' media='all' />
+<link rel='stylesheet' id='cusel-css'  href='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/css/cusel.css?ver=3.8.3' type='text/css' media='all' />
+<link rel='stylesheet' id='flexslider-css'  href='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/css/flexslider.css?ver=3.8.3' type='text/css' media='all' />
+<link rel='stylesheet' id='prettyPhoto-css'  href='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/framework/static/css/prettyPhoto.css?ver=3.8.3' type='text/css' media='all' />
+<link rel='stylesheet' id='shCore-css'  href='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/css/shCore.css?ver=3.8.3' type='text/css' media='all' />
+<link rel='stylesheet' id='shThemeDefault-css'  href='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/css/shThemeDefault.css?ver=3.8.3' type='text/css' media='all' />
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-includes/js/jquery/jquery.js?ver=1.10.2'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.gaia3d.com/2014/ko/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.gaia3d.com/2014/ko/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress 3.8.3" />
+<link rel="shortcut icon" href="http://www.gaia3d.com/ko/wp-content/uploads/2013/01/gaia3d_logo_pavi.png"/>
+<style type="text/css">
+.post-item .col_1_3 .work-item {
+min-height: 280px;
+}
+.services-text {
+margin-bottom: 10px;
+min-height: 200px;
+}
+.services-item {
+margin-bottom: 0px;
+min-height: 270px;
+}
 
-    <style>
-      #info {
-        top: 20px;
-        color: #444;
-        height: auto;
-        font-family: arial;
-        right: 20px;
-        margin: 5px;
-        padding: 10px;
-        position: absolute;
-        width: 115px;
-        z-index: 40;
-        border: solid 2px #666;
-        border-radius: 4px;
-        background-color: #fff;
-      }
-      html, body, #mapDiv {
-        padding:0;
-        margin:0;
-        height:100%;
-      }
-      button {
-        display: block;
-      }
-    </style>
+@media only screen and (min-width: 990px) {
+.f_col_4, .f_col_3 {
+width: 275px!important;
+}
+}
+@media only screen and (max-width:480px) {
+.content .widget_categories li {
+margin-right: 0px;
+margin-left: 5px;
+}
+.widget_categories {
+float: left;
+}
+}</style>
 
-    <script src="https://js.arcgis.com/3.22/"></script>
-    <script>
-      var map, tb;
-		
-      require([
-        "esri/map", "esri/toolbars/draw",
-        "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol",
-        "esri/symbols/PictureFillSymbol", "esri/symbols/CartographicLineSymbol", 
-        "esri/graphic", 
-        "esri/Color", "dojo/dom", "dojo/on", "dojo/domReady!"
-      ], function(
-        Map, Draw,
-        SimpleMarkerSymbol, SimpleLineSymbol,
-        PictureFillSymbol, CartographicLineSymbol, 
-        Graphic, 
-        Color, dom, on
-      ) {
-        map = new Map("mapDiv", {
-          basemap: "streets",
-          center: [-25.312, 34.307],
-          zoom: 3
-        });
-        map.on("load", initToolbar);
+<script type="text/javascript">/* <![CDATA[ */
+tf_script={"TF_THEME_PREFIX":"interakt","TFUSE_THEME_URL":"http:\/\/www.gaia3d.com\/2014\/ko\/wp-content\/themes\/interakt-parent","ajaxurl":"http:\/\/www.gaia3d.com\/2014\/ko\/wp-admin\/admin-ajax.php"};
+/* ]]> */</script>
 
-        // markerSymbol is used for point and multipoint, see http://raphaeljs.com/icons/#talkq for more examples
-        var markerSymbol = new SimpleMarkerSymbol();
-        markerSymbol.setPath("M16,4.938c-7.732,0-14,4.701-14,10.5c0,1.981,0.741,3.833,2.016,5.414L2,25.272l5.613-1.44c2.339,1.316,5.237,2.106,8.387,2.106c7.732,0,14-4.701,14-10.5S23.732,4.938,16,4.938zM16.868,21.375h-1.969v-1.889h1.969V21.375zM16.772,18.094h-1.777l-0.176-8.083h2.113L16.772,18.094z");
-        markerSymbol.setColor(new Color("#00FFFF"));
-
-        // lineSymbol used for freehand polyline, polyline and line. 
-        var lineSymbol = new CartographicLineSymbol(
-          CartographicLineSymbol.STYLE_SOLID,
-          new Color([255,0,0]), 10, 
-          CartographicLineSymbol.CAP_ROUND,
-          CartographicLineSymbol.JOIN_MITER, 5
-        );
-
-        // fill symbol used for extent, polygon and freehand polygon, use a picture fill symbol
-        // the images folder contains additional fill images, other options: sand.png, swamp.png or stiple.png
-        var fillSymbol = new PictureFillSymbol(
-          "images/mangrove.png",
-          new SimpleLineSymbol(
-            SimpleLineSymbol.STYLE_SOLID,
-            new Color('#000'), 
-            1
-          ), 
-          42, 
-          42
-        );
-
-        function initToolbar() {
-          tb = new Draw(map);
-          tb.on("draw-end", addGraphic);
-          aaa = map;
-          // event delegation so a click handler is not
-          // needed for each individual button
-          on(dom.byId("info"), "click", function(evt) {
-            if ( evt.target.id === "info" ) {
-              return;
-            }
-            var tool = evt.target.id.toLowerCase();
-            map.disableMapNavigation();
-            tb.activate(tool);
-          });
-        }
-
-        function addGraphic(evt) {
-          //deactivate the toolbar and clear existing graphics 
-          tb.deactivate(); 
-          map.enableMapNavigation();
-
-          // figure out which symbol to use
-          var symbol;
-          if ( evt.geometry.type === "point" || evt.geometry.type === "multipoint") {
-            symbol = markerSymbol;
-          } else if ( evt.geometry.type === "line" || evt.geometry.type === "polyline") {
-            symbol = lineSymbol;
-          }
-          else {
-            symbol = fillSymbol;
-          }
-
-          map.graphics.add(new Graphic(evt.geometry, symbol));
-        }
-      });
-    </script>
-  </head>
-  
-  <body>
-    
-    <div id="info">
-      <div>Select a shape then draw on map to add graphic</div>
-      <button id="Point">Point</button>
-      <button id="Multipoint">Multipoint</button>
-      <button id="Line">Line</button>
-      <button id="Polyline">Polyline</button>
-      <button id="FreehandPolyline">Freehand Polyline</button>
-      <button id="Triangle">Triangle</button>
-      <button id="Extent">Rectangle</button>
-      <button id="Circle">Circle</button>
-      <button id="Ellipse">Ellipse</button>
-      <button id="Polygon">Polygon</button>
-      <button id="FreehandPolygon">Freehand Polygon</button>
+<link rel="stylesheet" href="http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/cache/min-css-ee09306073b55cb20db6911b66f42972.css?m=0" type="text/css" media="all" /></head>
+<body class="chrome">
+    <div class="body_wrap">
+        <div class="white-background">
+            <div class="container">
+                                <div class="header">
+                    <div class="header-nav box_white">
+                        <!-- header -->
+                        <a href="http://www.gaia3d.com/ko">
+                            <div class="logo">
+                                <img src="http://www.gaia3d.com/ko/wp-content/uploads/2013/01/logo.png" alt="가이아쓰리디(주)"  border="0" />
+                            </div><!--/ .logo -->
+                        </a>
+                        <div class="topmenu">
+                            <div id="topmenu" class="menu-gaia3d-container"><ul id="menu-gaia3d" class="dropdown"><li id="menu-item-1169" class="menu-item menu-item-type-taxonomy menu-item-object-group menu-item-1169"><a title="Geospatial" href="http://www.gaia3d.com/ko/?group=geospatial">공간정보</a></li>
+<li id="menu-item-1170" class="menu-item menu-item-type-taxonomy menu-item-object-group menu-item-1170"><a title="Weather" href="http://www.gaia3d.com/ko/?group=weather">기상</a></li>
+<li id="menu-item-1171" class="menu-item menu-item-type-taxonomy menu-item-object-group menu-item-1171"><a title="Opensource" href="http://www.gaia3d.com/ko/?group=opensource">오픈소스</a></li>
+<li id="menu-item-1600" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1600"><a title="Product" href="http://www.gaia3d.com/ko/?group=products">제품</a></li>
+<li id="menu-item-1182" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1182"><a title="Gaia3D" href="http://www.gaia3d.com/ko/?page_id=1176">회사소개</a>
+<ul class="sub-menu">
+	<li id="menu-item-1256" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1256"><a title="About Gaia3D" href="http://www.gaia3d.com/ko/?page_id=1176">회사소개</a></li>
+	<li id="menu-item-1251" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1251"><a title="Team" href="http://www.gaia3d.com/ko/?page_id=1197">조직소개</a></li>
+	<li id="menu-item-1253" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1253"><a title="Clients &amp; Partners" href="http://www.gaia3d.com/ko/?page_id=1188">고객사와 협력사</a></li>
+	<li id="menu-item-1254" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1254"><a title="History" href="http://www.gaia3d.com/ko/?page_id=1186">연혁</a></li>
+	<li id="menu-item-1681" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1681"><a title="News" href="http://www.gaia3d.com/ko/?cat=63">소식</a></li>
+	<li id="menu-item-1252" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1252"><a title="Contact" href="http://www.gaia3d.com/ko/?page_id=1190">찾아오는 길</a></li>
+</ul>
+</li>
+</ul></div>                        </div>
+                    </div>
+                    <a href="http://www.gaia3d.com/en/">
+                        <div class="header-box box_orange">
+                            <h2 class="text-white  text-extrabold"><font size = 6>En</font></h2>
+                        </div>
+                     </a>                    <div class="clear"></div>
+                </div>
+                <!--/ header -->
+                <!--header title-->
+<div class="header-title box_white">
+    <div class="header-title-content text-center">
+        <h1><span class="text-orange">Fast, Easy, Simple</span> to Digitize the Earth</h1>
     </div>
 
-    <div id="mapDiv"></div>
+    <!--top search-->
+    <div class="topsearch">
+        <form id="searchform" action="http://www.gaia3d.com/ko/" method="get" >
+                <div class="header-search">
+                        <input type="text" name="s" class="s"  autocomplete="off"/>
+                </div>
+        </form>
+    </div>
+    <!--/top search-->
+</div>
+<!--/header title-->
+            </div>
+            <div class="clear"></div>
+        </div>
+ <div class="black-background">
+    <div class="container">
+        <div class="tf-header-slider">
+            <div class="flexslider">
+              <ul class="slides">
+                                    <li>
+                        <a href="http://www.gaia3d.com/ko/?group=geospatial"> 
+                            <img src="http://www.gaia3d.com/ko/wp-content/uploads/2014/04/slide_bim.jpg" width="960" height="401" alt="" />
+                        </a>
+                        <div class="details">
+                            <div class="text-details">
+                                <h2 class="text-bold text-white">On the Earth</h2>
+                            </div>
+                        </div>
+                    </li>
+                                    <li>
+                        <a href="http://www.gaia3d.com/ko/?group=weather"> 
+                            <img src="http://www.gaia3d.com/ko/wp-content/uploads/2014/04/slide_weather.jpg" width="960" height="401" alt="" />
+                        </a>
+                        <div class="details">
+                            <div class="text-details">
+                                <h2 class="text-bold text-white">In the Air</h2>
+                            </div>
+                        </div>
+                    </li>
+                                    <li>
+                        <a href="http://www.gaia3d.com/ko/?group=opensource"> 
+                            <img src="http://www.gaia3d.com/ko/wp-content/uploads/2014/04/slide_opensource.jpg" width="960" height="401" alt="" />
+                        </a>
+                        <div class="details">
+                            <div class="text-details">
+                                <h2 class="text-bold text-white">With People</h2>
+                            </div>
+                        </div>
+                    </li>
+                                    <li>
+                        <a href="http://www.gaia3d.com/ko/?cat=63"> 
+                            <img src="http://www.gaia3d.com/ko/wp-content/uploads/2013/01/slide_gaia3d.jpg" width="960" height="401" alt="" />
+                        </a>
+                        <div class="details">
+                            <div class="text-details">
+                                <h2 class="text-bold text-white">Gaia3D</h2>
+                            </div>
+                        </div>
+                    </li>
+                              </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    jQuery(window).load(function() {
+        jQuery('.tf-header-slider').flexslider({
+          animation: "fade"
+        });
+    });
+</script>
+   <div class="white-background">
+    <div class="container">
+                                         <div id="middle" class="cols2 box_white">
+                                 <!-- content --> 
+            <div class="content" role="main">
+                <div class="post-item">
+<div class="post-image ful"></div>
+     <div class="post-meta-bot">
+        <span class="post-date"> 
+                            2018/01/03/
+                        by  <a href="http://www.gaia3d.com/ko/?author=4" title="가이아쓰리디(주) 작성" rel="author">가이아쓰리디(주)</a>        </span>
+        <div class="post-date-corner"></div>
+    </div>
+    <div class="post_title">
+        <h2><a href="http://www.gaia3d.com/ko/?p=2535">가이아쓰리디, 플랜트조선 컨퍼런스 2018 참가</a></h2>
+    </div>
+    <div class="post-descr">
+    <div id="post-2535" class="post-2535 post type-post status-publish format-standard hentry category-event category-allnews">
+		<p><p>안녕하세요? 가이아쓰리디가 2018년 1월 19일 백범김구기념관에서 개최되는 플랜트조선컨퍼런스2018에 전시업체이자 발표업체로 참가합니다. 가이아쓰리디는 이번 컨퍼런스에서 해양, 조선, 플랜트 분야에서 활용될 수 있는 mago3D 기술에 대해 소개할 예정입니다. 고객 여러분의 많은 관심.</p>
+</p>
+	</div>
+    </div>
+    <div class="post-meta-links">
 
-  </body>
+       
+        <a href="http://www.gaia3d.com/ko/?p=2535" class="btn button_link_small color btn_pink alignright">Read more</a>
+    </div>
+</div>
+<div class="divider"></div><div class="row"><div class="col col_1_2">
+    <div class="inner">
+        <div class="post-item-wide">
+            <div class="post-image"></div>
+             <div class="post-meta-bot">
+                <span class="post-date"> 
+                                        2018/01/02/                    by  <a href="http://www.gaia3d.com/ko/?author=4" title="가이아쓰리디(주) 작성" rel="author">가이아쓰리디(주)</a>                </span>
+                <div class="post-date-corner"></div>
+            </div>
+            <div class="post_title">
+                <h2><a href="http://www.gaia3d.com/ko/?p=2533">
+                        새해 복 많이 받으십시오.                    </a>
+                </h2>
+            </div>
+            <div class="post-descr">
+            <div id="post-2533" class="post-2533 post type-post status-publish format-standard hentry category-event category-allnews">
+						<p><p>안녕하세요? 희망찬 2018년이 밝았습니다. 올 한 해도 고객 여러분들의 가정에 평안이 가득하시고 희망하시는 일 모두 성취하시기를 기원 드립니다. 고객 여러분의 성원에 항상 감사 드립니다. 새해 복 많이 받으십시오. 가이아쓰리디(주) 올림</p>
+</p>
+					</div>
+
+            </div>
+
+       </div>
+    </div>
+</div>
+     <div class="col col_1_2">
+    <div class="inner">
+        <div class="post-item-wide">
+            <div class="post-image"></div>
+             <div class="post-meta-bot">
+                <span class="post-date"> 
+                                        2017/12/20/                    by  <a href="http://www.gaia3d.com/ko/?author=4" title="가이아쓰리디(주) 작성" rel="author">가이아쓰리디(주)</a>                </span>
+                <div class="post-date-corner"></div>
+            </div>
+            <div class="post_title">
+                <h2><a href="http://www.gaia3d.com/ko/?p=2530">
+                        12월 26일 휴무 안내                    </a>
+                </h2>
+            </div>
+            <div class="post-descr">
+            <div id="post-2530" class="post-2530 post type-post status-publish format-standard hentry category-event category-allnews">
+						<p><p>안녕하세요? 11월 1일 회사창립기념일에 휴무하지 못하여 이를 대신하여 2017년 12월 26일(화요일) 휴무합니다. 고객 여러분의 넓은 이해 바랍니다. 감사합니다. 가이아쓰리디(주)</p>
+</p>
+					</div>
+
+            </div>
+
+       </div>
+    </div>
+</div>
+     </div><div class="clear"></div><div class="row"><div class="col col_1_2">
+    <div class="inner">
+        <div class="post-item-wide">
+            <div class="post-image"></div>
+             <div class="post-meta-bot">
+                <span class="post-date"> 
+                                        2017/12/18/                    by  <a href="http://www.gaia3d.com/ko/?author=4" title="가이아쓰리디(주) 작성" rel="author">가이아쓰리디(주)</a>                </span>
+                <div class="post-date-corner"></div>
+            </div>
+            <div class="post_title">
+                <h2><a href="http://www.gaia3d.com/ko/?p=2527">
+                        신상희 대표이사 스마트국토엑스포 인터뷰 동영상                    </a>
+                </h2>
+            </div>
+            <div class="post-descr">
+            <div id="post-2527" class="post-2527 post type-post status-publish format-standard hentry category-event category-allnews">
+						<p><p>안녕하세요? 지난 스마트국토엑스포 때 신상희 대표이사의 인터뷰 동영상을 공유해 드립니다. 가이아쓰리디가 어떤 일을 하는지 잘 설명해 주셨습니다. 감사합니다. 가이아쓰리디(주)</p>
+</p>
+					</div>
+
+            </div>
+
+       </div>
+    </div>
+</div>
+     <div class="col col_1_2">
+    <div class="inner">
+        <div class="post-item-wide">
+            <div class="post-image"></div>
+             <div class="post-meta-bot">
+                <span class="post-date"> 
+                                        2017/11/30/                    by  <a href="http://www.gaia3d.com/ko/?author=2" title="가이아쓰리디 (주) 작성" rel="author">가이아쓰리디 (주)</a>                </span>
+                <div class="post-date-corner"></div>
+            </div>
+            <div class="post_title">
+                <h2><a href="http://www.gaia3d.com/ko/?p=2524">
+                        2018 신입 프로그래머 모집                    </a>
+                </h2>
+            </div>
+            <div class="post-descr">
+            <div id="post-2524" class="post-2524 post type-post status-publish format-standard hentry category-event category-allnews">
+						<p><p>가이아쓰리디에서 2018년 신입 개발자를 모집하오니 많은 지원 부탁드립니다. *모집부분 &#8211; 공간정보를 바탕으로 한 웹 개발자 &#8211; 채용인원 0명 (필요인원 채용 완료까지 계속 지원 받음) *응시 자격 &#8211; 신입 혹은 3년.</p>
+</p>
+					</div>
+
+            </div>
+
+       </div>
+    </div>
+</div>
+     </div><div class="clear"></div><div class="row"><div class="col col_1_2">
+    <div class="inner">
+        <div class="post-item-wide">
+            <div class="post-image"></div>
+             <div class="post-meta-bot">
+                <span class="post-date"> 
+                                        2017/11/21/                    by  <a href="http://www.gaia3d.com/ko/?author=4" title="가이아쓰리디(주) 작성" rel="author">가이아쓰리디(주)</a>                </span>
+                <div class="post-date-corner"></div>
+            </div>
+            <div class="post_title">
+                <h2><a href="http://www.gaia3d.com/ko/?p=2517">
+                        mago3D, 과기정통부 장관상 수상                    </a>
+                </h2>
+            </div>
+            <div class="post-descr">
+            <div id="post-2517" class="post-2517 post type-post status-publish format-standard hentry category-event category-allnews tag-3d-gis tag-aec tag-bim">
+						<p><p>안녕하세요? 기쁜 소식을 전해 드립니다. 가이아쓰리디의 mago3D가 과기정통부가 주최한 글로벌SW공모대전에서 장관상을 수상하였습니다. 어제 가이아쓰리디 대표이사 신상희 사장님이 유영민 장관님으로부터 직접 영광스러운 상을 받았답니다. mago3D는 별도의 소프트웨어 설치 없이 웹 상에서.</p>
+</p>
+					</div>
+
+            </div>
+
+       </div>
+    </div>
+</div>
+     <div class="col col_1_2">
+    <div class="inner">
+        <div class="post-item-wide">
+            <div class="post-image"></div>
+             <div class="post-meta-bot">
+                <span class="post-date"> 
+                                        2017/11/20/                    by  <a href="http://www.gaia3d.com/ko/?author=4" title="가이아쓰리디(주) 작성" rel="author">가이아쓰리디(주)</a>                </span>
+                <div class="post-date-corner"></div>
+            </div>
+            <div class="post_title">
+                <h2><a href="http://www.gaia3d.com/ko/?p=2515">
+                        mago3D, 최신 한국어 실습 교재 안내                    </a>
+                </h2>
+            </div>
+            <div class="post-descr">
+            <div id="post-2515" class="post-2515 post type-post status-publish format-standard hentry category-event category-allnews tag-3d-gis tag-aec tag-bim tag-mago3d">
+						<p><p>안녕하세요? 초대용량의 3차원 BIM/AEC/GIS 자료를 웹에서 시각화하고 관리할 수 있는 오픈소스 프로젝트 mago3D(http://www.mago3d.com) 기술 워크샵 자료(한국어)를 안내해 드립니다. mago3D에 대한 개요, 설치, 파일 변환, 활용 방법 등에 대해 설명하고 있습니다..</p>
+</p>
+					</div>
+
+            </div>
+
+       </div>
+    </div>
+</div>
+     </div><div class="clear"></div><div class="row"><div class="col col_1_2">
+    <div class="inner">
+        <div class="post-item-wide">
+            <div class="post-image"></div>
+             <div class="post-meta-bot">
+                <span class="post-date"> 
+                                        2017/11/14/                    by  <a href="http://www.gaia3d.com/ko/?author=4" title="가이아쓰리디(주) 작성" rel="author">가이아쓰리디(주)</a>                </span>
+                <div class="post-date-corner"></div>
+            </div>
+            <div class="post_title">
+                <h2><a href="http://www.gaia3d.com/ko/?p=2511">
+                        mago3D, buildSmart Conference 2017에서 소개 및 전시 예정                    </a>
+                </h2>
+            </div>
+            <div class="post-descr">
+            <div id="post-2511" class="post-2511 post type-post status-publish format-standard hentry category-event category-allnews tag-3d-gis tag-aec tag-bim tag-mago3d">
+						<p><p>안녕하세요? 가이아쓰리디의 초대용량 BIM/AEC/GIS 가시화 및 관리 플랫폼인 mago3D가 11월 23일 개최되는 buildSmart Conference 2017에서 소개됩니다. 더불어, 이날 mago3D에 대한 전시도 행사 내내 진행될 예정입니다. 관심 있는 분들의 많은 참가와.</p>
+</p>
+					</div>
+
+            </div>
+
+       </div>
+    </div>
+</div>
+     <div class="col col_1_2">
+    <div class="inner">
+        <div class="post-item-wide">
+            <div class="post-image"></div>
+             <div class="post-meta-bot">
+                <span class="post-date"> 
+                                        2017/10/16/                    by  <a href="http://www.gaia3d.com/ko/?author=4" title="가이아쓰리디(주) 작성" rel="author">가이아쓰리디(주)</a>                </span>
+                <div class="post-date-corner"></div>
+            </div>
+            <div class="post_title">
+                <h2><a href="http://www.gaia3d.com/ko/?p=2509">
+                        mago3D 한국어 소개 자료                    </a>
+                </h2>
+            </div>
+            <div class="post-descr">
+            <div id="post-2509" class="post-2509 post type-post status-publish format-standard hentry category-event category-allnews tag-3d-gis tag-aec tag-bim tag-mago3d">
+						<p><p>안녕하세요? BIM/AEC/GIS 분야의 초대용량 3차원 객체를 웹 상에서 가시화하고 관리할 수 있는 mago3D 소개 자료입니다. mago3D가 무엇이고 왜 개발하게 되었으며, 무슨 기술을 사용하며 앞으로 어떤 방향으로 나아갈 지에 대해 소개하고.</p>
+</p>
+					</div>
+
+            </div>
+
+       </div>
+    </div>
+</div>
+     </div><div class="clear"></div>                        <div class="divider"></div>
+				                          <!-- pagination -->
+                    <div class="widget-pagination alignright">
+                        <ul>
+                            <span class='page-numbers current'>1</span>
+<a class='page-numbers' href='/ko/?paged=2'>2</a>
+<span class="page-numbers dots">&hellip;</span>
+<a class='page-numbers' href='/ko/?paged=13'>13</a>
+<a class='page-numbers' href='/ko/?paged=14'>14</a><a href="http://www.gaia3d.com/ko/?paged=2" ><img src="http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/images/arrow-nav-right.png" alt="" /></a>                        </ul>
+                    </div>
+                                </div>
+            <!--/ content --> 
+                            <div class="sidebar">
+                    			<div class="widget-content widget_search">
+				                                <div class="inner">
+                                    <form method="get" id="searchform" action="http://www.gaia3d.com/ko/">
+                                        <div>
+                                                                                        <input type="text" value="Search this blog" onfocus="if (this.value == 'Search this blog') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search this blog';}" name="s" id="s" class="inputField" />
+                                            <input type="submit" id="searchsubmit"  class="btn-submit" value="Search"/>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </form>
+                                </div>
+			</div>
+			        <!-- widget social contacts -->
+         <div class="widget-container sidebar_social"><h3>소셜미디어</h3><div class="social_icons">                        <a href="https://www.facebook.com/gaia3dinc" class="social-fb"><span></span></a>
+                                        <a href="https://twitter.com/Gaia3D" class="social-twitter"><span></span></a>
+                </div></div>            <!--/ widget social contacts -->
+            <div class="adv_125_box">
+<a href="http://www.gaia3d.com/ko/?work=weathernote"><div class="adv_125"><img width="125" height="125" src="wp-content/uploads/2014/04/ad_wn.png"></a></div>
+<a href="http://www.gaia3d.com/ko/?work=bim-on-gis"><div class="adv_125"><img width="125" height="125" src="wp-content/uploads/2014/04/ad_bm.png"></a></div>
+<a href="http://www.gaia3d.com/ko/?work=opengeo-suite"><div class="adv_125"><img width="125" height="125" src="wp-content/uploads/2014/04/ad_og.png"></a></div>
+<a href="http://www.gaia3d.com/ko/?page_id=1188"><div class="adv_125"><img width="125" height="125" src="wp-content/uploads/2014/04/ad_cl.png"></a></div>
+<div class="clear"></div>
+</div>
+<div class=" widget-content widget_tag_cloud">    <h3 class="widget-title">Gaia3D’s Tags</h3><div class="tagcloud"><a href='http://www.gaia3d.com/ko/?tags=3d' class='tag-link-115' title='1 토픽' style='font-size: 8pt;'>3D</a>
+<a href='http://www.gaia3d.com/ko/?tags=aec' class='tag-link-114' title='1 토픽' style='font-size: 8pt;'>AEC</a>
+<a href='http://www.gaia3d.com/ko/?tags=bim' class='tag-link-57' title='1 토픽' style='font-size: 8pt;'>BIM</a>
+<a href='http://www.gaia3d.com/ko/?tags=cesium' class='tag-link-105' title='1 토픽' style='font-size: 8pt;'>Cesium</a>
+<a href='http://www.gaia3d.com/ko/?tags=geoserver' class='tag-link-99' title='7 토픽' style='font-size: 22pt;'>GeoServer</a>
+<a href='http://www.gaia3d.com/ko/?tags=kompsat2' class='tag-link-59' title='1 토픽' style='font-size: 8pt;'>KOMPSAT2</a>
+<a href='http://www.gaia3d.com/ko/?tags=kompsat3' class='tag-link-61' title='1 토픽' style='font-size: 8pt;'>KOMPSAT3</a>
+<a href='http://www.gaia3d.com/ko/?tags=mago3d' class='tag-link-104' title='1 토픽' style='font-size: 8pt;'>Mago3D</a>
+<a href='http://www.gaia3d.com/ko/?tags=mip' class='tag-link-51' title='5 토픽' style='font-size: 19.2pt;'>MIP</a>
+<a href='http://www.gaia3d.com/ko/?tags=openlayers' class='tag-link-50' title='4 토픽' style='font-size: 17.3333333333pt;'>OpenLayers</a>
+<a href='http://www.gaia3d.com/ko/?tags=open-source-gis-full-stack-solution' class='tag-link-106' title='1 토픽' style='font-size: 8pt;'>Open source GIS Full Stack Solution</a>
+<a href='http://www.gaia3d.com/ko/?tags=openstreetmap' class='tag-link-48' title='2 토픽' style='font-size: 12.2pt;'>OpenStreetMap</a>
+<a href='http://www.gaia3d.com/ko/?tags=postgis' class='tag-link-53' title='2 토픽' style='font-size: 12.2pt;'>PostGIS</a>
+<a href='http://www.gaia3d.com/ko/?tags=qgis' class='tag-link-72' title='1 토픽' style='font-size: 8pt;'>QGIS</a>
+<a href='http://www.gaia3d.com/ko/?tags=satellite-image' class='tag-link-60' title='2 토픽' style='font-size: 12.2pt;'>Satellite Image</a>
+<a href='http://www.gaia3d.com/ko/?tags=squid' class='tag-link-52' title='2 토픽' style='font-size: 12.2pt;'>Squid</a>
+<a href='http://www.gaia3d.com/ko/?tags=world-wind' class='tag-link-113' title='1 토픽' style='font-size: 8pt;'>World Wind</a>
+<a href='http://www.gaia3d.com/ko/?tags=geospatial' class='tag-link-98' title='1 토픽' style='font-size: 8pt;'>공간정보</a>
+<a href='http://www.gaia3d.com/ko/?tags=weather' class='tag-link-101' title='1 토픽' style='font-size: 8pt;'>기상</a>
+<a href='http://www.gaia3d.com/ko/?tags=opensource' class='tag-link-100' title='3 토픽' style='font-size: 15pt;'>오픈소스</a></div>
+</div>                </div><!--/ .sidebar -->
+                        <div class="after">
+                            </div>
+          <div class="clear"></div>
+        </div><!--/ .middle -->
+        <div class="clear"></div>
+    </div>
+<div class="footer-slider">
+    <div class="container">
+        <div class="slider-inner">
+            <h2 class="text-bold">
+                Technologies            </h2>
+                <div class="tf-footer-carousel carousel">
+                    <ul class="slides ">
+                                                    <li>
+                               <a href=""><img src="http://www.gaia3d.com/ko/wp-content/uploads/2013/01/tu_postgis.png" height="68" alt="" /></a>
+                            </li>
+                                                    <li>
+                               <a href=""><img src="http://www.gaia3d.com/ko/wp-content/uploads/2013/01/tu_openlayers1.png" height="68" alt="" /></a>
+                            </li>
+                                                    <li>
+                               <a href=""><img src="http://www.gaia3d.com/ko/wp-content/uploads/2013/01/tu_geowebcache.png" height="68" alt="" /></a>
+                            </li>
+                                                    <li>
+                               <a href=""><img src="http://www.gaia3d.com/ko/wp-content/uploads/2013/01/tu_geoserver.png" height="68" alt="" /></a>
+                            </li>
+                                                    <li>
+                               <a href=""><img src="http://www.gaia3d.com/ko/wp-content/uploads/2013/01/tu_squid.png" height="68" alt="" /></a>
+                            </li>
+                                                    <li>
+                               <a href=""><img src="http://www.gaia3d.com/ko/wp-content/uploads/2013/01/tu_qgis.png" height="68" alt="" /></a>
+                            </li>
+                                                    <li>
+                               <a href=""><img src="http://www.gaia3d.com/ko/wp-content/uploads/2013/01/tu_postgresql.png" height="68" alt="" /></a>
+                            </li>
+                                            </ul>
+                </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="clear"></div>
+<script>
+    jQuery(window).load(function() {
+      jQuery('.tf-footer-carousel').flexslider({
+        animation: "slide",
+        animationLoop: true,
+        itemWidth: 140,
+        itemMargin: 15,
+        minItems: 1,
+        maxItems: 6,
+        move:1
+      });
+    });
+</script>
+<!--/ top Slider --><!-- footer -->
+<footer>
+    <div class="footer-top">
+        <div class="container">
+            <div class="footer-content">
+                            <div class="f_col f_col_1">
+                        <!-- widget social contacts -->
+         <div class="widget-container footer_social"><h3 class="">소셜</h3>            <div class="widget-container footer_social">
+            <ul>                        <li><a href="https://www.facebook.com/gaia3dinc" class="fb" target="_blank"></a></li>
+                                        <li><a href="https://twitter.com/Gaia3D" class="tw" target="_blank"></a></li>
+                </ul></div>                      
+	    </div>
+                   </div>
+
+            <div class="f_col f_col_2">
+                <div class="widget-container widget_nav_menu "><h3 class="widget-title">회사 소개</h3><div class="menu-index-menu-container"><ul id="menu-index-menu" class="menu"><li id="menu-item-1179" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1179"><a title="Gaia3D" href="http://www.gaia3d.com/ko/?page_id=1176"><span>회사 소개</span></a></li>
+<li id="menu-item-1199" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1199"><a title="Team" href="http://www.gaia3d.com/ko/?page_id=1197"><span>조직소개</span></a></li>
+<li id="menu-item-1194" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1194"><a href="http://www.gaia3d.com/ko/?page_id=1188"><span>고객사와 협력사</span></a></li>
+<li id="menu-item-1195" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1195"><a href="http://www.gaia3d.com/ko/?page_id=1186"><span>연혁</span></a></li>
+<li id="menu-item-1682" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1682"><a title="News" href="http://www.gaia3d.com/ko/?cat=63"><span>소식</span></a></li>
+<li id="menu-item-1193" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1193"><a href="http://www.gaia3d.com/ko/?page_id=1190"><span>찾아오는 길</span></a></li>
+</ul></div></div>            </div>
+            <div class="f_col f_col_3">
+                
+    <div class="widget-container widget_recent_entries">
+        <h3 class="widget-title">소식</h3>
+        <ul>
+                            <li>
+                    <a href="http://www.gaia3d.com/ko/?p=2535"></a>
+                    <div class="post-title">
+                        <a href="http://www.gaia3d.com/ko/?p=2535">가이아쓰리디, 플랜트조선 컨퍼런스 2018 참가</a>
+                    </div>
+					                                        <div class="post-date">2018-01-03</div>
+					                </li>
+
+                            <li>
+                    <a href="http://www.gaia3d.com/ko/?p=2533"></a>
+                    <div class="post-title">
+                        <a href="http://www.gaia3d.com/ko/?p=2533">새해 복 많이 받으십시오.</a>
+                    </div>
+					                                        <div class="post-date">2018-01-02</div>
+					                </li>
+
+                            <li>
+                    <a href="http://www.gaia3d.com/ko/?p=2530"></a>
+                    <div class="post-title">
+                        <a href="http://www.gaia3d.com/ko/?p=2530">12월 26일 휴무 안내</a>
+                    </div>
+					                                        <div class="post-date">2017-12-20</div>
+					                </li>
+
+                    </ul>
+    </div>
+
+                </div>
+
+            <div class="f_col f_col_4">
+                <div class="widget-container widget_twitter"><h3 class="widget-title">트위터</h3><ul> <li><div class="tweet_item"><div class="tweet_image"><img src="http://pbs.twimg.com/profile_images/438959338606981120/kVc-JzYe_normal.png" width="32" height="32""></div><div class="tweet_text">
+                                                <div class="inner"><a href="http://twitter.com/Gaia3D" rel="nofollow"  target="_blank">@Gaia3D</a> will open an exhibition booth at 'Ship Building, Plant Conference 2018' which will be held at Seoul on 19th… <a href="https://t.co/t4jl9eoHJk" rel="nofollow" target="_blank">https://t.co/t4jl9eoHJk</a><span class="tweet_time">2018-01-03</span></div></div><div class="clear"></div></div></li><li><div class="tweet_item"><div class="tweet_image"><img src="http://pbs.twimg.com/profile_images/438959338606981120/kVc-JzYe_normal.png" width="32" height="32""></div><div class="tweet_text">
+                                                <div class="inner">RT <a href="http://twitter.com/endofcap" rel="nofollow"  target="_blank">@endofcap</a>: My interview at SmartGeoExpo 2017. It's a quite great fun to see this. ha..
+
+<a href="https://t.co/zG8qbdM2iy" rel="nofollow" target="_blank">https://t.co/zG8qbdM2iy</a><span class="tweet_time">2017-12-18</span></div></div><div class="clear"></div></div></li></ul></div>            </div>
+        
+            <div class="f_col f_col_5">
+                            </div>
+                        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="copyright">
+                <span class="copyright-left">Copyright © 2014 <span class="text-orange">Gaia3D Inc.,</span>. All right reserved</span>
+                <span class="copyright-right">powered by <a href="http://www.gaia3d.com">Gaia3D Inc.,</a></span>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</footer><div class="clear"></div>
+</div>
+<!--/ footer -->
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-includes/js/jquery/ui/jquery.ui.core.min.js?ver=1.10.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/libs/modernizr.min.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/libs/respond.min.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/jquery.easing.1.3.min.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-includes/js/hoverIntent.min.js?ver=r7'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/general.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/jquery.carouFredSel.packed.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/jquery.touchSwipe.min.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/cusel-min.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/jquery.tools.min.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/slides.min.jquery.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/search-input.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/jquery.mousewheel.min.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/jquery.customInput.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/jquery.infieldlabel.min.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/jquery.flexslider-min.js?ver=3.8.3'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/framework/static/javascript/jquery.prettyPhoto.js?ver=3.1.4'></script>
+<script type='text/javascript' src='http://maps.google.com/maps/api/js?sensor=false&#038;ver=1.0'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/jquery.gmap.min.js?ver=3.3.0'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/shCore.js?ver=2.1.382'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/shBrushPlain.js?ver=2.1.382'></script>
+<script type='text/javascript' src='http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/js/SyntaxHighlighter.js?ver=3.8.3'></script>
+
+<script type="text/javascript" src="http://www.gaia3d.com/2014/ko/wp-content/themes/interakt-parent/cache/min-js-9199f9818fb1802a6335fc44741ef04c.js?m=0"></script></div>
+</body>
 </html>
