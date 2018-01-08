@@ -1,4 +1,331 @@
-<title>bingbingpa blog</title>
+
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> -->
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--     <meta http-equiv="X-UA-Compatible" content="IE=8" /> -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="content-language" content="kr">
+	<meta http-equiv="Cache-Control" content="No-Cache">
+	<meta http-equiv="Pragma" content="No-Cache">
+	<meta http-equiv="Access-Control-Allow-Origin" content="*">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
+	
+    <title>공간정보 통합운영체계 지도서비스</title>
+
+	<style>
+  		html, body {
+		    height: 100%;
+		    width: 100%;
+		    margin: 0;
+		    padding: 0;
+		}
+
+
+    
+  	</style>
+	<link href="css/map_style.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="js/map_tabmenu.js"></script>
+<!-- 	<script src="http://localhost:8080/iOpenAPI/js/openapi/krcgis.js?api_key=[KRCGIS_API_KEY]"></script>	 -->
+<!-- 	<script src="http://localhost:8080/iOpenAPI/js/openapi/krcgis.js?api_key=ed50b06ec6f483edea9f90afbbd05711"></script> -->
+	<script src="http://dev.smui.co.kr:28088/iOpenAPI/js/openapi/krcgis.js?api_key=[KRCGIS_API_KEY]"></script>	
+	<script>
+	
+		krcgis.ready(function() {
+			console.log("bbbbbbbbbbbbbbb");
+			krcgis.USER_NM = '<%=strUserName%>';
+			krcgis.USER_ID = '<%=strUserId%>';
+			
+			agmap = new krcgis.Map('map', 'eMap_Korean');
+
+			agmap.addEvent('load', function(evt) {
+
+				agmap.Layers.addLayer('LawBoundary', true);
+				agmap.Layers.addLayer('LandUse', false);
+				agmap.Layers.addLayer('Basin', false);
+				agmap.Layers.addLayer('CadastralMap', true);
+				
+				agmap.Layers.addLayer('RIMS_FAC');
+				
+				var home = new krcgis.widget.HomeButton({ map : agmap }, 'home');
+				var zoomin = new krcgis.widget.ZoomInButton({ map : agmap }, 'zoomin');
+				var zoomout = new krcgis.widget.ZoomOutButton({ map : agmap }, 'zoomout');
+				var dist = new krcgis.widget.MeasureDistanceButton({ map : agmap }, 'measure_dist');
+				var area = new krcgis.widget.MeasureAreaButton({ map : agmap }, 'measure_area');
+				var circle = new krcgis.widget.MeasureCircleButton({ map : agmap }, 'measure_circle');
+				var clear = new krcgis.widget.ClearButton({ map : agmap }, 'clear');
+				var poi = new krcgis.widget.PoiButton({ map : agmap }, 'poi');
+				var cadastralinfo = new krcgis.widget.CadastralInfoButton({ map : agmap }, 'cadastralinfo');
+				var tableview = new krcgis.widget.TableButton({ map : agmap }, 'tableview');
+				var savemap = new krcgis.widget.SaveButton({ map : agmap, user_name : '<%=strUserName%>' }, 'savemap');
+				var printmap = new krcgis.widget.PrintButton({ map : agmap, user_name : '<%=strUserName%>' }, 'printmap');
+				var coordinate = new krcgis.widget.Coordinate({ map : agmap }, 'coordinate');
+				var centeraddr = new krcgis.widget.CenterAddress({ map : agmap }, 'centeraddr');
+				var lawboundaryloc = new krcgis.widget.LawBoundaryLoc({ map : agmap }, 'lawboundaryloc');
+				var basinloc = new krcgis.widget.BasinLoc({ map : agmap }, 'basinloc');
+				var index = new krcgis.widget.IndexMap({ map: agmap, visible:false, position :'bottom-right' });
+				 cadastralsearch = new krcgis.widget.CadastralSearch({ map : agmap, tojiDaejang: cadastralinfo }, 'cadastralsearch');
+				 toc = new krcgis.widget.TOC({ map : agmap, tableView : tableview  }, 'toc');
+				 multimap = new krcgis.widget.MultiMap({ map : agmap}, 'multimap');
+				 multisearch = new krcgis.widget.MultiSearch({ map : agmap}, 'multisearch');
+				 integratedsearch = new krcgis.widget.IntegratedSearch({map : agmap}, 'integratedsearch');
+				 statistics = new krcgis.widget.StatisticsMap({ map : agmap }, 'statistics');
+				 historymap = new krcgis.widget.HistoryMap({ map : agmap }, 'historymap');
+				//2016공간정보통합운영체계 개발
+				var editbutton = new krcgis.widget.EditButton({map :agmap},'eidtbutton');
+				var selectlayer = new krcgis.widget.MultiSelectButton({ map : agmap }, 'selectlayer');
+				var changebasemap = new krcgis.widget.ChangeBasemapButton({ map : agmap }, 'changebasemap');
+				var memoinfo = new krcgis.widget.MemoInfoButton({map : agmap, user_id : '<%=strUserId%>'}, 'memoinfo');
+				
+				
+				var multimapBtn = multimap.getListButton();
+				multimapBtn[0].addEventListener('click',function(){
+					select.options[0].selected = true;
+				});
+				multimapBtn[1].addEventListener('click',function(){
+					select.options[0].selected = true;
+				});
+				var pnu = '<%= pnu%>';
+				if(pnu == 'null'){
+					return;
+				}
+				else{
+					setTimeout(function(){
+						krcgis.Function.CadastralMap.mapView(pnu,agmap);
+					},500);
+					
+				}
+			});
+			var select =  document.getElementById('activemap')
+			var searchtoolbar = dijit.byId('integratedSearch');
+			var searchBtn = dijit.byId('searchBtn');
+			
+			searchBtn.on('click',function(){
+				DisplayMenu(5);
+				integratedsearch.setSearchResult(searchtoolbar.value);
+			});
+			//마우스오버 됐을시 콤보박스를 초기화한다. 
+			select.addEventListener('mouseover',function(e){
+				var mapList = krcgis.Function.MultiMap.getListMap();
+				var tempStr;
+				for(var j=0;j<select.options.length;j++){
+					
+					if(select.options[j].selected){
+						tempStr = select.options[j].text;
+					}
+				}
+				for(var j=0;j<select.options.length;){
+					select.options.remove(j);
+				}
+				for(var i=0; i<mapList.length;i++){
+					var op = new Option();
+					op.value=i;
+					if(i==0){
+						op.text="메인지도";
+					}
+					else{
+						op.text='화면분할'+i;
+					}
+					if(op.text === tempStr) op.selected = true;
+					select.options.add(op);
+				}
+			});
+			select.addEventListener('change',function(e){
+				index = this.value;
+				krcgis.Function.MultiMap.initWidget(krcgis.core.mapArr[index]);
+			});
+		});	
+	</script>
+
+</head>
+<body style="overflow:hidden;" onresize='OnResize();' onload='OnLoad();'> 
+<div id="wrap_popup">
+  <div id="main_top">
+<input id="integratedSearch" placeholder="통합검색" style="width:230px;margin-top:5px;" data-dojo-type="dijit/form/TextBox" value="" />
+ <button id="searchBtn"  style="margin-top:5px;"data-dojo-type="dijit/form/Button"  type="button" >검　　색</button>
+	  <div id='toolbar'>
+	       			<div id='home' class='floatL toolbar_button'></div>
+	       			<div id='changebasemap' class='floatL toolbar_button'></div>
+	       			<div id='zoomin' class='floatL toolbar_button'></div>
+	       			<div id='zoomout' class='floatL toolbar_button'></div>
+	       			<div id='savemap' class='floatL toolbar_button'></div>
+	       			<div id='printmap' class='floatL toolbar_button'></div>
+	       			<div id='poi' class='floatL toolbar_button'></div>
+	       			<div id='cadastralinfo' class='floatL toolbar_button'></div>
+	       			<div id='tableview' class='floatL toolbar_button'></div>
+	       			<div id='measure_dist' class='floatL toolbar_button'></div>
+	       			<div id='measure_area' class='floatL toolbar_button'></div>
+	       			<div id='measure_circle' class='floatL toolbar_button'></div>
+	       			<div id='eidtbutton' class='floatL toolbar_button'></div>
+	       			<div id='memoinfo' class='floatL toolbar_button'></div>
+	       			<div id='selectlayer' class='floatL toolbar_button'></div>
+	       			<div id='clear' class='floatL toolbar_button'></div>
+   		</div>
+				
+				<select class="floatR" id="activemap" name="activemap"style="margin-top: 4px;margin-right:10px;margin-left: 5px;width:100px;height: 22px;">
+			    	<option>메인지도</option>
+				</select>
+				<div class="floatR"><img src="img/map/activemap.png" alt="공간정보 통합운영체계 지도서비스" /></div>
+  </div>
+  <div id="main_wrap">
+	  	<!-- 지번검색-->
+		<div id="menu1" style="display:block;"> 
+			<div class="left_menu">
+				<div class="menu_wrap">
+			    	<ul class="lnb">
+			      		<li class="on"><a href="#left_01" onclick="DisplayMenu(1)"><img src="img/map/left_menu_01.png" alt="지번검색" /></a></li>
+						<li><a href="#left_04" onclick="DisplayMenu(4)"><img src="img/map/left_menu_04.png" alt="토지정보" /></a></li>
+						<li><a href="#left_05" onclick="DisplayMenu(5)"><img src="img/map/left_menu_05.png" alt="통합검색" /></a></li>
+						<li><a href="#left_02" onclick="DisplayMenu(2)"><img src="img/map/left_menu_02.png" alt="레이어" /></a></li>
+						<li><a href="#left_03" onclick="DisplayMenu(3)"><img src="img/map/left_menu_03.png" alt="화면분할" /></a></li>
+						<li><a href="#left_06" onclick="DisplayMenu(6)"><img src="img/map/left_menu_06.png" alt="통계지도" /></a></li>
+						<li><a href="#left_07" onclick="DisplayMenu(7)"><img src="img/map/left_menu_07.png" alt="이력시계열" /></a></li>
+			    	</ul>
+			  	</div>
+			</div>
+			<div id='left_con1' class="left_con1">
+				<div id='cadastralsearch' style="width:100%;height:100%;"></div>
+			</div>  
+		</div>  
+	  
+	  	<!-- 레이어용-->
+		<div id="menu2" style="display:none;"> 
+			<div class="left_menu">
+				<div class="menu_wrap">
+			    	<ul class="lnb">
+			      		<li><a href="#left_01" onclick="DisplayMenu(1)"><img src="img/map/left_menu_01.png" alt="지번검색" /></a></li>
+						<li><a href="#left_04" onclick="DisplayMenu(4)"><img src="img/map/left_menu_04.png" alt="토지정보" /></a></li>
+						<li><a href="#left_05" onclick="DisplayMenu(5)"><img src="img/map/left_menu_05.png" alt="통합검색" /></a></li>
+						<li class="on"><a href="#left_02" onclick="DisplayMenu(2)"><img src="img/map/left_menu_02.png" alt="레이어" /></a></li>
+						<li><a href="#left_03" onclick="DisplayMenu(3)"><img src="img/map/left_menu_03.png" alt="화면분할" /></a></li>
+						<li><a href="#left_06" onclick="DisplayMenu(6)"><img src="img/map/left_menu_06.png" alt="통계지도" /></a></li>
+						<li><a href="#left_07" onclick="DisplayMenu(7)"><img src="img/map/left_menu_07.png" alt="이력시계열" /></a></li>
+			    	</ul>
+			  	</div>
+			</div>
+			<div id='left_con2' class="left_con2">
+				<div id='toc' style="width:100%;height:100%;"></div>
+			</div>
+		</div>
+		<!-- 화면분할용 -->
+		<div id="menu3" style="display:none;"> 
+			<div class="left_menu">
+				<div class="menu_wrap">
+			    	<ul class="lnb">
+			      		<li><a href="#left_01" onclick="DisplayMenu(1)"><img src="img/map/left_menu_01.png" alt="지번검색" /></a></li>
+						<li><a href="#left_04" onclick="DisplayMenu(4)"><img src="img/map/left_menu_04.png" alt="토지정보" /></a></li>
+						<li><a href="#left_05" onclick="DisplayMenu(5)"><img src="img/map/left_menu_05.png" alt="통합검색" /></a></li>
+						<li><a href="#left_02" onclick="DisplayMenu(2)"><img src="img/map/left_menu_02.png" alt="레이어" /></a></li>
+						<li class="on"><a href="#left_03" onclick="DisplayMenu(3)"><img src="img/map/left_menu_03.png" alt="화면분할" /></a></li>
+						<li><a href="#left_06" onclick="DisplayMenu(6)"><img src="img/map/left_menu_06.png" alt="통계지도" /></a></li>
+						<li><a href="#left_07" onclick="DisplayMenu(7)"><img src="img/map/left_menu_07.png" alt="이력시계열" /></a></li>
+			    	</ul>
+			  	</div>
+			</div>
+			<div id='left_con3' class="left_con3">
+				<div id='multimap' style="width:100%;height:100%;"></div>
+			</div>  
+		</div>
+		<div id="menu4" style="display:none;"> 
+			<div class="left_menu">
+				<div class="menu_wrap">
+			    	<ul class="lnb">
+			      		<li><a href="#left_01" onclick="DisplayMenu(1)"><img src="img/map/left_menu_01.png" alt="지번검색" /></a></li>
+						<li class="on"><a href="#left_04" onclick="DisplayMenu(4)"><img src="img/map/left_menu_04.png" alt="토지정보" /></a></li>
+						<li><a href="#left_05" onclick="DisplayMenu(5)"><img src="img/map/left_menu_05.png" alt="통합검색" /></a></li>
+						<li><a href="#left_02" onclick="DisplayMenu(2)"><img src="img/map/left_menu_02.png" alt="레이어" /></a></li>
+						<li><a href="#left_03" onclick="DisplayMenu(3)"><img src="img/map/left_menu_03.png" alt="화면분할" /></a></li>
+						<li><a href="#left_06" onclick="DisplayMenu(6)"><img src="img/map/left_menu_06.png" alt="통계지도" /></a></li>
+						<li><a href="#left_07" onclick="DisplayMenu(7)"><img src="img/map/left_menu_07.png" alt="이력시계열" /></a></li>
+			    	</ul>
+			  	</div>
+			</div>
+			<div id='left_con4' class="left_con4">
+				<div id='multisearch' style="width:100%;height:100%;"></div>
+			</div>  
+		</div>
+		<div id="menu5" style="display:none;"> 
+			<div class="left_menu">
+				<div class="menu_wrap">
+			    	<ul class="lnb">
+			      		<li><a href="#left_01" onclick="DisplayMenu(1)"><img src="img/map/left_menu_01.png" alt="지번검색" /></a></li>
+						<li><a href="#left_04" onclick="DisplayMenu(4)"><img src="img/map/left_menu_04.png" alt="토지정보" /></a></li>
+						<li class="on"><a href="#left_05" onclick="DisplayMenu(5)"><img src="img/map/left_menu_05.png" alt="통합검색" /></a></li>
+						<li><a href="#left_02" onclick="DisplayMenu(2)"><img src="img/map/left_menu_02.png" alt="레이어" /></a></li>
+						<li><a href="#left_03" onclick="DisplayMenu(3)"><img src="img/map/left_menu_03.png" alt="화면분할" /></a></li>
+						<li><a href="#left_06" onclick="DisplayMenu(6)"><img src="img/map/left_menu_06.png" alt="통계지도" /></a></li>
+						<li><a href="#left_07" onclick="DisplayMenu(7)"><img src="img/map/left_menu_07.png" alt="이력시계열" /></a></li>
+			    	</ul>
+			  	</div>
+			</div>
+			<div id='left_con5' class="left_con5">
+				<div id='integratedsearch' style="width:100%;height:100%;"></div>
+			</div>  
+		</div>
+		<div id="menu6" style="display:none;"> 
+			<div class="left_menu">
+				<div class="menu_wrap">
+			    	<ul class="lnb">
+			      		<li><a href="#left_01" onclick="DisplayMenu(1)"><img src="img/map/left_menu_01.png" alt="지번검색" /></a></li>
+						<li><a href="#left_04" onclick="DisplayMenu(4)"><img src="img/map/left_menu_04.png" alt="토지정보" /></a></li>
+						<li><a href="#left_05" onclick="DisplayMenu(5)"><img src="img/map/left_menu_05.png" alt="통합검색" /></a></li>
+						<li><a href="#left_02" onclick="DisplayMenu(2)"><img src="img/map/left_menu_02.png" alt="레이어" /></a></li>
+						<li><a href="#left_03" onclick="DisplayMenu(3)"><img src="img/map/left_menu_03.png" alt="화면분할" /></a></li>
+						<li class="on"><a href="#left_06" onclick="DisplayMenu(6)"><img src="img/map/left_menu_06.png" alt="통계지도" /></a></li>
+						<li><a href="#left_07" onclick="DisplayMenu(7)"><img src="img/map/left_menu_07.png" alt="이력시계열" /></a></li>
+			    	</ul>
+			  	</div>
+			</div>
+			<div id='left_con6' class="left_con6">
+				<div id='statistics' style="width:100%;height:100%;"></div>
+			</div>  
+		</div>
+		<div id="menu7" style="display:none;"> 
+			<div class="left_menu">
+				<div class="menu_wrap">
+			    	<ul class="lnb">
+			      		<li><a href="#left_01" onclick="DisplayMenu(1)"><img src="img/map/left_menu_01.png" alt="지번검색" /></a></li>
+						<li><a href="#left_04" onclick="DisplayMenu(4)"><img src="img/map/left_menu_04.png" alt="토지정보" /></a></li>
+						<li><a href="#left_05" onclick="DisplayMenu(5)"><img src="img/map/left_menu_05.png" alt="통합검색" /></a></li>
+						<li><a href="#left_02" onclick="DisplayMenu(2)"><img src="img/map/left_menu_02.png" alt="레이어" /></a></li>
+						<li><a href="#left_03" onclick="DisplayMenu(3)"><img src="img/map/left_menu_03.png" alt="화면분할" /></a></li>
+						<li><a href="#left_06" onclick="DisplayMenu(6)"><img src="img/map/left_menu_06.png" alt="통계지도" /></a></li>
+						<li class="on"><a href="#left_07" onclick="DisplayMenu(7)"><img src="img/map/left_menu_07.png" alt="이력시계열" /></a></li>
+			    	</ul>
+			  	</div>
+			</div>
+			<div id='left_con7' class="left_con7">
+				<div id='historymap' style="width:100%;height:100%;"></div>
+			</div>  
+		</div>
+		
+		<div class="aside_line"></div>
+		<a href="#" id="side_toggle" class="aside_close" onclick="DisplayToggle()" title="접기">본문 컨텐츠 접기</a>
+	  	<!-- 맵객체 및 툴기능 -->
+	    <div id="right">
+	       	<div id='map' style="width:100%;height:100%;">
+			</div>
+	    </div>
+  	</div>
+ 	<!-- 하단툴바 -->
+	<div id="footer_wrap">
+		<div class="area_box floatL">
+			<div id='coordinate'></div>
+		</div>
+		<div class="area_box floatL">
+			<div id='centeraddr'></div>
+		</div>
+		<div class="area_box floatR">
+			<div id='lawboundaryloc'></div>
+		</div>
+		<div class="area_box floatR">
+			<div id='basinloc'></div>
+		</div>
+	</div>
+</div>
+</body>
+
+
 <div id="disqus_thread"></div>
 <script>
 
@@ -20,3 +347,4 @@ s.setAttribute('data-timestamp', +new Date());
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
                             
+</html>
