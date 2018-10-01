@@ -6,9 +6,11 @@ $(document).ready(function(){
     var ctx=q.getContext('2d');
     
     var draw = function () {
-      ctx.fillStyle='rgba(0,0,0,.05)';
+      // ctx.fillStyle='rgba(0,0,0,.05)';
+      ctx.fillStyle='rgba(0,216,255,.05)';
       ctx.fillRect(0,0,width,height);
-      ctx.fillStyle='#0F0';
+      // ctx.fillStyle='#0F0';
+      ctx.fillStyle='#FFFFFF';
       ctx.font = '10pt Georgia';
        //ctx.fillText('BingBingPa', Math.random()*(width), Math.random()*(height));
       yPositions.map(function(y, index){
@@ -28,7 +30,7 @@ $(document).ready(function(){
     RunMatrix();
     function RunMatrix(){
     if(typeof Game_Interval != "undefined") clearInterval(Game_Interval);
-            Game_Interval = setInterval(draw, 100);
+            Game_Interval = setInterval(draw, 70);
     }
     function StopMatrix(){
       clearInterval(Game_Interval);
