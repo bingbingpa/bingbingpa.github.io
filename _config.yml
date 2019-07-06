@@ -1,78 +1,48 @@
-# Site
-title:              삽질 저장소
-bio:                OpenSesame
-description:        ""
-reading_time:       true
-words_per_minute:   200
-logo:               'assets/img/logo.png'
-about:              'assets/img/emoji.png'
-# background:         'assets/img/placeholder-big.jpg'
-background:         'assets/img/gasan.jpg'
-tiled_bg:           false   # Set this true if you want to tile your background image, otherwise it will be covered
-locale:             ko-KR
-url:                https://bingbingpa.github.io
+permalink: /:categories/:title/
 
-# Jekyll
-permalink:          /:title/
-markdown:           kramdown
-highlighter:        rouge
+highlighter: rouge
+markdown: kramdown
 kramdown:
-  auto_ids:         true
-  footnote_nr:      1
-  entity_output:    as_char
-  toc_levels:       1..6
-  enable_coderay:   false
-mathjax:            true
-sass:
-  sass_dir:         _sass
-  style:            compressed
+  input:  GFM
+  syntax_highlighter: rouge
 
-# Comments
-disqus_shortname:   bingbingpa
+plugins:
+  - jekyll-paginate
 
-# Social
-# if you don't have any of social below, comment the line.
-#google:
-  #plus:            #username
-  #analytics:
-  #verify:
-  #ad-client:
-  #ad-slot:
-#bing-verify:
-#email:
-#twitter:            username
-#facebook:           username
-github-url:         bingbingpa
-stackoverflow:     3534610/bingbingpa   from a "http://stackoverflow.com/users/3534610/bingbingpa" link
-#linkedin:          username
-#xing:              username
-instagram:          paaaaaark_sh
-#lastfm:            username
-#tumblr:            username
-#medium:            '@username'
-#pinterest:         username
-#foursquare:        username
-#steam:              username
-#dribbble:          username
-#youtube:           username
-#youtube-channel:   channel
-#soundcloud:        username
-#weibo:             username
-#flickr:            username
-#codepen:           username
-#keybase:           username
-#xmpp:              username@server.com
-#hackernews:        username
+paginate: 10
+paginate_path: "page/:num"
+baseurl: ""
 
-# Gems
-gems:
-  - jekyll-mentions
-  - jekyll-feed
-  - jekyll-sitemap
-  - jekyll-gist
 
-jekyll-mentions:
-    base_url: https://github.com
 
-# Exclude list
-exclude: [README.md, Gemfile, Gemfile.lock, node_modules, gulpfile.js, package.json, _site, src, vendor, CNAME, LICENSE, Rakefile]
+defaults:
+  -
+    scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      styles : [highlight.css,gitment.css,post.css]
+      scripts : [gitment.js, post.js]
+
+
+
+title: "삽질저장소"
+email: guriguri1576@gmail.com
+description: ""
+github:
+  username: bingbingpa
+swiftype:
+  searchId: iXZyPokVfxFaBTvi64Y6
+gitment:
+    repo: blog
+    client_id: a6fb73b3e790e234bab8
+    client_secret: cc10aaff53a03d05ab2ee002dbf401dd7627c7a3
+
+url: "https://bingbingpa.github.io"
+imgrepo: "https://bingbingpa.github.io/static/img"
+
+
+#url: "http://127.0.0.1:4000"
+#imgrepo: "http://127.0.0.1:4000/static/img"
+
