@@ -110,8 +110,7 @@ body {
 }
 
 body,code,pre{
-    font-family:  "Menlo", "Monaco", "Consolas", "Courier New", "monospace", "Helvetica", "Tahoma", "Arial",
-    "WenQuanYi Micro Hei", "文泉驿微米黑", "STXihei", "华文细黑", "Microsoft YaHei", "微软雅黑", "SimSun", "宋体", "Heiti", "黑体", sans-serif;
+    font: 400 18px/1.8 "Apple SD Gothic Neo","Nanum Barun Gothic","Nanum Gothic",Verdana,Arial,"Malgun Gothic",Dotum,sans-serif;
 }
 
 body,.sheet,pre,code{
@@ -119,10 +118,10 @@ body,.sheet,pre,code{
 }
 
 
-a:link {text-decoration: none}		/* 未访问的链接 */
-a:visited {text-decoration: none}	/* 已访问的链接 */
-a:hover {text-decoration: none}	/* 鼠标移动到链接上 */
-a:active {text-decoration: none}	/* 选定的链接 */
+a:link {text-decoration: none}		
+a:visited {text-decoration: none}	
+a:hover {text-decoration: none}	
+a:active {text-decoration: none}	
 
 .main{
     min-height: 100%;

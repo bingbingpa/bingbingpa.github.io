@@ -4,6 +4,7 @@ title : gradle 멀티 프로젝트 세팅하기
 date : 2019-02-10
 excerpt : "gradle과 springBoot 환경에서 멀티 프로젝트 세팅하기 "
 tags: [gradle, Java, SpringBoot, MultiProject]
+categories: [SpringBoot]
 comments: true
 ---
 
@@ -15,9 +16,9 @@ comments: true
 - 또는 url로 바로 Initializr경로[(https://start.spring.io/)](https://start.spring.io/)로 이동 가능하다. 
 - Switch To the full version링크를 선택하여 다른 옵션들을 활성화한다. 
 
-<figure >
-	<a href="../assets/img/20190210/springIo.png"><img src="../assets/img/20190210/springIo.png"></a>
-</figure>
+
+<img src="/static/img/springBootProject/springIo.png">
+
 
 - Group : 그룹명
 - Artifact : 실제 생성되는 프로젝트명

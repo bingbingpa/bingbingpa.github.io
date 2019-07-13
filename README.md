@@ -1,1 +1,1 @@
-블로그 정리중
+- jekyll 테마 사이트에서 http://jekyllthemes.org/themes/tiffany/ 사용 

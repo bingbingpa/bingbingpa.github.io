@@ -5,8 +5,8 @@
 
 $(document).ready(function() {
     generateContent();
-    // share();
-    gitment();
+     //share();
+    // gitment();
 });
 
 /**
