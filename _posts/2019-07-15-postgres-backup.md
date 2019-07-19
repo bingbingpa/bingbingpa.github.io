@@ -3,8 +3,8 @@ layout : post
 title : postgresql pg-dump
 date : 2019-07-15
 excerpt : "postgresql 다른 버전간의 pg-dump 하기             "
-tags: [backup]
-categories: [postgresql]
+tags: [postgresql, backup]
+categories: [DataBase]
 comments: true
 changefreq : daily
 ---
@@ -20,6 +20,6 @@ changefreq : daily
 - \copy (카피할 쿼리 ) to '/저장할 경로.csv' CSV HEADER; 
 - 이렇게 하면 쿼리 결과가 해당 경로에 csv 파일로 떨어지고 해당 파일을 import 할 수 있다. 
 - 참고로 postgresql에서는 select * from information_schema.columns where table_name='테이블명'; 쿼리로 해당 테이블의 스키마를 조회 할 수 있다. 
-- **[참고]**psql에서 \t를 하면 쿼리 결과를 보기 좋다. 
+- **[참고]** psql에서 \t를 하면 쿼리 결과를 보기 좋다. 
 
  
