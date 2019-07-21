@@ -10,7 +10,7 @@ changefreq : daily
 ---
 
 
-## 1. postgresql 백업하기!
+##  postgresql 백업하기!
 
 - 같은 버전의 DB 같은 경우에는 pg_dump로 손쉽게 sql 파일로 백업이 가능 
 - pg-dump 'DB명' > '백업파일명'.sql
