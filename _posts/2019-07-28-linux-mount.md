@@ -3,7 +3,7 @@ layout : post
 title : fdisk를 통한 파티션 분할 
 date : 2019-07-30
 excerpt : "fdisk를 통한 파티션 분할                                          "
-tags: [fidsk, mount]
+tags: [fdisk, mount]
 categories: [Linux]
 comments: true
 changefreq : daily
