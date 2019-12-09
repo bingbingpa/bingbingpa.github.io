@@ -35,6 +35,9 @@ changefreq : daily
 - ctrl + d : 라인 삭제 
 - **alt + shift + R : 지정한 블록 rename** 
 - ctrl + /(ctrl + shift + C) : 선택 블록 주석처리/제거 
+- ctrl + shift + X : 대문자로 변환 
+- ctrl + shift + Y : 소문자로 변환
+- alt + shift + s : source 메뉴 보기 
 
 #### 3. 디버깅 관련 단축키 
 - ctrl + shift + B : 현재 커서의 위치에 브레이크 포인트 설정/해제
