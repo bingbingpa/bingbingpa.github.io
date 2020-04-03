@@ -1,4 +1,12 @@
 _site/
 .sass-cache/
 .jekyll-metadata
+.jekyll-cache
 /vendor/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
