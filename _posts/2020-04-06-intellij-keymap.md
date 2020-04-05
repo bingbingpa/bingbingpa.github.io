@@ -1,8 +1,8 @@
 ---
 layout : post
-title : intellij keymap 
-date : 2020-04-05
-excerpt : "intellij(windows & linux)  keymap 정리 및 기타 소소한 설정들 "
+title : intellij 단축키  
+date : 2020-04-06
+excerpt : "intellij(windows & linux)  단축키 정리"
 tags: [intellij]
 categories: [개발환경]
 comments: true
