@@ -140,9 +140,9 @@ changefreq : daily
 - **Run/Debug : Shift + F10/F9**
 
 ### Usage Search
-- **Find usages /Find usages in file Alt + F7 / Ctrl + F7**
-- **Highlight usages in file Ctrl + Shift + F7**
-- **Show usages Ctrl + Alt + F7**
+- **전체 찾기(tool window) / 파일에서 찾기 : Alt + F7 / Ctrl + F7**
+- 현재파일에서 검색어 하이라이트 : Ctrl + Shift + F7
+- **검색 팝업 Ctrl + Alt + F7**
 
 ### VCS / Local History(git)
 - **commit : Ctrl + K**
