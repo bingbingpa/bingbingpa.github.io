@@ -33,12 +33,12 @@ changefreq : daily
 ### Debugging
 
 - Step over / into : F8 / F7
-- Smart step into/Step out : Shift + F7 / Shift + F8
-- Run to cursor : Alt + F9
-- Evaluate expression : Alt + F8
-- Resume program : F9
-- Toggle breakpoint : Ctrl + F8
-- View breakpoints : Ctrl + Shift + F8
+- Smart step over / into : Shift + F8 / Shift + F7
+- 현재커서위치까지 실행 : Alt + F9
+- 표현식 사용 팝업 : Alt + F8
+- 다음브레이크 포인트까지 실행 : F9
+- 브레이크 포인트 토글 : Ctrl + F8
+- 모들 브레이크 포인트 보기 팝업 : Ctrl + Shift + F8
 
 ### Search / Replace
 
