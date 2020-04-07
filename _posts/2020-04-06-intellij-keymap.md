@@ -133,6 +133,7 @@ changefreq : daily
 - 북마크 표시(숫자, 영문) : Ctrl + F11
 - 넘버링된 북마크로 이동 : Ctrl + #[0-9]
 - 북마크 표시 : Shift : F11
+- 새로운 테스트 생성 및 이동 : Ctrl + Shift + T
 
 ### Compile and Run
 - **컴파일 : Ctrl + F9**
