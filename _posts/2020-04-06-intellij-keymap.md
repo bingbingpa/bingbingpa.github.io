@@ -89,6 +89,7 @@ changefreq : daily
 - 모두 확장 : Ctrl + Shift + NumPad + 
 - 모두 축소 : Ctrl + Shift + NumPad - 
 - **현재 에디터 탭 닫기 : Ctrl + F4**
+- 현재 에디터 새창으로 띄우기 : Shift + F4
 
 ### Refactoring 
 - **파일 복사 : F5**
