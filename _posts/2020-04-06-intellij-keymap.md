@@ -91,7 +91,7 @@ changefreq : daily
 - **현재 에디터 탭 닫기 : Ctrl + F4**
 - 현재 에디터 새창으로 띄우기 : Shift + F4
 - 메소드 간의 위치 변경 : Ctrl + Shift + 위/아래 
-- css (예:#myDiv>ul>li*5) : Tab
+- css문법으로 태그 생성(예:#myDiv>ul>li*5) : Tab
 
 ### Refactoring 
 - **파일 복사 : F5**
