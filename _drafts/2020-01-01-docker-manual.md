@@ -115,7 +115,34 @@ changefreq : daily
 ~~~ 
     
 ## docker 컨테이너 생성 / 시작 / 정지 
-  
+
+- 컨테이너 생성 : 이미지로부터 컨테이너를 생성한다. 이미지의 실체는 'docker 에서 서버 기능을 작동 시키기 위해 필요한 디렉토리 및 파일들' 이다. 구체적으로는 Linux의 작동에 필요한 /etc 나 /bin 등과 같은 디렉토리 및 파일들이다.
+~~~ cmd
+    docker container create <이미지명>
+~~~
+- 컨테이너 생성 및 시작 
+~~~ cmd
+    docker container run [옵션] 이미지명[:태그명] [인수] 
+~~~
+
+    - 지정할 수 있는 주요 옵션 
+                    
+        |옵션|설명|
+        |:---|:---|
+        |\--attach, -a|표준 입출력, 오류 출력|
+        |\--cidfile|컨테이너 ID를 파일로 출력|
+        |\--detach, -d|컨테이너를 생성하고 백그라운드에서 실행|
+        |\--interactive, -i|컨테이너의 표준 입력을 연다.|
+        |\--tty, -t|단말기 디바이스를 사용한다.|
+
+    - docker container run : 컨테이너를 생성 및 실행
+    - -it : 콘솔에 결과를 출력하는 옵션 
+    - \--name "test" : 컨테이너명
+    - centos : 이미지멍(해당 이미지가 없을 경우 pull 받는다.)
+    - /bin/cal : 컨테이너에서 실행할 명령. /bin/bash를 실행하면 컨테이너 안에서 명령 조작을 할 수 있고 컨테이너를 종료시키려면 exit 명령을 입력하여 쉘을 종료 시킨다.
+    ~~~ cmd
+        docker container run -it --name "test1" centos /bin/cal
+    ~~~  
   
 
 
