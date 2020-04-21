@@ -4,7 +4,7 @@ title : Ubuntu vscode 한글 관련 오류 해결
 date : 2019-07-14
 excerpt : "Ubuntu vscode에서 발생하는 한글 받침 입력 오류 수정             "
 tags: [Ubuntu, vscode]
-categories: [Linux]
+categories: [IDE]
 comments: true
 changefreq : daily
 ---

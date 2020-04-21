@@ -4,7 +4,7 @@ title : vscode lombok & static import 설정
 date : 2019-12-05
 excerpt : "vscode에서 lombok이 되지 않는 문제와 테스트 코드 작성시 static import가 되지 않는 문제 삽질 저장"
 tags: [springboot, vscode]
-categories: [개발환경]
+categories: [IDE]
 comments: true
 changefreq : daily
 ---

@@ -4,7 +4,7 @@ title : maven 프로젝트 생성
 date : 2020-03-08
 excerpt : "커맨드에서 mvn archetype:generate 로 maven 프로젝트 생성하기"
 tags: [maven]
-categories: [Spring]
+categories: [BuildTool]
 comments: true
 changefreq : daily
 ---

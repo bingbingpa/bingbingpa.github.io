@@ -4,7 +4,7 @@ title : intellij 단축키
 date : 2020-04-06
 excerpt : "intellij(windows & linux)  단축키 정리"
 tags: [intellij]
-categories: [개발환경]
+categories: [IDE]
 comments: true
 changefreq : daily
 ---
