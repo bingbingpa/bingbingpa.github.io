@@ -2,7 +2,7 @@
 layout : post
 title : docker 시작하기 
 date : 2020-01-01
-excerpt : "docker 를 활용한 환경 구축 방법에 대한 정리                    "
+excerpt : "docker 기본적인 사용 방법 정리                    "
 tags: [docker]
 categories: [Server]
 comments: true
@@ -12,6 +12,7 @@ changefreq : daily
 ## docker image, container 
 - image : 필요한 프로그램, 라이브러리, 소스 등을 설치한 뒤에 이를 파일로 만든 것이다.
 - container : 이미지가 실행된 상태가 컨테이너(Container) 이다. 운영체제로 본다면 이미지는 일종의 실행파일, 컨테이너는 프로세스와 유사한 개념이다.
+- 아래에서 사용되는 명령어는 [] 는 하나의 입력값을, <> 는 여러개의 입력값을 의미한다. 
 
 ## docker 상태 확인 
 - 버전 확인 : docker 의 버전이나 go 언어의 버전, OS, 아키텍처를 확인 할 수 있다. 
@@ -39,7 +40,7 @@ changefreq : daily
     ~~~
     - 이미지명에 취득할 url 을 지정할 수도 있다. url 은 프로토콜(https://)을 제외하고 지정한다.
 - 이미지 목록 표시
-~~~ cmd
+~~~ css
     docker image ls [옵션] [리포지토리명]
 ~~~
 
@@ -53,15 +54,15 @@ changefreq : daily
         |\--quiet, -q|docker 이미지 ID만 표시|
         
 - 이미지 상세 정보 확인 : 이미지 ID, 작성일, docker 버전, cpu 아키텍처 등을 JSON 형태로 표시한다. 
-~~~ cmd
+~~~ css
     docker image inspect <이미지명>
 ~~~
-- 이미지 태그 설정 : **docker hub 에 등록하기 위해서는 <사용자명/repository명:태그명> 과 같은 명명 규칙을 사용해야 한다.**
-~~~ cmd
-    docker image tag <원본이미지명> <변경할이미지명:태그명>
+- 이미지 태그 설정 : **docker hub 에 등록하기 위해서는 [사용자명/repository명:태그명] 과 같은 명명 규칙을 사용해야 한다.**
+~~~ css
+    docker image tag [원본이미지명] [변경할이미지명:태그명]
 ~~~
 - 이미지 검색 : docker hub 에 공개되어 있는 이미지를 검색한다. 
-~~~ cmd
+~~~ css
     docker search [옵션] <검색 키워드>
 ~~~
 
@@ -74,7 +75,7 @@ changefreq : daily
         |\--filter=stars=n|즐겨찾기의 수(n 이상)를 지정|
 
 - 이미지 삭제 
-~~~ cmd
+~~~ css
     docker image rm [옵션] 이미지명 [이미지명] 
 ~~~
     
@@ -86,7 +87,7 @@ changefreq : daily
         |\--no-prune|중간 이미지를 삭제하지 않음|
             
 - 사용하지 않는 이미지 삭제 
-~~~ cmd
+~~~ css
     docker image prune [옵션]
 ~~~
     
@@ -98,7 +99,7 @@ changefreq : daily
         |\--force, -f|이미지를 강제로 삭제|
         
 - docker hub 에 로그인 
-~~~ cmd
+~~~ css
     docker login [옵션] [서버]
 ~~~
 
@@ -110,18 +111,18 @@ changefreq : daily
         |\--username, -u|사용자명|
         
 - 이미지 업로드 : **업로드 하는 이미지명은 유저명/repository:태그명 이어야 하고, repository 는 docker hub 에서 생성해 주어야 한다.** 태그명이 없을 경우 latest 버전으로 업로드 된다.
-~~~ cmd
+~~~ css
     docker image push 이미지명[:태그명]
 ~~~ 
     
 ## docker 컨테이너 생성 / 시작 / 정지 
 
 - 컨테이너 생성 : 이미지로부터 컨테이너를 생성한다. 이미지의 실체는 'docker 에서 서버 기능을 작동 시키기 위해 필요한 디렉토리 및 파일들' 이다. 구체적으로는 Linux의 작동에 필요한 /etc 나 /bin 등과 같은 디렉토리 및 파일들이다.
-~~~ cmd
-    docker container create <이미지명>
+~~~ css
+    docker container create [이미지명]
 ~~~
 - 컨테이너 생성 및 시작 
-~~~ cmd
+~~~ css
     docker container run [옵션] 이미지명[:태그명] [인수] 
 ~~~
 
@@ -134,16 +135,47 @@ changefreq : daily
         |\--detach, -d|컨테이너를 생성하고 백그라운드에서 실행|
         |\--interactive, -i|컨테이너의 표준 입력을 연다.|
         |\--tty, -t|단말기 디바이스를 사용한다.|
-
-    - docker container run : 컨테이너를 생성 및 실행
-    - -it : 콘솔에 결과를 출력하는 옵션 
-    - \--name "test" : 컨테이너명
-    - centos : 이미지멍(해당 이미지가 없을 경우 pull 받는다.)
-    - /bin/cal : 컨테이너에서 실행할 명령. /bin/bash를 실행하면 컨테이너 안에서 명령 조작을 할 수 있고 컨테이너를 종료시키려면 exit 명령을 입력하여 쉘을 종료 시킨다.
-    ~~~ cmd
-        docker container run -it --name "test1" centos /bin/cal
-    ~~~  
+        
+        ~~~ cmd
+            docker container run -it --name "test1" centos /bin/cal
+        ~~~ 
+        - docker container run : 컨테이너를 생성 및 실행
+        - -it : 콘솔에 결과를 출력하는 옵션 
+        - \--name "test" : 컨테이너명
+        - centos : 이미지명(해당 이미지가 없을 경우 pull 받는다.)
+        - /bin/cal : 컨테이너에서 실행할 명령. /bin/bash를 실행하면 컨테이너 안에서 명령 조작을 할 수 있고 컨테이너를 종료시키려면 exit 명령을 입력하여 쉘을 종료 시킨다.
+     
   
-  
-
+- 컨테이너의 백그라운드 실행
+~~~ css
+    docker container run [실행 옵션] 이미지명[:태그명] [인수]
+~~~
+    
+    - 지정할 수 있는 주요 옵션 
+                        
+        |옵션|설명|
+        |:---|:---|
+        |\--detach, -d|백그라운드에서 실행|
+        |\--user, -u|사용자명을 지정|
+        |\--rm|명령 실행 완료 후에 컨테이너를 자동으로 삭제|
+        |\--restart=<옵션>|명령의 실행 결과에 따라 재시작을 하는 옵션|
+        
+        - \--restart 옵션  
+                                
+            |설정값|설명|
+            |:---|:---|
+            |no|재시작하지 않는다.|
+            |on-failure|종료 스테이터스가 0이 아닐 때 재시작한다.|
+            |on-failure:횟수n|종료 스테이터스가 0이 아닐 때 n번 재시작한다.|
+            |always|항상 재시작한다.|
+            |unless-stopped|최근 컨테이너가 정지 상태가 아니라면 항상 재시작한다.|
+        
+        ~~~ cmd
+            docker container run -d centos /bin/ping localhost
+        ~~~
+        - docker container run : 컨테이너를 생성 및 실행 
+        - -d : 백그라운드에서 실행하는 옵션
+        - centos : 이미지명 
+        - /bin/ping localhost : 컨테이너에서 실행할 명령
+        
 
