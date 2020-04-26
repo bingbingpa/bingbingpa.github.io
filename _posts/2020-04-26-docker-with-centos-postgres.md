@@ -1,6 +1,6 @@
 ---
 layout : post
-title : centos8 & postgresql12&postgis 설치하기  
+title : centos8 postgresql12&postgis 설치하기  
 date : 2020-04-26
 excerpt : "docker 로 centos8 container 에 postgresql12&postgis 설치 하기"
 tags: [intellij]
@@ -17,26 +17,40 @@ changefreq : daily
 ~~~ bash
     docker container run --privileged  -d -p 15432:5432  --name "postgres" centos /sbin/init
 ~~~     
-- 컨테이너 bash 
+- 컨테이너 접속? 
 ~~~ bash
     docker exec -it postgres /bin/bash
 ~~~
 - 업데이트 : centos8 부터는 yum 대신 dnf를 사용한다. 
 ~~~ bash
-    dnf update
+    dnf -y update
 ~~~
 - 저장소 추가 후 postgresql 설치   
 ~~~ bash
-    yum -y install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm 
+    dnf -y install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm 
 ~~~
 ~~~ bash
-    dnf -qy module disable postgresql
+    dnf -y module disable postgresql
 ~~~
 ~~~ bash
     dnf -y install postgresql12 postgresql12-server
 ~~~
 ~~~ bash
+    dnf -y install epel-release yum-utils
+~~~
+~~~ bash
+    dnf config-manager --enable pgdg12
+~~~
+- db init : 필요에 따라 initdb 할 때 인코딩과 data 경로를 설정 할 수도 있다.  
+~~~ bash
     /usr/pgsql-12/bin/postgresql-12-setup initdb
+~~~
+- container 시작 시 자동 시작 되도록 설정 
+~~~ bash
+    systemctl enable postgresql-12
+~~~
+~~~ bash
+    systemctl start postgresql-12
 ~~~
 - postgis 설치 
 ~~~ bash
@@ -46,5 +60,13 @@ changefreq : daily
     dnf config-manager --set-enabled PowerTools
 ~~~
 ~~~ bash
-    dnf install postgis30_12
+    dnf -y install postgis30_12
+~~~
+- 설치 후 postgres 로 사용자 변경후 psql 로 접속해서 postgis 가 정상 설치되는지 확인 
+~~~ bash
+    su posgres
+    psql -U postgres 
+~~~
+~~~ sql
+    create extension postgis;
 ~~~
