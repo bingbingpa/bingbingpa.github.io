@@ -17,7 +17,6 @@ changefreq : daily
 - 반대로 비동기 솔루션을 사용하면 커밋 시간과 다른 서버로의 전파 사이에 약간의 지연이 발생하여 백업 서버로 전환 할 때 일부 트랜잭션이 손실 될 수 있으며, 로드 밸런싱 된 서버가 약간 오래된 결과를 반환 할 수 있습니다. 비동기 통신은 동기화가 너무 느릴 때 사용된다.
 
 ### 2. 여러 해결 기법 비교
-
 - Shared Disk Failover
     - 하나의 디스크에 여러개의 Postgres 인스턴스를 사용하며, master 서버가 망가지면 대기하던 서버가 해당 디스크를 마운트해서 사용한다. 
     - master 서버가 실행 중일 때 대기 서버가 공유 스토리지에 절대 액세스하지 않아야 한다.
@@ -51,7 +50,7 @@ changefreq : daily
 - Trigger-Based Master-Standby Replication
     - 데이터 변경을 주 서버가 받아서 처리하고 비동기적으로 복제 서버에 보낸다.
     - 테이블 단위로 컨트롤 가능
-    - 마스터 서버가 실행중인 동안 standby 서버는 hot standby 서버로 읽기 전용 조회에 응답 할 수 있고 여러 대의 standby 서버를 지한다.
+    - master 서버가 실행중인 동안 standby 서버는 hot standby 서버로 읽기 전용 조회에 응답 할 수 있고 여러 대의 standby 서버를 지한다.
     - 대기 서버를 비동기식으로 (일괄 적으로) 업데이트 하므로 장애 조치 중에 데이터가 손실 될 수 있다.
     
 - Statement-Based Replication Middleware원
@@ -80,3 +79,8 @@ changefreq : daily
     
  - **기능 비교 표**
 <img src="/static/img/postgresHighAvailability/table.png">
+
+### 3. Write-Ahead Log Shipping 
+
+#### 3.1. master 서버 설정 
+- 
