@@ -25,6 +25,10 @@ changefreq : daily
 ~~~ bash
     dnf -y update
 ~~~
+- centos docker 컨테이너에서 clear가 안되서 가능하도록 패키지 설치 
+~~~ bash
+    dnf install ncurses
+~~~
 - 저장소 추가 후 postgresql 설치   
 ~~~ bash
     dnf -y install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm 
