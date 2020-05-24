@@ -10,6 +10,7 @@ changefreq : daily
 ---
 
 ### 1. 정의 
+- 고가용성(HA, High Availability)이란 서버와 네트워크, 프로그램 등의 정보 시스템이 상당히 오랜 기간 동안 지속적으로 정상 운영이 가능한 성질을 말한다.
 - **데이터를 수정할 수있는 서버**를 read/writer, **master**, primary server 라고 한다. 
 - **master 의 변경 사항을 추적 하는 서버**를 **standby**, secondary server 라고 한다. 
 - **마스터 서버로 승격 될 때까지 연결할 수없는 대기 서버를 warm standby server 라고 하며, 연결을 허용 하고 읽기 전용 쿼리를 제공 하는 서버를 hot standby server 라고 한다.**
