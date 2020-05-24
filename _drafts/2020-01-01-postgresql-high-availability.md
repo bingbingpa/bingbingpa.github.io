@@ -85,3 +85,12 @@ changefreq : daily
 
 #### 3.1. master 서버 설정 
 - 
+
+
+
+#### 커맨드 임시 기록 
+
+- docker container run --privileged -d -p 15432:5432 --name "master" gaia3d/mago3d-postgresql /sbin/init
+- docker container run --privileged -d -p 15433:5432 --name "slave" gaia3d/mago3d-postgresql /sbin/init
+- pg_basebackup -h 172.17.0.2 -U replicator -p 5432 -D /pg_data -Fp -Xs -P -R
+- psql -x -c "select * from pg_stat_replication"
