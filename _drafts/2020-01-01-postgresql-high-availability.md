@@ -84,8 +84,14 @@ changefreq : daily
 ### 3. Write-Ahead Log Shipping 
 
 #### 3.1. master 서버 설정 
+- replicator 역할의 유저 생성 : CREATE USER replicator WITH REPLICATION ENCRYPTED PASSWORD 'secret';
+- pg.hba.conf 설정 
+    - type / database / user / address / method(인증방식) 을 적어주고 postgresql 을  적어주고 저장한다.
+    - docker 를 사용해서 테스트 할 경우 container 의 ip 를 작성하도록 한다.  
+~~~ bash
+    host    replication     replicator      172.17.0.3/32             md5
+~~~
 - 
-
 
 
 #### 커맨드 임시 기록 
