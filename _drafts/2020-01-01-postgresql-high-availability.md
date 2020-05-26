@@ -84,9 +84,22 @@ changefreq : daily
 ### 3. Write-Ahead Log Shipping 
 
 #### 3.1. master 서버 설정 
+- postgresql.conf 설정
+    - max_wal_senders(integer)
+        - standby 서버 또는 streaming 기본 백업 클라이언트로부터의 최대 동시 연결수를 지정한다. (기본값 : 10)
+        - 이 값이 0일 경우는 replication 이 비활성화 된다. 
+        - 이 값은 최대 예상 클라이언트보다 약간 더 높게 설정하도록 한다. (일반적으로 slave 의 수 + 1)
+    - max_replication_slots(integer) 
+        - 서버가 지원 할 수 있는 최대 복제 슬롯 수를 지정한다. (기본값 : 10)
+        - 현재 존재하는 복제 슬롯 수보다 낮은 값으로 설정하면 서버가 시작되지 않는다. 
+    - wal_keep_segments(integer)
+        - 대기 서버가 streaming replication 을 위해 과거 로그 파일을 가져와야 하는 경우 pg_wal 디렉토리에 저장되는 과거 로그 파일 세그먼트의 최소 수를 지정한다. 
+    - wal_sender_timeout(integer)
+        - 지정된 시간 이상 작동되지 않은 복제 연결이 중단 된다. 
 - replicator 역할의 유저 생성 : CREATE USER replicator WITH REPLICATION ENCRYPTED PASSWORD 'secret';
 - pg.hba.conf 설정 
-    - type / database / user / address / method(인증방식) 을 적어주고 postgresql 을  적어주고 저장한다.
+    - type / database / user / address / method(인증방식) 을 작성 후 저장후 postgresql 을 재시작한다.
+    - address 는 slave 의 ip 를 작성하도록 한다.
     - docker 를 사용해서 테스트 할 경우 container 의 ip 를 작성하도록 한다.  
 ~~~ bash
     host    replication     replicator      172.17.0.3/32             md5
