@@ -113,3 +113,8 @@ changefreq : daily
 - docker container run --privileged -d -p 15433:5432 --name "slave" gaia3d/mago3d-postgresql /sbin/init
 - pg_basebackup -h 172.17.0.2 -U replicator -p 5432 -D /pg_data -Fp -Xs -P -R
 - psql -x -c "select * from pg_stat_replication"
+
+
+#### TODO 
+- master fail over 시 slave 를 master 로 승격 시키고 master 를 slave 로 설정하기 
+- master slave1 slave2 가 되는거 글로 설명하기
