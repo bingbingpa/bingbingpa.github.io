@@ -37,7 +37,8 @@ changefreq : daily
         - master 서버에 지정된 WAL 파일의 크기를 다 채워야 standby 서버로 전송이 일어나기 때문에, 만약 WAL 파일을 다 채우지 못한 상태에서 master 서버에 장애가 발생하면 WAL 파일을 다 채우지 못해서 전달되지 못한 로그는 유실된다. 
     - streaming log shipping : WAL 파일 저장 여부와 관계 없이 로그 내용을 standby 서버로 직접 전달한다.
         - master, standby 서버간의 네트워크에 문제가 없다는 가정하에 거의 실시간으로 동작한다.
-        - wal_keep_segements 값에 따라 WAL 파일의 저장 개수가 정해지는데, standby 서버에 장애가 발생할 경우 만약 이 값이 32라면 master 서버에서 33번째 WAL을 쓰기 시작하면 1번째 파일은 유실되고, standby 서버가 다시 동작하더라도 데이터를 동기화 하는 방법은 다시 구축하는 방법 밖에는 없다.   
+        - wal_keep_segements 값에 따라 WAL 파일의 저장 개수가 정해지는데, standby 서버에 장애가 발생할 경우 만약 이 값이 32라면 master 서버에서 33번째 WAL을 쓰기 시작하면 1번째 파일은 유실되고, standby 서버가 다시 동작하더라도 데이터를 동기화 하는 방법은 다시 구축하는 방법 밖에는 없다.
+        - 위와 같은 상황을 방지하기 위해서 standby 서버로 보낼 WAL 파일을 그냥 버리지 않고, 별도의 공간에 저장 후 standby 서버에 장애가 발생했을 경우에 [restore command](https://www.postgresql.org/docs/12/runtime-config-wal.html#GUC-RESTORE-COMMAND) 를 사용하여 복구 할 수 있다. 하지만 별도의 저장공간이 필요하고 수동으로 하나하나 확인하며 복구하는데 걸리는 시간을 고려하여 여기서는 다루지 않는다.    
 
 - Logical Replication
     - 변경된 데이터를 스트림으로 다른 서버로 보내며, 테이블 단위로 리플리케이션 될 수도 있다.
@@ -54,7 +55,7 @@ changefreq : daily
     - master 서버가 실행중인 동안 standby 서버는 hot standby 서버로 읽기 전용 조회에 응답 할 수 있고 여러 대의 standby 서버를 지한다.
     - 대기 서버를 비동기식으로 (일괄 적으로) 업데이트 하므로 장애 조치 중에 데이터가 손실 될 수 있다.
     
-- Statement-Based Replication Middleware원
+- Statement-Based Replication Middleware
     - **미들웨어 프로그램이 모든 SQL 쿼리를 가로 채서 하나 또는 모든 서버로 보내며, 각 서버는 독립적으로 작동한다.**
     - 모든 서버가 변경 사항을 수신 할 수 있도록 읽기 / 쓰기 쿼리를 모든 서버로 보낸다. 
     - 읽기 전용 쿼리는 단 하나의 서버로 전송해서 서버간 부하를 줄일 수 있다.
@@ -82,7 +83,10 @@ changefreq : daily
 <img src="/static/img/postgresHighAvailability/table.png">
 
 ### 3. Write-Ahead Log Shipping 
-
+- PostgreSQL Streaming Replication 은 기본이 비동기 방식이며, 여기서는 비동기 방식에 대해서만 다루도록 한다. 
+- WAL 파일을 이용한 replication 은 다음과 같은 방식으로 동작한다. 
+<img src="/static/img/postgresHighAvailability/wal_log_shipping.png">
+ 
 #### 3.1. master 서버 설정 
 - postgresql.conf 설정
     - max_wal_senders(integer)
@@ -104,8 +108,15 @@ changefreq : daily
 ~~~ bash
     host    replication     replicator      172.17.0.3/32             md5
 ~~~
-- 
 
+#### 3.2. Standby 서버 설정 
+
+#### 3.3. 모니터링
+
+
+#### 3.4. 복제 슬롯
+
+### 4. 장애 처리 
 
 #### 커맨드 임시 기록 
 
