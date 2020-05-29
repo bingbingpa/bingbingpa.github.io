@@ -100,6 +100,9 @@ changefreq : daily
         - 대기 서버가 streaming replication 을 위해 과거 로그 파일을 가져와야 하는 경우 pg_wal 디렉토리에 저장되는 과거 로그 파일 세그먼트의 최소 수를 지정한다. 
     - wal_sender_timeout(integer)
         - 지정된 시간 이상 작동되지 않은 복제 연결이 중단 된다. 
+    - wal_level(enum)
+        - WAL 파일에 기록되는 정보의 양을 결정한다. 기본값은 replica 로 WAL 아카이빙(archive mode) 및 streaming replication 을 위해서는 replica 이상을 사용해야 한다. 
+        - 9.6 이전 버전에서는 archive, hot_standby 두 값을 쓸 수 있었으며, 12버전에서는 이 설정값을 사용 시 모두 replica로 처리 된다. 
 - replicator 역할의 유저 생성 : CREATE USER replicator WITH REPLICATION ENCRYPTED PASSWORD 'secret';
 - pg.hba.conf 설정 
     - type / database / user / address / method(인증방식) 을 작성 후 저장후 postgresql 을 재시작한다.
