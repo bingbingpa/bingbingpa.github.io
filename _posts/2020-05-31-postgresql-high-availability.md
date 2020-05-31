@@ -38,7 +38,7 @@ changefreq : daily
     - streaming log shipping : WAL 파일 저장 여부와 관계 없이 로그 내용을 standby 서버로 직접 전달한다.
         - master, standby 서버간의 네트워크에 문제가 없다는 가정하에 거의 실시간으로 동작한다.
         - wal_keep_segements 값에 따라 WAL 파일의 저장 개수가 정해지는데, standby 서버에 장애가 발생할 경우 만약 이 값이 32라면 master 서버에서 33번째 WAL을 쓰기 시작하면 1번째 파일은 유실되고, standby 서버가 다시 동작하더라도 데이터를 동기화 하는 방법은 다시 구축하는 방법 밖에는 없다.
-        - 위와 같은 상황을 방지하기 위해서 standby 서버로 보낼 WAL 파일을 그냥 버리지 않고, 별도의 공간에 저장 후 standby 서버에 장애가 발생했을 경우에 [restore command](https://www.postgresql.org/docs/12/runtime-config-wal.html#GUC-RESTORE-COMMAND) 를 사용하여 복구 할 수 있다. 하지만 별도의 저장공간이 필요하고 수동으로 하나하나 확인하며 복구하는데 걸리는 시간을 고려하여 여기서는 다루지 않는다.    
+        - 위와 같은 상황을 방지하기 위해서 standby 서버로 보낼 WAL 파일을 그냥 버리지 않고, 별도의 공간에 저장 후 standby 서버에 장애가 발생했을 경우에 [restore command](https://www.postgresql.org/docs/12/runtime-config-wal.html#GUC-RESTORE-COMMAND) 를 사용하여 복구 할 수 있다. 단, 별도의 저장공간이 필요하다.    
 
 - Logical Replication
     - 변경된 데이터를 스트림으로 다른 서버로 보내며, 테이블 단위로 리플리케이션 될 수도 있다.
@@ -83,41 +83,68 @@ changefreq : daily
 <img src="/static/img/postgresHighAvailability/table.png">
 
 ### 3. Write-Ahead Log Shipping 
-- PostgreSQL Streaming Replication 은 기본이 비동기 방식이며, 여기서는 비동기 방식에 대해서만 다루도록 한다. 
-- WAL 파일을 이용한 replication 은 다음과 같은 방식으로 동작한다. 
+- PostgreSQL Streaming Replication 은 기본이 비동기 방식이다.
+- 동기식 복제 방식은 하나의 트랜잭션을 하나 이상의 standby 서버에 반영하고, 그 결과를 master 서버가 확인하는 방식이며, master, standby 서버 모두 트랜잭션이 트랜잭션 로그 파일에 기록 되었을 경우에만 정상처리 되었다고 판단한다.
+- 동기식 복제 방식은 자료의 안정성을 제공하지만, standby 서버의 작업 완료 응답을 확인하는 작업까지 포함하므로 그 만큼의 지연시간이 생길 수 밖에 없다. 
+- 기본적인 WAL 파일을 이용한 복제는 다음과 같은 방식으로 동작하며, 본 문서에서는 postgresql 9.6과 12에서 기본적인 streaming replication 을 설정하는 방법에 대해서만 다룬다.  
 <img src="/static/img/postgresHighAvailability/wal_log_shipping.png">
- 
-#### 3.1. master 서버 설정 
-- postgresql.conf 설정
-    - max_wal_senders(integer)
-        - standby 서버 또는 streaming 기본 백업 클라이언트로부터의 최대 동시 연결수를 지정한다. (기본값 : 10)
-        - 이 값이 0일 경우는 replication 이 비활성화 된다. 
-        - 이 값은 최대 예상 클라이언트보다 약간 더 높게 설정하도록 한다. (일반적으로 slave 의 수 + 1)
-    - max_replication_slots(integer) 
-        - 서버가 지원 할 수 있는 최대 복제 슬롯 수를 지정한다. (기본값 : 10)
-        - 현재 존재하는 복제 슬롯 수보다 낮은 값으로 설정하면 서버가 시작되지 않는다. 
-    - wal_keep_segments(integer)
-        - 대기 서버가 streaming replication 을 위해 과거 로그 파일을 가져와야 하는 경우 pg_wal 디렉토리에 저장되는 과거 로그 파일 세그먼트의 최소 수를 지정한다. 
-    - wal_sender_timeout(integer)
-        - 지정된 시간 이상 작동되지 않은 복제 연결이 중단 된다. 
-    - wal_level(enum)
-        - WAL 파일에 기록되는 정보의 양을 결정한다. 기본값은 replica 로 WAL 아카이빙(archive mode) 및 streaming replication 을 위해서는 replica 이상을 사용해야 한다. 
-        - 9.6 이전 버전에서는 archive, hot_standby 두 값을 쓸 수 있었으며, 12버전에서는 이 설정값을 사용 시 모두 replica로 처리 된다. 
-- replicator 역할의 유저 생성 : CREATE USER replicator WITH REPLICATION ENCRYPTED PASSWORD 'secret';
+
+#### 3.1. postgreSQL 12 설정
+- postgresql 12 부터는 recovery.conf는 더이상 사용되지 않고, recovery.conf 파일이 존재하면 서버를 시작할 수 없다.
+- standby 서버에 설정하던 standby_mode 가 삭제 되었다. 
+
+#### 3.1.1 master 서버 설정 
+- master 서버의 설정은 크게 replication role 을 가진 유저를 생성하고, standby 서버가 master 서버에 접근하기 위한 보안 설정과 replication을 위한 설정 3가지로 나눌 수 있다.  
+- replicator 역할의 유저 생성(psql) 
+    ~~~ sql
+        CREATE USER replicator WITH REPLICATION ENCRYPTED PASSWORD 'secret';
+    ~~~
+    - user가 정상적으로 생성되었는지 확인(\du)
+    <img src="/static/img/postgresHighAvailability/user_list.png">
+    
 - pg.hba.conf 설정 
     - type / database / user / address / method(인증방식) 을 작성 후 저장후 postgresql 을 재시작한다.
     - address 는 slave 의 ip 를 작성하도록 한다.
     - docker 를 사용해서 테스트 할 경우 container 의 ip 를 작성하도록 한다.  
+    ~~~ bash
+        host    replication     replicator      172.17.0.3/32             md5
+    ~~~
+
+- postgresql.conf 설정
+    - wal_level(enum)
+        - WAL 파일에 기록되는 정보의 양을 결정한다. 기본값은 replica 로 WAL 아카이빙(archive mode) 및 streaming replication 을 위해서는 replica 이상을 사용해야 한다. 
+        - 9.6 이전 버전에서는 archive, hot_standby 두 값을 쓸 수 있었으며, 12버전에서는 이 설정값을 사용 시 모두 replica로 처리 된다. 
+    - max_wal_senders(integer)
+        - standby 서버 또는 streaming 기본 백업 클라이언트로부터의 최대 동시 연결수를 지정한다. (기본값 : 10)
+        - 이 값이 0일 경우는 replication 이 비활성화 된다. 
+    - wal_keep_segments(integer)
+        - standby 서버가 streaming replication을 위해 과거 로그 파일을 가져와야 하는 경우 pg_wal 디렉토리에 저장되는 과거 로그 파일 세그컨트의 최수 수를 지정하며, 각 세그먼트는 일반적으로 16MB 이다.
+        - wal segment 가 너무 빨리 갱신 되어 빠른 속도로 사라지게 되고, standby 서버에 기록되는 wal segment 가 master 서버의 wal 갱신 속도를 따라가지 못하면 replication이 중단 된다. 
+    - wal_sender_timeout(integer)
+        - 지정된 시간 이상 작동되지 않은 복제 연결이 중단 된다. 기본값은 60초이고, 0일 경우 비활성화 된다.
+    ~~~ bash
+        wal_level = replica
+        max_wal_senders = 10
+        wal_keep_segments = 32
+        wal_sender_timeout = 60s
+    ~~~
+      
+#### 3.1.2 Standby 서버 설정 
+
+- pg_basebackup 으로 master db 를 복사할때 옵션을 사용해서 자동으로 replication 설정을 할 수 있다.
+- -D : 복사할 data 경로를 지정한다.
+- -Xs : wal 파일을 stream 방식으로 쓴다. 
+- -P : 진행사항을 표시한다.
+- **-R : replication 을 위한 설정을 적용한다.**  
+
 ~~~ bash
-    host    replication     replicator      172.17.0.3/32             md5
+    pg_basebackup -h 172.17.0.2 -U replicator -p 5432 -D /pg_data -Xs -P -R
 ~~~
 
-#### 3.2. Standby 서버 설정 
-
-#### 3.3. 모니터링
-
-
-#### 3.4. 복제 슬롯
+#### 3.1.3. 모니터링
+ps -ef | grep wal
+pg_stat_replication
+pg_stat_wal_receiver 
 
 ### 4. 장애 처리 
 
@@ -125,10 +152,15 @@ changefreq : daily
 
 - docker container run --privileged -d -p 15432:5432 --name "master" gaia3d/mago3d-postgresql /sbin/init
 - docker container run --privileged -d -p 15433:5432 --name "slave" gaia3d/mago3d-postgresql /sbin/init
-- pg_basebackup -h 172.17.0.2 -U replicator -p 5432 -D /pg_data -Fp -Xs -P -R
+- pg_basebackup -h 172.17.0.3 -U replicator -p 5432 -D /pg_data  -Xs -P -R
 - psql -x -c "select * from pg_stat_replication"
 
+CREATE TABLE test (id serial, name character varying);
+INSERT INTO test (name) VALUES ('tester');
 
+- docker container run --privileged -d --name "master2" gaia3d/mago3d-postgresql:9.6 /sbin/init
+- docker container run --privileged -d --name "slave2" gaia3d/mago3d-postgresql:9.6 /sbin/init
+
+postgresql-9.6 에선 hot_standby가 기본으로 off라서 psql 사용 불가능하다.
 #### TODO 
 - master fail over 시 slave 를 master 로 승격 시키고 master 를 slave 로 설정하기 
-- master slave1 slave2 가 되는거 글로 설명하기
