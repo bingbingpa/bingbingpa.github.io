@@ -1,7 +1,7 @@
 ---
 layout : post
 title : postgreSQL High Availability, Load Balancing, and Replication
-date : 2020-01-01
+date : 2020-05-31
 excerpt : "postgreSQL 12 공식 문서 내용 정리                                    "
 tags: [postgres, replication, high Availability, Load Balancing]
 categories: [DataBase]
