@@ -30,9 +30,10 @@ changefreq : daily
     - 주로 DRBD(Distributed Replication Block Device) 라는 Linux 용 파일 시스템 복제 솔루션을 사용한다.
 
 - Write-Ahead Log Shipping
+    - WAL : 데이터 무결성을 보장하는 표준 방법이며, 데이터베이스의 변경 내용을 기록하는 파일이다. wal 파일은 pg_waldump 명령어로 읽을 수 있다. 
+    - <img src="/static/img/postgresHighAvailability/wla-file.png"> 
     - **WAL(트랜잭션 로그)를 스트리밍이나 파일 기반으로 전달해서 standby 서버를 동기화 한다.** 
     - **standby 서버를 hot standby server(읽기 전용 쿼리를 제공 하는 서버)로 만들어 추가적으로 활용 할 수 있다.**
-    - WAL 파일은 9.6 기준 pg_xlog 폴더에, 12기준 pg_wal 폴더에 저장된다. 
     - WAL file log shipping : WAL 파일 자체를 standby 서버로 전송한다.(file copy) 
         - master 서버에 지정된 WAL 파일의 크기를 다 채워야 standby 서버로 전송이 일어나기 때문에, 만약 WAL 파일을 다 채우지 못한 상태에서 master 서버에 장애가 발생하면 WAL 파일을 다 채우지 못해서 전달되지 못한 로그는 유실된다. 
     - streaming log shipping : WAL 파일 저장 여부와 관계 없이 로그 내용을 standby 서버로 직접 전달한다.
@@ -56,6 +57,7 @@ changefreq : daily
     - 대기 서버를 비동기식으로 (일괄 적으로) 업데이트 하므로 장애 조치 중에 데이터가 손실 될 수 있다.
     
 - Statement-Based Replication Middleware
+    - <img src="/static/img/postgresHighAvailability/pg-pool.png">
     - **미들웨어 프로그램이 모든 SQL 쿼리를 가로 채서 하나 또는 모든 서버로 보내며, 각 서버는 독립적으로 작동한다.**
     - 모든 서버가 변경 사항을 수신 할 수 있도록 읽기 / 쓰기 쿼리를 모든 서버로 보낸다. 
     - 읽기 전용 쿼리는 단 하나의 서버로 전송해서 서버간 부하를 줄일 수 있다.
@@ -86,28 +88,49 @@ changefreq : daily
 - PostgreSQL Streaming Replication 은 기본이 비동기 방식이다.
 - 동기식 복제 방식은 하나의 트랜잭션을 하나 이상의 standby 서버에 반영하고, 그 결과를 master 서버가 확인하는 방식이며, master, standby 서버 모두 트랜잭션이 트랜잭션 로그 파일에 기록 되었을 경우에만 정상처리 되었다고 판단한다.
 - 동기식 복제 방식은 자료의 안정성을 제공하지만, standby 서버의 작업 완료 응답을 확인하는 작업까지 포함하므로 그 만큼의 지연시간이 생길 수 밖에 없다. 
-- 기본적인 WAL 파일을 이용한 복제는 다음과 같은 방식으로 동작하며, 본 문서에서는 postgresql 9.6과 12에서 기본적인 streaming replication 을 설정하는 방법에 대해서만 다룬다.  
-<img src="/static/img/postgresHighAvailability/wal_log_shipping.png">
+- 기본적인 WAL 파일을 이용한 복제는 다음과 같은 방식으로 동작하며, 본 글에서는 기본적인 streaming replication 을 설정하는 방법에 대해서만 다룬다.  
+<img src="/static/img/postgresHighAvailability/wal-log-shipping.png">
 
-#### 3.1. postgreSQL 12 설정
-- postgresql 12 부터는 recovery.conf는 더이상 사용되지 않고, recovery.conf 파일이 존재하면 서버를 시작할 수 없다.
-- standby 서버에 설정하던 standby_mode 가 삭제 되었다. 
+#### 3.1. postgresql 9.6 / 12 차이점 비교 
+- <img src="/static/img/postgresHighAvailability/change-list.png"> 
 
-#### 3.1.1 master 서버 설정 
+#### 3.2. docker container 생성
+- 아래부터 진행되는 모든 과정은 docker container 환경에서 테스트를 진행한다. 테스트에 사용한 이미지는 centos8.1 이미지에 postgresql12.3 을 설치하여 테스트 하였다.
+- master container 생성
+~~~ bash
+    docker container run --privileged -d -p 25432:5432 --name "master" gaia3d/mago3d-postgresql /sbin/init
+~~~
+- slave container 생성 
+~~~ bash
+    docker container run --privileged -d -p 25433:5432 --name "slave" gaia3d/mago3d-postgresql /sbin/init
+~~~
+- container에 연결 하기
+~~~ bash
+    docker exec -it master bash
+~~~
+
+#### 3.3. master 서버 설정 
 - master 서버의 설정은 크게 replication role 을 가진 유저를 생성하고, standby 서버가 master 서버에 접근하기 위한 보안 설정과 replication을 위한 설정 3가지로 나눌 수 있다.  
-- replicator 역할의 유저 생성(psql) 
+- replicator 역할의 유저 생성
+    ~~~ bash
+        su postgres 
+        psql -U postgres
+    ~~~ 
     ~~~ sql
         CREATE USER replicator WITH REPLICATION ENCRYPTED PASSWORD 'secret';
     ~~~
     - user가 정상적으로 생성되었는지 확인(\du)
-    <img src="/static/img/postgresHighAvailability/user_list.png">
+    <img src="/static/img/postgresHighAvailability/user-list.png">
     
 - pg.hba.conf 설정 
     - type / database / user / address / method(인증방식) 을 작성 후 저장후 postgresql 을 재시작한다.
-    - address 는 slave 의 ip 를 작성하도록 한다.
+    - **address 는 standby 서버의 ip 를 작성하도록 한다.**
     - docker 를 사용해서 테스트 할 경우 container 의 ip 를 작성하도록 한다.  
     ~~~ bash
-        host    replication     replicator      172.17.0.3/32             md5
+        host    replication     replicator      standbyIP/32             md5
+    ~~~
+    ~~~ bash
+        systemctl restart postgresql-12
     ~~~
 
 - postgresql.conf 설정
@@ -116,7 +139,8 @@ changefreq : daily
         - 9.6 이전 버전에서는 archive, hot_standby 두 값을 쓸 수 있었으며, 12버전에서는 이 설정값을 사용 시 모두 replica로 처리 된다. 
     - max_wal_senders(integer)
         - standby 서버 또는 streaming 기본 백업 클라이언트로부터의 최대 동시 연결수를 지정한다. (기본값 : 10)
-        - 이 값이 0일 경우는 replication 이 비활성화 된다. 
+        - 이 값이 0일 경우는 replication 이 비활성화 된다.
+        - 일반적으로 standby 서버의 개수 +1 개로 설정한다.  
     - wal_keep_segments(integer)
         - standby 서버가 streaming replication을 위해 과거 로그 파일을 가져와야 하는 경우 pg_wal 디렉토리에 저장되는 과거 로그 파일 세그컨트의 최수 수를 지정하며, 각 세그먼트는 일반적으로 16MB 이다.
         - wal segment 가 너무 빨리 갱신 되어 빠른 속도로 사라지게 되고, standby 서버에 기록되는 wal segment 가 master 서버의 wal 갱신 속도를 따라가지 못하면 replication이 중단 된다. 
@@ -124,43 +148,96 @@ changefreq : daily
         - 지정된 시간 이상 작동되지 않은 복제 연결이 중단 된다. 기본값은 60초이고, 0일 경우 비활성화 된다.
     ~~~ bash
         wal_level = replica
-        max_wal_senders = 10
+        max_wal_senders = 2
         wal_keep_segments = 32
         wal_sender_timeout = 60s
     ~~~
+    - 설정 파일 저장후 pg 재시작 
+    ~~~
+        systemctl restart postgresql-12
+    ~~~
       
-#### 3.1.2 Standby 서버 설정 
-
-- pg_basebackup 으로 master db 를 복사할때 옵션을 사용해서 자동으로 replication 설정을 할 수 있다.
-- -D : 복사할 data 경로를 지정한다.
+#### 3.4 Standby 서버 설정 
+- pg_basebackup 으로 master db 를 복사할때 옵션을 사용해서 자동으로 replication 설정을 할 수 있다. **ip 는 master 의 ip를 써준다.**
+- -D : 복사할 data 경로를 지정한다. (postgresql data 파일 경로로 지정해야 한다.)
 - -Xs : wal 파일을 stream 방식으로 쓴다. 
 - -P : 진행사항을 표시한다.
 - **-R : replication 을 위한 설정을 적용한다.**  
-
 ~~~ bash
-    pg_basebackup -h 172.17.0.2 -U replicator -p 5432 -D /pg_data -Xs -P -R
+    pg_basebackup -h masterIP -U replicator -p 5432 -D /pg_data -Xs -P -R
 ~~~
+- root 계정으로 복사 했으므로 data 경로의 권한은 postgres로 변경해준다. 
+~~~ bash
+    chown -R postgres:postgres /pg_data
+~~~
+- standby 서버 실행 
+~~~ bash
+    systemctl start postgresql-12
+~~~
+- data 폴더에 standby.signal 파일이 있는지와 postgresql.auto.conf 파일에 master 의 정보가 정상적으로 작성되었는지 확인한다. 
+    - <img src="/static/img/postgresHighAvailability/standby-signal.png">
 
-#### 3.1.3. 모니터링
-ps -ef | grep wal
-pg_stat_replication
-pg_stat_wal_receiver 
+#### 3.5 테스트 
+- 테스트는 master 에 테이블을 하나 생성하고 insert 쿼리 후 standby 서버에 정상적으로 반영이 되는지 확인한다. 
+- master
+    ~~~ bash
+        su postgres
+        psql -U postgres
+    ~~~ 
+    ~~~ sql
+        CREATE TABLE test (id serial, name character varying);
+        INSERT INTO test (name) VALUES ('tester');
+    ~~~
+- standby 
+    - **postgres 9.6 의 경우는 postgresql.conf 파일의 hot_standby 기본 옵션이 'off' 로 되어 있어 psql 사용이 불가능하다. 해당 옵션을 on으로 변경후 pg를 재시작후 테스트를 하도록 한다.** 
+    ~~~ bash
+        su postgres
+        psql -U postgres
+    ~~~ 
+    ~~~ sql
+        SELECT * FROM test;
+    ~~~
+
+#### 3.6. 모니터링
+- master 에서는 walsender 가 standby 에서는 walreceiver 가 잘 실행되고 있는지 확인한다.
+~~~ bash
+    ps -ef | grep wal
+~~~ 
+- <img src="/static/img/postgresHighAvailability/wal-check.png">
+- master 에서는 pg_stat_replication 을 standby 에서는 pg_stat_wal_receiver view를 각각 psql로 조회해본다.
+- <img src="/static/img/postgresHighAvailability/pg-stat.png"> 
+- master 서버에서 select pg_current_wal_lsn(); 쿼리 결과의 값이 pg_stat_replication view 를 조회한 값중 sent_lsn 값과 차이가 많이 나면
+ master 서버가 부하가 많이 걸리거나 네트워크 상황이 좋지 않은 경우이고, standby 서버에서 select pg_last_wal_receive_lsn();
+ 쿼리 결과의 값이 sent_lsn 값과 차이가 많이 나면 standby 서버가 부하가 많이 걸리거나 네트워크 상황이 좋지 않은 경우이다.    
+    
 
 ### 4. 장애 처리 
+- streaming replication 은 수동으로 standby 서버를 master 서버로 승격시켜주고 연결된 application 의 db 접속 정보를 변경해 주어야 한다. 자동 장애 처리를 위해서는 pg-pool2 와 같은 미들웨어를 사용해야 한다. 
+- standby 서버 master 서버로 승격 
+    - **pg_ctl promote** 호출하거나 postgresql.conf 파일에 **promote_trigger_file** 파일을 작성하면 된다. 
+    ~~~ bash
+        su postgres
+        ./usr/pgsql-12/bin/pg_ctl promote -D /pg_data/
+    ~~~
+    - data 경로에 standby.siganl 파일이 사라졌는지 확인한다. 
+- 새로운 master 서버 pg_hba.conf 파일 수정
+    - 장애 서버에서 새로운 master 서버의 데이터를 복사하기 위해 장애 서버의 접근을 허용해준다. 
+    ~~~ bash
+        host    replication     replicator      장애서버IP/32             md5
+    ~~~
+    ~~~ bash
+        systemctl restart postgresql-12
+    ~~~
+    
+- 장애 서버 standby 서버로 변경 
+    - 기존 데이터 디렉토리를 백업하고 pg_basebackup 으로 새로운 master 서버의 DB를 복사한다. 
+    ~~~ bash
+        mv /pg_data /pg_backup
+        pg_basebackup -h 새로운masterIP -U replicator -p 5432 -D /pg_data  -Xs -P -R
+    ~~~
+    - postgresql 시작 
+    ~~~ bash
+        systemctl restart postgresql-12
+    ~~~
+3.5 테스트과정을 반복한다. 
 
-#### 커맨드 임시 기록 
-
-- docker container run --privileged -d -p 15432:5432 --name "master" gaia3d/mago3d-postgresql /sbin/init
-- docker container run --privileged -d -p 15433:5432 --name "slave" gaia3d/mago3d-postgresql /sbin/init
-- pg_basebackup -h 172.17.0.3 -U replicator -p 5432 -D /pg_data  -Xs -P -R
-- psql -x -c "select * from pg_stat_replication"
-
-CREATE TABLE test (id serial, name character varying);
-INSERT INTO test (name) VALUES ('tester');
-
-- docker container run --privileged -d --name "master2" gaia3d/mago3d-postgresql:9.6 /sbin/init
-- docker container run --privileged -d --name "slave2" gaia3d/mago3d-postgresql:9.6 /sbin/init
-
-postgresql-9.6 에선 hot_standby가 기본으로 off라서 psql 사용 불가능하다.
-#### TODO 
-- master fail over 시 slave 를 master 로 승격 시키고 master 를 slave 로 설정하기 
