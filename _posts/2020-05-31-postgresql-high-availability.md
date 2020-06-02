@@ -53,8 +53,9 @@ changefreq : daily
 - Trigger-Based Master-Standby Replication
     - 데이터 변경을 주 서버가 받아서 처리하고 비동기적으로 복제 서버에 보낸다.
     - 테이블 단위로 컨트롤 가능
-    - master 서버가 실행중인 동안 standby 서버는 hot standby 서버로 읽기 전용 조회에 응답 할 수 있고 여러 대의 standby 서버를 지한다.
+    - master 서버가 실행중인 동안 standby 서버는 hot standby 서버로 읽기 전용 조회에 응답 할 수 있고 여러 대의 standby 서버를 지원한다.
     - 대기 서버를 비동기식으로 (일괄 적으로) 업데이트 하므로 장애 조치 중에 데이터가 손실 될 수 있다.
+    - DDL replication 은 지원하지 않는다.
     
 - Statement-Based Replication Middleware
     - <img src="/static/img/postgresHighAvailability/pg-pool.png">
