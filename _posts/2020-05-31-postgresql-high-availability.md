@@ -75,7 +75,7 @@ changefreq : daily
     
 - Asynchronous Multimaster Replication
     - 비동기 멀티 마스터 복제는 시간차를 두고 서로 통신하게 된다. 
-    - 데이터가 충돌이 나면 사용자가 해결 할 수 있는 방법을 제공하거나, 충돌 해결 정책에 따라 자동으로 해결 할 수 있는 기능이 있어야한다.
+    - 데이터가 충돌이 나면 사용자가 해결 할 수 있는 방법을 제공하거나, 충돌 해결 정책에 따라 자동으로 해결 할 수 있는 기능이 있어야 한다.
     - Bucardo 라는 제품이 있다.
     
 - Synchronous Multimaster Replication
@@ -143,7 +143,7 @@ changefreq : daily
         - 이 값이 0일 경우는 replication 이 비활성화 된다.
         - 일반적으로 standby 서버의 개수 +1 개로 설정한다.  
     - wal_keep_segments(integer)
-        - standby 서버가 streaming replication을 위해 과거 로그 파일을 가져와야 하는 경우 pg_wal 디렉토리에 저장되는 과거 로그 파일 세그컨트의 최수 수를 지정하며, 각 세그먼트는 일반적으로 16MB 이다.
+        - standby 서버가 streaming replication을 위해 과거 로그 파일을 가져와야 하는 경우 pg_wal 디렉토리에 저장되는 과거 로그 파일 세그먼트의 최소 수를 지정하며, 각 세그먼트는 일반적으로 16MB 이다.
         - wal segment 가 너무 빨리 갱신 되어 빠른 속도로 사라지게 되고, standby 서버에 기록되는 wal segment 가 master 서버의 wal 갱신 속도를 따라가지 못하면 replication이 중단 된다. 
     - wal_sender_timeout(integer)
         - 지정된 시간 이상 작동되지 않은 복제 연결이 중단 된다. 기본값은 60초이고, 0일 경우 비활성화 된다.
