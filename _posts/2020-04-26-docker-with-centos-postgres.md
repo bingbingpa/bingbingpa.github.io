@@ -4,7 +4,7 @@ title : centos8 postgresql12&postgis 설치하기
 date : 2020-04-26
 excerpt : "docker 로 centos8 container 에 postgresql12&postgis 설치 하기"
 tags: [postgresql, centos]
-categories: [Database]
+categories: [DataBase]
 comments: true
 changefreq : daily
 ---
