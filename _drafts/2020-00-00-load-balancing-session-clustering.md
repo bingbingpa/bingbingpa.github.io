@@ -13,15 +13,21 @@ changefreq : daily
 - 모든 테스트는 docker 에서 진행 
 - centos : CentOS Linux release 8.1.1911(centos 버전 확인은 cat /etc/centos-release)
 - haproxy : 2.1.5
-- apache :
-- nginx : 
-- tomcat :
-- 
+- apache : 2.4
+- nginx : 1.18.0
+- tomcat : 9.0.35
 
-### 2. 리눅스 명령어 정리 
-
-### 3. vi 명령어 정리 
+### 2. Load Balancing 
 
 
+### 3. 리눅스 명령어 정리 
 
-### 3. 
+### 4. vi 명령어 정리 
+
+### 5. tomcat 설정
+
+### 6. apache 설치 및 설정
+
+### 7. haproxy 설정 
+
+### 8. nginx 설정 
