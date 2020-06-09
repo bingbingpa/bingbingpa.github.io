@@ -94,6 +94,13 @@ changefreq : daily
     export JAVA_HOME=/home/gaia3d/tools/jdk-11.0.2
     export JAVA_OPTS=-D-Xms4096m-Xmx4096m
 ~~~
+- tomcat cache 설정 
+~~~ bash
+    vi /home/gaia3d/tools/mago3d-tomcat/conf/context.xml
+~~~
+~~~ text
+    <Resources cachingAllowed="true" cacheMaxSize="100000"/>
+~~~
 
 #### 5.2.2. application 경로 설정 
 - server.xml 설정 : service 엘리먼트를 다음과 같이 수정한다. 
@@ -110,7 +117,7 @@ apllication 에서 로그 파일을 쓸 경우 webapp 밑에 있는 경우 충�
                    connectionTimeout="20000"
                    redirectPort="8446" />
     
-        <Connector port="8049" protocol="AJP/1.3" redirectPort="8446" />
+        <!--<Connector port="8049" protocol="AJP/1.3" redirectPort="8446" />-->
     
         <Engine name="Catalina" defaultHost="localhost">
     
@@ -137,7 +144,7 @@ apllication 에서 로그 파일을 쓸 경우 webapp 밑에 있는 경우 충�
                    connectionTimeout="20000"
                    redirectPort="8447" />
     
-        <Connector port="8059" protocol="AJP/1.3" redirectPort="8447" />
+        <!--<Connector port="8059" protocol="AJP/1.3" redirectPort="8447" />-->
     
         <Engine name="Catalina2" defaultHost="localhost">
     
@@ -198,7 +205,7 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
 ~~~
 <img src="/static/img/web-load-balancing/catalina.png">
 - logback 설정 확인 
-    - build 시 설정한 profile 대로 로그 파일이 파일로  생성 되도록 설정 되어 있는지 확인 한다. 
+    - build 시 설정한 profile 대로 로그 파일이 파일로 생성 되도록 설정 되어 있는지 확인 한다. 
     <img src="/static/img/web-load-balancing/logback.png">    
 
      
