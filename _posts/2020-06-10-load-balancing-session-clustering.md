@@ -20,7 +20,13 @@ changefreq : daily
 - application : mago3d-CMS([mago3d 브런치](https://github.com/Gaia3D/mago3d-CMS/tree/mago3d)) 
 
 ### 2. 네트워크 구성도
-- img
+<img src="/static/img/web-load-balancing/network.png">
+- 설정 순서 
+    - 사용자 설정
+    - tomcat 서비스 설정 
+    - session clustering
+    - apache 설치 및 mod_jk 컴파일 및 설정 
+    - haproxy  
 
 ### 3. container 설정 
 - 테스트에는 db, haproxy, apache-tomcat 2 개 총 4개의 컨테이너가 필요하고 apache-tomcat은 하나의 설정이 완료 된 후 이를 복사하여 사용한다.
@@ -280,7 +286,7 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
     </Cluster>
 ~~~
 
-- web.xml 설정 : **<distributable/>** 을 web.xml 에 추가한다. 톰캣이 아닌 어플리케이션의 web.xml 에 설정해야 한다. 별도의 web.xml 이 없다면 생성해서 저 내용을 추가해야지 정상동작한다. 
+- web.xml 설정 : **\<distributable/>** 을 web.xml 에 추가한다. 톰캣이 아닌 어플리케이션의 web.xml 에 설정해야 한다. 별도의 web.xml 이 없다면 생성해서 저 내용을 추가해야지 정상동작한다. 
 
 - 지금까지 설정한 컨테이너를 이미지로 만들어 동일한 컨테이너를 만든다. 
 ~~~ cmd
