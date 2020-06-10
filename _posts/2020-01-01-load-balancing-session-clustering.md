@@ -414,7 +414,8 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
 ~~~
 
 #### 7.8. tomcat ajp 포트 설정
-- session clustering 테스르를 위해 http port 로 실행한 톰캣의 port 를 ajp port 로 변경 해준다.(기존의 http port 를 주석하고 ajp port 를 주석해제 한다.)  
+- session clustering 테스르를 위해 http port 로 실행한 톰캣의 port 를 ajp port 로 변경 해준다.(기존의 http port 를 주석 하고 ajp port 를 주석 해제 한다.)
+- **tomcat 9.5 이상 버전을 사용할 경우  secretRequired 값을 설정 하지 않으면 톰캣이 시작되지 않는다.**
 ~~~ bash
     su gaia3d
     vi /home/gaia3d/tools/mago3d-tomcat/conf/server.xml
