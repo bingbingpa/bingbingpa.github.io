@@ -1,9 +1,9 @@
 ---
 layout : post
 title : Load Balancing, Session Clustering
-date : 2020-01-01
+date : 2020-06-10
 excerpt : "Centos8 에서 haproxy, apache/nginx, tomcat 으로 Load Balancing, Session Clustering 환경 구축하기"
-tags: [apache, tomcat, nginx, Load Balancing, Session Clustering]
+tags: [apache, tomcat, Load Balancing, Session Clustering]
 categories: [Server]
 comments: true
 changefreq : daily
@@ -15,7 +15,6 @@ changefreq : daily
 - haproxy : 2.1.5
 - apache : 2.4
 - tomcat-conectors(mod_jk) : 1.2.48
-- nginx : 1.18.0
 - tomcat : 9.0.35
 - db container : gaia3d/mago3d-postgresql(postgresql-12.3) docker image
 - application : mago3d-CMS([mago3d 브런치](https://github.com/Gaia3D/mago3d-CMS/tree/mago3d)) 
@@ -39,6 +38,7 @@ changefreq : daily
 ~~~
 
 #### 3.3. haproxy
+- 로드 밸런싱 테스트를 위한 haproxy container 
 ~~~  cmd
     cmd> docker container run --privileged --net mynetwork --ip 172.18.0.11  -d -p 80:80 -p 9090:9090 --name "haproxy" gaia3d/haproxy /sbin/init
 ~~~
@@ -415,7 +415,7 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
 
 #### 7.8. tomcat ajp 포트 설정
 - session clustering 테스르를 위해 http port 로 실행한 톰캣의 port 를 ajp port 로 변경 해준다.(기존의 http port 를 주석 하고 ajp port 를 주석 해제 한다.)
-- **tomcat 9.5 이상 버전을 사용할 경우  secretRequired 값을 설정 하지 않으면 톰캣이 시작되지 않는다.**
+- **tomcat 버전에 따라 secretRequired 값을 설정 하지 않으면 톰캣이 시작 되지 않을 수 있다.**
 ~~~ bash
     su gaia3d
     vi /home/gaia3d/tools/mago3d-tomcat/conf/server.xml
@@ -432,11 +432,62 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
 ~~~  
 - 생성한 container 에서 tomcat 의 jvmRoute 값을 각각 admin2, user2 로 변경한다. 
 
-#### 7.9. 테스트 
+#### 7.10. 테스트 
 - apache-tomcat1 의 port 로 사용자 또는 관리자 사이트에 접속해서 개발자 도구의 네트워크 탭에서 세션을 확인 한다. 
 - apache-tomcat1 container 를 stop 했을 때 기존의 세션값이 그대로 넘엉고 jvmroutid 가 변경 됐는지 확인 한다.  
 <img src="/static/img/web-load-balancing/ajp-port.png">
 
 ### 8. haproxy 설정 
+- haproxy container 연결 
+~~~ cmd
+    cmd> docker exec -it haproxy bash 
+~~~
 
-### 9. nginx 설정 
+- haproxy.cfg 파일에서 frontend, backend 부분 수정  
+~~~
+    vi /etc/haproxy/haproxy.cfg 
+~~~ 
+~~~ text
+    #---------------------------------------------------------------------
+    # main frontend which proxys to the backends
+    #---------------------------------------------------------------------
+    frontend mago3d-user-front
+        bind *:80
+        stats uri /haproxy?stats
+    
+        default_backend    mago3d-user
+    
+    #---------------------------------------------------------------------
+    # round robin balancing between the various backends
+    #---------------------------------------------------------------------
+    backend mago3d-user
+        balance     roundrobin
+        server  user-server-1-host   172.18.0.12:80  check fall 3 rise 2
+        server  user-server-2-host   172.18.0.13:80  check fall 3 rise 2
+    
+    
+    
+    #---------------------------------------------------------------------
+    # main frontend which proxys to the backends
+    #---------------------------------------------------------------------
+    frontend mago3d-admin-front
+        bind *:9090
+        stats uri /haproxy?stats
+    
+        default_backend    mago3d-admin
+    
+    #---------------------------------------------------------------------
+    # round robin balancing between the various backends
+    #---------------------------------------------------------------------
+    backend mago3d-admin
+        balance     roundrobin
+        server  admin-server-1-host   172.18.0.12:9090  check fall 3 rise 2
+        server  admin-server-2-host   172.18.0.13:9090  check fall 3 rise 2
+~~~
+
+- 파일 유효성 확인 후 재시작 
+~~~ bash
+    haproxy -f haproxy.cfg -c
+    systemctl restart haproxy
+~~~
+- haproxy container 의 바인딩 포트인 80 / 9090 으로 확인 한다. 
