@@ -14,6 +14,7 @@ changefreq : daily
 - centos : CentOS Linux release 8.1.1911(centos 버전 확인은 cat /etc/centos-release)
 - haproxy : 2.1.5
 - apache : 2.4
+- tomcat-conectors(mod_jk) : 1.2.48
 - nginx : 1.18.0
 - tomcat : 9.0.35
 - db container : gaia3d/mago3d-postgresql(postgresql-12.3) docker image
@@ -88,8 +89,7 @@ changefreq : daily
     mkdir ../tools && mv apache-tomcat-9.0.36 mago3d-tomcat && mv mago3d-tomcat ../tools && mv jdk-11.0.2 ../tools 
 ~~~
 
-#### 5.2. 환경설정
-#### 5.2.1. 자바 경로 및 메모리 설정
+#### 5.2. 자바 경로 및 메모리 설정
 - linux 의 경우에는 setenv.sh 파일을 만들어 작성하고, windows 의 경우에는 setenv.bat 파일을 만들어 작성한다. 
 - **windows 의 경우 서비스로 등록시 setenv.bat 파일을 읽지 않기 때문에 service.bat 에 설정하거나 환경 변수로 등록해야 한다.**    
 ~~~ bash
@@ -108,7 +108,7 @@ changefreq : daily
     <Resources cachingAllowed="true" cacheMaxSize="100000"/>
 ~~~
 
-#### 5.2.2. application 경로 설정 
+#### 5.3. application 경로 설정 
 - server.xml 설정 : service 엘리먼트를 다음과 같이 수정한다. 
 ~~~ bash
     vi /home/gaia3d/tools/mago3d-tomcat/conf/server.xml
@@ -123,7 +123,7 @@ apllication 에서 로그 파일을 쓸 경우 webapp 밑에 있는 경우 충�
                    connectionTimeout="20000"
                    redirectPort="8446" />
     
-        <!--<Connector port="8049" protocol="AJP/1.3" redirectPort="8446" />-->
+        <!--<Connector port="8049" protocol="AJP/1.3" redirectPort="8446" address="0.0.0.0" secretRequired="false"/>-->
     
         <Engine name="Catalina" defaultHost="localhost" jvmRoute="admin1">
     
@@ -150,7 +150,7 @@ apllication 에서 로그 파일을 쓸 경우 webapp 밑에 있는 경우 충�
                    connectionTimeout="20000"
                    redirectPort="8447" />
     
-        <!--<Connector port="8059" protocol="AJP/1.3" redirectPort="8447" />-->
+        <!--<Connector port="8059" protocol="AJP/1.3" redirectPort="8447" address="0.0.0.0" secretRequired="false"/>-->
     
         <Engine name="Catalina2" defaultHost="localhost" jvmRoute="user1">
     
@@ -172,7 +172,7 @@ apllication 에서 로그 파일을 쓸 경우 webapp 밑에 있는 경우 충�
       </Service>
 ~~~
 
-#### 5.2.3. application 배치
+#### 5.4. application 배치
 - **resources/develop/application.properties 수정**
     - mago3d-CMS jdbc url 은 localhost 로 되어 있으므로 생성한 container-db 의 ip로 변경해준다.
 - 프로젝트 빌드 
@@ -197,7 +197,7 @@ apllication 에서 로그 파일을 쓸 경우 webapp 밑에 있는 경우 충�
     unzip mago3d-user-0.0.1-SNAPSHOT.war -d ../tools/mago3d-tomcat/source/mago3d-user/
 ~~~
 
-#### 5.2.4. log 설정 
+#### 5.5. log 설정 
 - 톰캣에서 서비스되는 어플리케이션의 비즈니스 로그는 기본적으로 톰캣의 logs/catalina.out 파일에 기록되는데 로그 설정을 따로 하지 않으면 
 계속 이 파일에 로그가 기록되어 파일 사이즈가 계속 커지게 된다. 따라서 별도의 설정이 필요한데 /etc/rogrotate.conf 에 로그 설정을 하는 방법이 있고 
 logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프로젝트에 사용하고 있는 logback을 사용해서 로그 설정을 한다.
@@ -214,7 +214,7 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
     <img src="/static/img/web-load-balancing/logback.png">    
 
      
-#### 5.2.5. service 등록 
+#### 5.6. service 등록 
 ~~~ bash
     exit(root 계정으로 변경)
     vi /usr/lib/systemd/system/mago3d-tomcat.service
@@ -241,6 +241,55 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
 ~~~
 
 ### 6. session clustering 설정
+- session 에 담기는 모든 객체는 **java.io.Serializable** 을 상속 해야 한다. [참고](https://woowabros.github.io/experience/2017/10/17/java-serialize.html) 
+- tomcat 에서 제공하는 session clustering 은 node 가 4대 이상일 경우 속도가 매우 떨어지므로 4대 이상의 노드를 연결할 경우에는 redis 와 같은 별도의 세션 관리 방법이 필요하다. 
+- Manager : 세션을 어떻게 복제할지를 책임지는 객체
+    - DeltaManager : 모든 노드에 동일한 세션을 복제한다. 정보가 변경될 때 마다 복제하기 때문에 노드 개수가 많을 수록 네트워크 트래픽이 높아지고 메모리 소모가 심해진다.
+    - BackupManager : Primary Node 와 Backup Node 로 분리 되어 모든 노드에 복제하지 않고 Backup Node 에만 복제한다.
+    - PersistentManager : DB 나 파일 시스템을 이용하여 세션을 저장하는데, IO 문제가 생기기 때문에 실시간성이 떨어진다. 
+- Channel
+    - Membership : Cluster 안의 노드들을 동적으로 분별하는데 Multicast IP/PORT 를 통해 frequency 에 설정된 간격으로 각 노드들이 UDP packet 을 날려 상태를 확인한다.
+    - Receiver : Cluster 로부터 메시지를 수신하는 역활을 하며 blocking 방식 **org.apache.catalina.tribes.transport.bio.BioReceiver**와 non-blocking방식인
+     **org.apache.catalina.tribes.transport.nio.NioReceiver**을 지원합니다.
+- channelSendOptions : 기본값은 8 이며, 8은 비동기 6은 동기 방식이다.
+- 앞서 설정한 server.xml 에 각 서비스별로 다음의 내용을 추가한다. 각 서비스별로 Membership 의 address 와 Receiver 의 port는 달라야 한다. 
+~~~ text
+    <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster" channelSendOptions="8">
+    
+        <Manager className="org.apache.catalina.ha.session.DeltaManager" expireSessionsOnShutdown="false" notifyListenersOnReplication="true" />
+    
+        <Channel className="org.apache.catalina.tribes.group.GroupChannel">
+            <Membership className="org.apache.catalina.tribes.membership.McastService" address="228.0.0.4" port="45564" frequency="500" dropTime="3000" />
+    
+            <Receiver className="org.apache.catalina.tribes.transport.nio.NioReceiver" address="auto" port="4000" autoBind="100" selectorTimeout="5000" maxThreads="6" />
+    
+            <Sender className="org.apache.catalina.tribes.transport.ReplicationTransmitter">
+                <Transport className="org.apache.catalina.tribes.transport.nio.PooledParallelSender" />
+            </Sender>
+    
+            <Interceptor className="org.apache.catalina.tribes.group.interceptors.TcpFailureDetector" />
+            <Interceptor className="org.apache.catalina.tribes.group.interceptors.MessageDispatchInterceptor" />
+        </Channel>
+    
+        <Valve className="org.apache.catalina.ha.tcp.ReplicationValve" filter="" />
+        <Valve className="org.apache.catalina.ha.session.JvmRouteBinderValve" />
+    
+        <Deployer className="org.apache.catalina.ha.deploy.FarmWarDeployer" tempDir="/tmp/war-temp/" deployDir="/tmp/war-deploy/" watchDir="/tmp/war-listen/" watchEnabled="false" />
+    
+        <ClusterListener className="org.apache.catalina.ha.session.ClusterSessionListener" />
+    </Cluster>
+~~~
+
+- web.xml 설정 : **<distributable/>** 을 web.xml 에 추가한다. 톰캣이 아닌 어플리케이션의 web.xml 에 설정해야 한다. 별도의 web.xml 이 없다면 생성해서 저 내용을 추가해야지 정상동작한다. 
+
+- 지금까지 설정한 컨테이너를 이미지로 만들어 동일한 컨테이너를 만든다. 
+~~~ cmd
+    cmd> docker container commit apache-tomcat1 temp-image
+    cmd> docker container run --privileged --net mynetwork --ip 172.18.0.13  -d -p 20080:80 -p 28081:8081 -p 29090:9090 --name "temp" temp /sbin/init
+~~~
+- apache-tomcat1 에서 mago3d-CMS 시스템에 로그인 하고 apache-tomcat2 의 index 페이지에 접근하여 세션이 공유 되어 로그인이 된 상태인지 확인한다.
+- admin 사이트에서 로그인 한 세션이 user 사이트로 로그인 되지 않는지 확인한다. admin / user 는 각기 다른 세션을 사용해야 한다.
+    - admin / user 서비스가 같은 클러스터 채널을 사용한다면 Serializable 에러가 발생한다.   
 
 ### 7. apache 설정
 - apache 설정과 관련된 부분은 root 계정으로 진행한다.
@@ -288,6 +337,7 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
 #### 7.5. workers.properties 파일 생성 
 - apache 에서 로드 밸런싱 해줄 톰캣에 대한 설정 정보 파일이다. **port는 http port 가 아닌 ajp port 를 사용한다.**
 - lbfactor 가중치에 따라 로드 밸런싱 된다.
+- sticky_session : 기존의 세션 아이디 뒤에 jvmroutid 를 붙여 어느 서버로 갈지 결정 한다.
 ~~~ bash
     vi /etc/httpd/conf/workers.properties
 ~~~
@@ -296,28 +346,30 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
     
     worker.admin.type=lb
     worker.admin.balance_workers=admin1,admin2
+    worker.admin.sticky_session=true
     
     worker.admin1.type=ajp13
-    worker.admin1.host=172.17.0.4
-    worker.admin1.port=8049
+    worker.admin1.host=172.18.0.12
+    worker.admin1.port=8019
     worker.admin1.lbfactor=1
     
     worker.admin2.type=ajp13
-    worker.admin2.host=172.17.0.5
-    worker.admin2.port=8049
+    worker.admin2.host=172.18.0.13
+    worker.admin2.port=8019
     worker.admin2.lbfactor=1
     
     worker.user.type=lb
     worker.user.balance_workers=user1,user2
+    worker.user.sticky_session=true
     
     worker.user1.type=ajp13
-    worker.user1.host=172.17.0.4
-    worker.user1.port=8059
+    worker.user1.host=172.18.0.12
+    worker.user1.port=8029
     worker.user1.lbfactor=1
     
     worker.user2.type=ajp13
-    worker.user2.host=172.17.0.5
-    worker.user2.port=8059
+    worker.user2.host=172.18.0.13
+    worker.user2.port=8029
     worker.user2.lbfactor=1
 ~~~
 
@@ -325,12 +377,10 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
 ~~~ bash
     vi /etc/httpd/conf/httpd.conf
 ~~~
-~~~ bash
+~~~ text
     Listen 9090
+    
     LoadModule jk_module modules/mod_jk.so
-~~~
-<img src="/static/img/web-load-balancing/visudo.png">
-~~~ bash
     <VirtualHost *:80>
     ServerName mago3d-user
     JkMount /* user
@@ -338,8 +388,10 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
     JkUnMount  /js/* user
     JkUnMount  /css/* user
     jkUnMount  /externlib/* user
+    jkUnMount  /sample/* user
     DocumentRoot "/var/www/mago3d-user"
     </VirtualHost>
+
     <VirtualHost *:9090>
     ServerName mago3d-admin
     JkMount /* admin
@@ -347,16 +399,42 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
     JkUnMount  /js/* admin
     JkUnMount  /css/* admin
     jkUnMount  /externlib/* admin
+    jkUnMount  /sample/* admin
     DocumentRoot "/var/www/mago3d-admin"
     </VirtualHost>
 ~~~
+<img src="/static/img/web-load-balancing/httpd-conf.png">
 
 #### 7.7. static resource 복사 
 - static 파일들을 apache 에서 처리하도록 httpd.conf 파일에 설정한 폴더를 생성하고 파일들을 복사해준다. 
 ~~~ bash
     mkdir /var/www/mago3d-user && mkdir /var/www/mago3d-admin
+    cp -R /home/gaia3d/tools/mago3d-tomcat/source/mago3d-admin/WEB-INF/classes/static/* /var/www/mago3d-admin/
+    cp -R /home/gaia3d/tools/mago3d-tomcat/source/mago3d-user/WEB-INF/classes/static/* /var/www/mago3d-user/
 ~~~
 
+#### 7.8. tomcat ajp 포트 설정
+- session clustering 테스르를 위해 http port 로 실행한 톰캣의 port 를 ajp port 로 변경 해준다.(기존의 http port 를 주석하고 ajp port 를 주석해제 한다.)  
+~~~ bash
+    su gaia3d
+    vi /home/gaia3d/tools/mago3d-tomcat/conf/server.xml
+~~~
+<img src="/static/img/web-load-balancing/ajp-port.png">
+
+#### 7.9. container 생성
+- 테스트를 위해 생성한 temp container 를 삭제하고 지금까지 설정한 내용을 기반으로 container 를 생성한다.
+~~~ cmd
+    cmd> docker container stop temp
+    cmd> docker container rm temp
+    cmd> docker container commit apache-tomcat1 apache-tomcat2
+    cmd> docker container run --privileged --net mynetwork --ip 172.18.0.13  -d -p 20080:80 -p 28081:8081 -p 29090:9090 --name "apache-tomcat2" apache-tomcat2 /sbin/init
+~~~  
+- 생성한 container 에서 tomcat 의 jvmRoute 값을 각각 admin2, user2 로 변경한다. 
+
+#### 7.9. 테스트 
+- apache-tomcat1 의 port 로 사용자 또는 관리자 사이트에 접속해서 개발자 도구의 네트워크 탭에서 세션을 확인 한다. 
+- apache-tomcat1 container 를 stop 했을 때 기존의 세션값이 그대로 넘엉고 jvmroutid 가 변경 됐는지 확인 한다.  
+<img src="/static/img/web-load-balancing/ajp-port.png">
 
 ### 8. haproxy 설정 
 
