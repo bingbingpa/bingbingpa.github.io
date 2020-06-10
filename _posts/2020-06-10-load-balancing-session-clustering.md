@@ -2,7 +2,7 @@
 layout : post
 title : Load Balancing, Session Clustering
 date : 2020-06-10
-excerpt : "Centos8 에서 haproxy, apache/nginx, tomcat 으로 Load Balancing, Session Clustering 환경 구축하기"
+excerpt : "Centos8 에서 haproxy, apache, tomcat 으로 Load Balancing, Session Clustering 환경 구축 하기"
 tags: [apache, tomcat, Load Balancing, Session Clustering]
 categories: [Server]
 comments: true
@@ -38,7 +38,7 @@ changefreq : daily
 ~~~
 
 #### 3.3. haproxy
-- 로드 밸런싱 테스트를 위한 haproxy container 
+- 로드 밸런스 테스트를 위한 haproxy container 
 ~~~  cmd
     cmd> docker container run --privileged --net mynetwork --ip 172.18.0.11  -d -p 80:80 -p 9090:9090 --name "haproxy" gaia3d/haproxy /sbin/init
 ~~~
@@ -51,7 +51,7 @@ changefreq : daily
 ~~~
 
 ### 4. 유저 생성 및 sudo 권한 설정
-- tomcat 과 관련된 다음의 모든 과정은 생성한 apache-tomcat1 컨테이너에 접근하여 수행한다. 
+- tomcat 과 관련된 다음의 모든 과정은 생성한 apache-tomcat1 컨테이너에 연결해서 수행한다. 
 ~~~ cmd
     cmd> docker exec -it apache-tomcat1 bash
 ~~~
@@ -292,8 +292,8 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
     - admin / user 서비스가 같은 클러스터 채널을 사용한다면 Serializable 에러가 발생한다.   
 
 ### 7. apache 설정
-- apache 설정과 관련된 부분은 root 계정으로 진행한다.
 #### 7.1. complie 관련 패키지 설치
+- apache 설정과 관련된 부분은 root 계정으로 진행한다.
 ~~~ bash
     dnf install -y gcc gcc-c++ httpd-devel redhat-rpm-config
 ~~~ 
@@ -336,7 +336,7 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
 
 #### 7.5. workers.properties 파일 생성 
 - apache 에서 로드 밸런싱 해줄 톰캣에 대한 설정 정보 파일이다. **port는 http port 가 아닌 ajp port 를 사용한다.**
-- lbfactor 가중치에 따라 로드 밸런싱 된다.
+- lbfactor : 가중치에 따라 로드 밸런싱 된다.
 - sticky_session : 기존의 세션 아이디 뒤에 jvmroutid 를 붙여 어느 서버로 갈지 결정 한다.
 ~~~ bash
     vi /etc/httpd/conf/workers.properties
