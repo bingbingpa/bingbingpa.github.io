@@ -92,7 +92,8 @@ changefreq : daily
     cd /home/gaia3d/setup
     tar -xvzf jdk-11.tgz
     tar -xvzf tomcat.tgz
-    mkdir ../tools && mv apache-tomcat-9.0.36 mago3d-tomcat && mv mago3d-tomcat ../tools && mv jdk-11.0.2 ../tools 
+    mkdir ../tools && mv apache-tomcat-9.0.36 mago3d-tomcat && mv mago3d-tomcat ../tools && mv jdk-11.0.2 ../tools
+    rm -rf /home/gaia3d/tools/mago3d-tomcat/webapps/* 
 ~~~
 
 #### 5.2. 자바 경로 및 메모리 설정
@@ -129,7 +130,7 @@ apllication 에서 로그 파일을 쓸 경우 webapp 밑에 있는 경우 충�
                    connectionTimeout="20000"
                    redirectPort="8446" />
     
-        <!--<Connector port="8049" protocol="AJP/1.3" redirectPort="8446" address="0.0.0.0" secretRequired="false"/>-->
+        <!--<Connector port="8019" protocol="AJP/1.3" redirectPort="8446" address="0.0.0.0" secretRequired="false"/>-->
     
         <Engine name="Catalina" defaultHost="localhost" jvmRoute="admin1">
     
@@ -156,7 +157,7 @@ apllication 에서 로그 파일을 쓸 경우 webapp 밑에 있는 경우 충�
                    connectionTimeout="20000"
                    redirectPort="8447" />
     
-        <!--<Connector port="8059" protocol="AJP/1.3" redirectPort="8447" address="0.0.0.0" secretRequired="false"/>-->
+        <!--<Connector port="8029" protocol="AJP/1.3" redirectPort="8447" address="0.0.0.0" secretRequired="false"/>-->
     
         <Engine name="Catalina2" defaultHost="localhost" jvmRoute="user1">
     
@@ -290,26 +291,27 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
 
 - 지금까지 설정한 컨테이너를 이미지로 만들어 동일한 컨테이너를 만든다. 
 ~~~ cmd
-    cmd> docker container commit apache-tomcat1 temp-image
+    cmd> docker container commit apache-tomcat1 temp
     cmd> docker container run --privileged --net mynetwork --ip 172.18.0.13  -d -p 20080:80 -p 28081:8081 -p 29090:9090 --name "temp" temp /sbin/init
 ~~~
-- apache-tomcat1 에서 mago3d-CMS 시스템에 로그인 하고 apache-tomcat2 의 index 페이지에 접근하여 세션이 공유 되어 로그인이 된 상태인지 확인한다.
+- apache-tomcat1, temp container 의 톰캣을 재시작 한다. 
+<img src="/static/img/web-load-balancing/socke-bind.png">
+- apache-tomcat1 에서 mago3d-CMS 시스템에 로그인 하고 temp 의 index 페이지에 접근하여 세션이 공유 되어 로그인이 된 상태인지 확인한다.
 - admin 사이트에서 로그인 한 세션이 user 사이트로 로그인 되지 않는지 확인한다. admin / user 는 각기 다른 세션을 사용해야 한다.
     - admin / user 서비스가 같은 클러스터 채널을 사용한다면 Serializable 에러가 발생한다.   
 
 ### 7. apache 설정
-#### 7.1. complie 관련 패키지 설치
+#### 7.1. apache 및 compile 관련 패키지 설치
 - apache 설정과 관련된 부분은 root 계정으로 진행한다.
 ~~~ bash
     dnf install -y gcc gcc-c++ httpd-devel redhat-rpm-config
 ~~~ 
-
-#### 7.2. apache 설치 
+- httpd 자동 재시작 설정
 ~~~ bash
-    dnf install -y httpd
+    systemctl enable httpd && systemctl daemon-reload
 ~~~
 
-#### 7.3. 압축해제 및 컴파일
+#### 7.2. 압축해제 및 컴파일
 - apache 와 was 를 연결하는 방법에는 mod_jk, mod_proxy, mod_proxy_ajp 이렇게 3가지가 있지만 여기에서는 mod_jk를 사용하도록 한다.
 - 컴파일이 정상적으로 되면 /etc/httpd/modules 경로에 mod_jk.so 파일이 생성된다. 
 ~~~ bash
@@ -320,7 +322,7 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
     make && make install
 ~~~
 
-#### 7.4. mod_jk.conf 파일 생성 
+#### 7.3. mod_jk.conf 파일 생성 
 - mod_jk 의 로그 및 worker 파일 위치 및 기타 설정들을 설정한다.
 ~~~ bash
     vi /etc/httpd/conf.modules.d/mod_jk.conf 
@@ -340,7 +342,7 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
     </IfModule>
 ~~~
 
-#### 7.5. workers.properties 파일 생성 
+#### 7.4. workers.properties 파일 생성 
 - apache 에서 로드 밸런싱 해줄 톰캣에 대한 설정 정보 파일이다. **port는 http port 가 아닌 ajp port 를 사용한다.**
 - lbfactor : 가중치에 따라 로드 밸런싱 된다.
 - sticky_session : 기존의 세션 아이디 뒤에 jvmroutid 를 붙여 어느 서버로 갈지 결정 한다.
@@ -379,7 +381,7 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
     worker.user2.lbfactor=1
 ~~~
 
-#### 7.6. httpd.conf 설정
+#### 7.5. httpd.conf 설정
 ~~~ bash
     vi /etc/httpd/conf/httpd.conf
 ~~~
@@ -411,7 +413,7 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
 ~~~
 <img src="/static/img/web-load-balancing/httpd-conf.png">
 
-#### 7.7. static resource 복사 
+#### 7.6. static resource 복사 
 - static 파일들을 apache 에서 처리하도록 httpd.conf 파일에 설정한 폴더를 생성하고 파일들을 복사해준다. 
 ~~~ bash
     mkdir /var/www/mago3d-user && mkdir /var/www/mago3d-admin
@@ -419,16 +421,21 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
     cp -R /home/gaia3d/tools/mago3d-tomcat/source/mago3d-user/WEB-INF/classes/static/* /var/www/mago3d-user/
 ~~~
 
-#### 7.8. tomcat ajp 포트 설정
-- session clustering 테스르를 위해 http port 로 실행한 톰캣의 port 를 ajp port 로 변경 해준다.(기존의 http port 를 주석 하고 ajp port 를 주석 해제 한다.)
+#### 7.7. tomcat ajp 포트 설정
+- session clustering 테스르를 위해 http port 로 실행한 톰캣의 port 를 ajp port 로 변경 한다.(기존의 http port 를 주석 하고 ajp port 를 주석 해제 한다.)
 - **tomcat 버전에 따라 secretRequired 값을 설정 하지 않으면 톰캣이 시작 되지 않을 수 있다.**
 ~~~ bash
     su gaia3d
     vi /home/gaia3d/tools/mago3d-tomcat/conf/server.xml
 ~~~
 <img src="/static/img/web-load-balancing/ajp-port.png">
+- 설정 변경 후 톰캣 - apache 순으로 재시작한다.  
+~~~ bash
+    sudo systemctl restart mago3d-tomcat
+    sudo systemctl restart httpd
+~~~
 
-#### 7.9. container 생성
+#### 7.8. container 생성
 - 테스트를 위해 생성한 temp container 를 삭제하고 지금까지 설정한 내용을 기반으로 container 를 생성한다.
 ~~~ cmd
     cmd> docker container stop temp
@@ -438,7 +445,7 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
 ~~~  
 - 생성한 container 에서 tomcat 의 jvmRoute 값을 각각 admin2, user2 로 변경한다. 
 
-#### 7.10. 테스트 
+#### 7.9. 테스트 
 - apache-tomcat1 의 port 로 사용자 또는 관리자 사이트에 접속해서 개발자 도구의 네트워크 탭에서 세션을 확인 한다. 
 - apache-tomcat1 container 를 stop 했을 때 기존의 세션값이 그대로 넘엉고 jvmroutid 가 변경 됐는지 확인 한다.  
 <img src="/static/img/web-load-balancing/ajp-port.png">
