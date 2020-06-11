@@ -447,8 +447,8 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
 
 #### 7.9. 테스트 
 - apache-tomcat1 의 port 로 사용자 또는 관리자 사이트에 접속해서 개발자 도구의 네트워크 탭에서 세션을 확인 한다. 
-- apache-tomcat1 container 를 stop 했을 때 기존의 세션값이 그대로 넘엉고 jvmroutid 가 변경 됐는지 확인 한다.  
-<img src="/static/img/web-load-balancing/ajp-port.png">
+- apache-tomcat1 container 를 stop 했을 때 기존의 세션값이 그대로 넘어 가고 jvmroutid 가 변경 됐는지 확인 한다.  
+<img src="/static/img/web-load-balancing/session-test.png">
 
 ### 8. haproxy 설정 
 - haproxy container 연결 
