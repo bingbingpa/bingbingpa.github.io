@@ -295,7 +295,7 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
     cmd> docker container run --privileged --net mynetwork --ip 172.18.0.13  -d -p 20080:80 -p 28081:8081 -p 29090:9090 --name "temp" temp /sbin/init
 ~~~
 - apache-tomcat1, temp container 의 톰캣을 재시작 한다. 
-<img src="/static/img/web-load-balancing/socke-bind.png">
+<img src="/static/img/web-load-balancing/socket-bind.png">
 - apache-tomcat1 에서 mago3d-CMS 시스템에 로그인 하고 temp 의 index 페이지에 접근하여 세션이 공유 되어 로그인이 된 상태인지 확인한다.
 - admin 사이트에서 로그인 한 세션이 user 사이트로 로그인 되지 않는지 확인한다. admin / user 는 각기 다른 세션을 사용해야 한다.
     - admin / user 서비스가 같은 클러스터 채널을 사용한다면 Serializable 에러가 발생한다.   
