@@ -257,7 +257,7 @@ logback이나 log4j를 사용하는 방법이 있는데 여기서는 현재 프�
 - Channel
     - Membership : Cluster 안의 노드들을 동적으로 분별하는데 Multicast IP/PORT 를 통해 frequency 에 설정된 간격으로 각 노드들이 UDP packet 을 날려 상태를 확인한다.
     - Receiver : Cluster 로부터 메시지를 수신하는 역활을 하며 blocking 방식 **org.apache.catalina.tribes.transport.bio.BioReceiver**와 non-blocking방식인
-     **org.apache.catalina.tribes.transport.nio.NioReceiver**을 지원합니다.
+     **org.apache.catalina.tribes.transport.nio.NioReceiver**을 지원한다.
 - channelSendOptions : 기본값은 8 이며, 8은 비동기 6은 동기 방식이다.
 - 앞서 설정한 server.xml 에 각 서비스별로 다음의 내용을 추가한다. 각 서비스별로 Membership 의 address 와 Receiver 의 port는 달라야 한다. 
 ~~~ text
