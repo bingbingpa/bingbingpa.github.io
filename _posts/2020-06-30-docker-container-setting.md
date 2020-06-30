@@ -32,7 +32,10 @@ changefreq : daily
 ~~~
 
 ### 4. vim 설정
-
+- 홈디렉토리의 최상위에 다음 내용의 파일을 만든다
+~~~ bash
+    vi ~/.vimrc   
+~~~ 
 ~~~ text
     set hlsearch " 검색어 하이라이팅
     set nu " 줄번호
