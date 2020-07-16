@@ -33,6 +33,7 @@ changefreq : daily
 <img src="/static/img/geoserver-clustering/gridset.png">
 - geoserver2 설정 reload
 - 타일 캐시 - 캐시 기본 설정 - 기본 그리드셋 추가(geoserver1, geoserver2 동일하게 설정)
+<img src="/static/img/geoserver-clustering/gridset-add.png">
 
 ### 3. cluster 설정 
 - jms cluster plugin 이 설치 되면 기본적으로 embeddedBroker 가 활성화 된다. 여기서는 master 의 broker 만 활성화 하고 slave 는 master 의 변경사항만 전달 받도록 설정한다.
