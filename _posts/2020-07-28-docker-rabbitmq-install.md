@@ -145,6 +145,10 @@ changefreq : daily
     print(pass_hash)
 ~~~ 
 
+- 참고
+    - 로그 파일 위치 : /var/log/rabbitmq 
+    - 설정 파일 위치 : /etc/rabbitmq
+    - 실행 파일 위치 : /usr/sbin/rabbitmq-server
  
 
 
