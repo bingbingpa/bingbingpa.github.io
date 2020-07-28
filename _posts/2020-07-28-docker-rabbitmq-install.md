@@ -53,7 +53,7 @@ changefreq : daily
 ~~~ bash
     vim /etc/rabbitmq/definitions.json
 ~~~
-~~~ text
+~~~ json
     {
     	 "rabbit_version": "3.8.5",
     		  "users": [
@@ -102,7 +102,6 @@ changefreq : daily
     			],
     			 "bindings": []
     }
-
 ~~~
 
 - 패스워드 암호화에는 다음의 파이썬 스크립트를 사용
