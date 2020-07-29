@@ -29,6 +29,7 @@ changefreq : daily
 - **settings dialog 열기 : Ctrl + Alt + S** 
 - project dialog 열기 : Ctrl + Alt + Shift + S 
 - **Action 찾기 팝업 : Ctrl + Shift + A** 
+- 태스크 팝업 : Alt + Shift + N
 
 ### Debugging
 
