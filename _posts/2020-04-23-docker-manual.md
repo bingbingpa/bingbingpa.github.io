@@ -57,6 +57,10 @@ changefreq : daily
 ~~~ css
     docker image inspect <이미지명>
 ~~~
+- 이미지 commit 히스토리 보기 
+~~~ css
+    docker image history <이미지명>
+~~~
 - 이미지 태그 설정 : **docker hub 에 등록하기 위해서는 [사용자명/repository명:태그명] 과 같은 명명 규칙을 사용해야 한다.**
 ~~~ css
     docker image tag [원본이미지명] [변경할이미지명:태그명]
@@ -64,10 +68,6 @@ changefreq : daily
 - 이미지 검색 : docker hub 에 공개되어 있는 이미지를 검색한다. 
 ~~~ css
     docker search [옵션] <검색 키워드>
-~~~
-- 이미지 commit 히스토리 보기 
-~~~ css
-    docker image history <이미지명>
 ~~~
 
     - 지정할 수 있는 주요 옵션 
