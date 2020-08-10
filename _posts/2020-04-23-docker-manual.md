@@ -65,6 +65,10 @@ changefreq : daily
 ~~~ css
     docker search [옵션] <검색 키워드>
 ~~~
+- 이미지 commit 히스토리 보기 
+~~~ css
+    docker image history <이미지명>
+~~~
 
     - 지정할 수 있는 주요 옵션 
     
