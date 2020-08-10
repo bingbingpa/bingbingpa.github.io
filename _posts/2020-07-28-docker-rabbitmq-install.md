@@ -37,8 +37,7 @@ changefreq : daily
 ~~~ bash
     vim /etc/rabbitmq/advanced.config 
 ~~~
-
-~~~ text
+~~~ json
     [
        {rabbit, [
     				{loopback_users, []}
