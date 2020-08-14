@@ -279,7 +279,10 @@ changefreq : daily
 ~~~ css
     docker container top [컨테이너 식별자]
 ~~~ 
-
+- 실행중인 컨테이너 size 확인 
+~~~ css
+    docker ps --size
+~~~
 - 정지하고 있는 컨테이너 시작 
 ~~~ css
     docker container start [옵션] <컨테이너 식별자> [컨테이너 식별자]
