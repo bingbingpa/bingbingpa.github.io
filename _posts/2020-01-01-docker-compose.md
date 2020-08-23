@@ -21,3 +21,15 @@ changefreq : daily
 
 ### 이미지 빌드(build)
 - 이미지의 작성을 Dockerfile 에 기술 하고 그것을 자동으로 빌드하여 베이스 이미지로 지정할 때는 build 를 지정한다. build 에는 Dockerfile 의 파일 경로를 지정 한다. 
+- Docker 이미지를 빌드할 때에 인수를 args 로 지정할 수 있다. bool 연산자를 사용하는 경우는 따옴표로 둘러싸야 한다. 
+- 예시)
+~~~ dockerfile
+    services:
+        webserver:
+            build:
+                args:
+                    projectno: 1
+                    user: asa 
+~~~
+
+### 컨테이너 안에서 작동하는 명령 지정(command/entrypoint)
