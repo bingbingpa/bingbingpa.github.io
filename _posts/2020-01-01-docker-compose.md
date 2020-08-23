@@ -33,3 +33,15 @@ changefreq : daily
 ~~~
 
 ### 컨테이너 안에서 작동하는 명령 지정(command/entrypoint)
+- 베이스 이미지에 지정되어 있을 때는 그 명령을 덮어쓴다. 
+
+### 컨테이너 간 연결(links)
+- 예시)
+~~~ dockerfile
+    links:
+        - logserver
+        - logserver:1og01
+~~~
+
+### 컨테이너 간 통신(ports/expose)
+- 컨테이너가 공개하는 포트는 ports 로 지정한다. 
