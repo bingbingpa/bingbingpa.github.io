@@ -40,31 +40,3 @@ changefreq : daily
 
 
 
-version: '3'
-volumes:
-  mago3d-postgres-data:
-  mago3d-geoserver-data:
-
-services:
-  db:
-    image: postgis/postgis:12-master
-    user: postgres:postgres
-    container_name: mago3d-db
-    volumes:
-#      - mago3d-postgres-data:/var/lib/postgresql/data
-      - ./doc/database:/database
-    ports:
-      - 15433:5432
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_INITDB_ARGS=--encoding=UTF-8
-#    command:
-#      - chown postgres:postgres /var/lib/postgresql/data
-#      - psql -U postgres -a -f /database/database.sql
-#      - psql -U postgres -a -f /var/lib/postgresql/data/database/database.sql
-  #geoserver:
-  #rabbitmq:
-
- 
