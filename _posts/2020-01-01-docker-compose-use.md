@@ -29,7 +29,6 @@ changefreq : daily
     - centos image 위에 모든 것을 설치해서 배포하기 때문에 용량이 크다. 
     - privileged 권한으로 실행하면서 container 에 불필요한 파일들이 늘어나 용량이 증가한다. 
     - <img src="/static/img/docker-compose-use/docker-size.png">
-    - <img src="/static/img/docker-compose-use/docker-diff.png"> 
     
 ### 3. docker compose 를 사용해서 개선하기
 - 필요한 환경 구성을 Dockerfile 에 작성하고 docker compose 를 이용해서 관리하기  
