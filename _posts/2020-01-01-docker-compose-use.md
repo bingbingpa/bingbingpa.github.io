@@ -34,6 +34,9 @@ changefreq : daily
 - 필요한 환경 구성을 Dockerfile 에 작성하고 docker compose 를 이용해서 관리하기  
 
 #### 3.1. postgresql
+~~~ dockerfile
+    FROM postgis/postgis:12-master
+~~~
 #### 3.2. geoserver
 #### 3.3. rabbitmq
 #### 3.4. mago3d
