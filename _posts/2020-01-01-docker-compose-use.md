@@ -40,6 +40,3 @@ changefreq : daily
 #### 3.2. geoserver
 #### 3.3. rabbitmq
 #### 3.4. mago3d
-
-
-
