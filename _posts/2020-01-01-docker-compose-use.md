@@ -36,6 +36,8 @@ changefreq : daily
 #### 3.1. postgresql
 ~~~ dockerfile
     FROM postgis/postgis:12-master
+    RUN 
+    COPY
 ~~~
 #### 3.2. geoserver
 #### 3.3. rabbitmq
