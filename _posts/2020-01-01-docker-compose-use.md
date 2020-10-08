@@ -36,9 +36,44 @@ changefreq : daily
 #### 3.1. postgresql
 ~~~ dockerfile
     FROM postgis/postgis:12-master
-    RUN 
-    COPY
+    
+    COPY .vimrc /root/.vimrc
+    COPY bashrc /color-config
+    
+    RUN \
+        apt-get update && \
+        apt-get install -y vim && \
+        cat color-config >> /etc/bash.bashrc
 ~~~
 #### 3.2. geoserver
 #### 3.3. rabbitmq
-#### 3.4. mago3d
+#### 3.4. docker-compose
+~~~ dockerfile
+    version: '3'
+    #volumes:
+    #  mago3d-postgres-data:
+    #  mago3d-geoserver-data:
+    
+    services:
+      db:
+    #    image: postgis/postgis:12-master
+        container_name: oim-db
+        restart: always
+        build:
+          context: ./doc/docker/postgres
+          dockerfile: Dockerfile
+        volumes:
+          - ./doc/database:/database
+          - ./init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+        ports:
+          - 15433:5432
+        environment:
+          - TZ=Asia/Seoul
+          - POSTGRES_DB=lhdt
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+          - POSTGRES_INITDB_ARGS=--encoding=UTF-8
+          - ALLOW_IP_RANGE=0.0.0.0/0
+      #geoserver:
+      #rabbitmq:
+~~~
