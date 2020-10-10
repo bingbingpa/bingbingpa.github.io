@@ -45,35 +45,107 @@ changefreq : daily
         apt-get install -y vim && \
         cat color-config >> /etc/bash.bashrc
 ~~~
+
 #### 3.2. geoserver
+~~~ dockerfile
+    FROM tomcat:9.0.38-jdk11-adoptopenjdk-openj9
+    
+    ENV JAVA_OPTS=-D-Xms4096m-Xmx4096m
+    #ENV GEOSERVER_DATA_DIR=/geoserver-data
+    
+    RUN \
+        apt-get update && \
+        apt-get install -y vim wget unzip && \
+        rm -rf /usr/local/tomcat/webapps/* && \
+        cd /tmp && wget http://sourceforge.net/projects/geoserver/files/GeoServer/2.17.3/geoserver-2.17.3-war.zip && \
+        unzip /tmp/geoserver-2.17.3-war.zip -d /usr/local/tomcat/webapps && \
+        rm -rf /tmp/geoserver-2.17.3-war.zip
+    
+    # Enable CORS
+    RUN sed -i '\:</web-app>:i\
+    <filter>\n\
+        <filter-name>CorsFilter</filter-name>\n\
+        <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>\n\
+        <init-param>\n\
+            <param-name>cors.allowed.origins</param-name>\n\
+            <param-value>*</param-value>\n\
+        </init-param>\n\
+        <init-param>\n\
+            <param-name>cors.allowed.methods</param-name>\n\
+            <param-value>GET,POST,HEAD,OPTIONS,PUT</param-value>\n\
+        </init-param>\n\
+    </filter>\n\
+    <filter-mapping>\n\
+        <filter-name>CorsFilter</filter-name>\n\
+        <url-pattern>/*</url-pattern>\n\
+    </filter-mapping>' /usr/local/tomcat/conf/web.xml
+~~~
+
 #### 3.3. rabbitmq
+~~~ dockerfile
+    FROM rabbitmq:3.8.9-management
+    
+    COPY definitions.json /etc/rabbitmq/
+    
+    RUN apt-get update && apt-get install -y vim
+~~~
+
 #### 3.4. docker-compose
 ~~~ dockerfile
     version: '3'
-    #volumes:
-    #  mago3d-postgres-data:
-    #  mago3d-geoserver-data:
+    volumes:
+      oim-geoserver-data:
     
     services:
       db:
-    #    image: postgis/postgis:12-master
         container_name: oim-db
         restart: always
         build:
           context: ./doc/docker/postgres
           dockerfile: Dockerfile
         volumes:
-          - ./doc/database:/database
-          - ./init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+          - ./doc/database:/database:ro
+          - ./init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh:ro
         ports:
-          - 15433:5432
-        environment:
-          - TZ=Asia/Seoul
-          - POSTGRES_DB=lhdt
-          - POSTGRES_USER=postgres
-          - POSTGRES_PASSWORD=postgres
-          - POSTGRES_INITDB_ARGS=--encoding=UTF-8
-          - ALLOW_IP_RANGE=0.0.0.0/0
-      #geoserver:
-      #rabbitmq:
+          - 15432:5432
+          - 18080:8080
+    
+      geoserver:
+        container_name: oim-geoserver
+        restart: always
+        image: gaia3d/geoserver:oim-2.17.3
+    #    build:
+    #      context: ./doc/docker/geoserver
+    #      dockerfile: Dockerfile
+        volumes:
+          - oim-geoserver-data:/geoserver-data
+        network_mode: "service:db"
+    
+      rabbitmq:
+        container_name: oim-rabbitmq
+        restart: always
+        image: gaia3d/rabbitmq:oim-3.8.9
+    #    build:
+    #      context: ./doc/docker/rabbitmq
+    #      dockerfile: Dockerfile
+        ports:
+          - 5672:5672
+          - 15672:15672
 ~~~
+
+## docker 개발환경 실행하기 
+    - docker-compose.yml 파일이 있는 경로에서 다음 실행
+    - docker-compose up -d
+
+## 변경된 db 반영시에는 지우고 다시 실행
+    - -v 옵션을 줘야 docker 에서 사용하는 volume(geoserver-data) 이 모두 삭제됨. geoserver 의 데이터를 유지하고 싶을 경우에는 -v 옵션 생략
+    - docker-compose down -v
+    - docker-compose up -d
+
+## Dockerfile, docker-compose.yml 파일만 변경되었을 경우에는 다시 빌드
+    - docker-compose up -d --build
+
+## geoserver docker 에서 로컬 데이터 사용하기
+    - docker-compose 파일의 volume 마운트 하는 부븐 "oim-geoserver-data:/geoserver-data" 에서 oim-geoserver-data(docker 내부에서 자동으로 관리하는 volume)을
+    로컬 호스트의 경로로 마운트하고 docker-compose up -d --build 으로 실행하여 사용하거나 geoserver container 에 마운트 한 geoserver-data 폴더 안으로 파일을 복사하여 사용
+    (docker container cp "로컬파일" oim-geoserver:/geoserver-data)
