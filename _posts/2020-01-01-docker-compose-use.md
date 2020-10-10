@@ -34,6 +34,7 @@ changefreq : daily
 - 필요한 환경 구성을 Dockerfile 에 작성하고 docker compose 를 이용해서 관리하기  
 
 #### 3.1. postgresql
+- 커맨드창을 색감있게 보기 위한 설정 파일과 vim 에디터 설정 파일을 복사해서 빌드한다. 
 ~~~ dockerfile
     FROM postgis/postgis:12-master
     
@@ -47,11 +48,11 @@ changefreq : daily
 ~~~
 
 #### 3.2. geoserver
+- tomcat image 에 geoserver war 를 받아서 압축을 풀고 cors 설정을 해준다. 
 ~~~ dockerfile
     FROM tomcat:9.0.38-jdk11-adoptopenjdk-openj9
     
     ENV JAVA_OPTS=-D-Xms4096m-Xmx4096m
-    #ENV GEOSERVER_DATA_DIR=/geoserver-data
     
     RUN \
         apt-get update && \
@@ -82,6 +83,7 @@ changefreq : daily
 ~~~
 
 #### 3.3. rabbitmq
+- rabbitmq 에서 사용할 사용자와 queue 등을 미리 작성해둔 json 파일을 image 에 복사해서 빌드한다.
 ~~~ dockerfile
     FROM rabbitmq:3.8.9-management
     
@@ -140,6 +142,7 @@ changefreq : daily
 ## 변경된 db 반영시에는 지우고 다시 실행
     - -v 옵션을 줘야 docker 에서 사용하는 volume(geoserver-data) 이 모두 삭제됨. geoserver 의 데이터를 유지하고 싶을 경우에는 -v 옵션 생략
     - docker-compose down -v
+    - docker image rm openindoormap_db 
     - docker-compose up -d
 
 ## Dockerfile, docker-compose.yml 파일만 변경되었을 경우에는 다시 빌드
