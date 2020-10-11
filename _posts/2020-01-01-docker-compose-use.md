@@ -104,7 +104,7 @@ changefreq : daily
 
 #### 3.4. docker-compose
 - 초기 한번은 모든 Dockerfile 을 빌드하여 이미지를 생성하고, 변동 가능성이 적은 geoserver, rabbitmq 등은 만들어진 image 를 docker hub 에 등록하여 해당 image 를 사용한다. 
-- geoserver 에 마운트하는 볼륨 docker 내부에서 자동으로 관리하도록 한다. 
+- geoserver 에 마운트하는 볼륨은 docker 내부에서 자동으로 관리하도록 한다. 
 ~~~ dockerfile
     version: '3'
     volumes:
@@ -156,7 +156,7 @@ changefreq : daily
     - docker-compose down -v
     - docker image rm openindoormap_db 
     - docker-compose up -d
-은
+
 ## Dockerfile, docker-compose.yml 파일만 변경되었을 경우에는 다시 빌드
     - docker-compose up -d --build
 
