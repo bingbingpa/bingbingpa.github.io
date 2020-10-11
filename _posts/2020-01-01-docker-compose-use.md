@@ -1,6 +1,6 @@
 ---
 layout : post
-title : docker-compose 활용하기
+title : docker 로 개발환경 구성하기
 date : 2020-01-01
 excerpt : "docker compose 를 활용해서 프로젝트 환경 구성하기                     "
 tags: [docker, dockerfile, docker-compose]
@@ -15,12 +15,12 @@ changefreq : daily
     docker container run -d  -p 15432:5432 --name "postgres" -e POSTGRES_PASSWORD=postgres postgis/postgis:12-master
 ~~~
 - 문제점 
-    - 리눅스에서 기본적으로 사용하던 wget, unzip, clear 명령 등을 사용할 수 없다. 
+    - 리눅스에서 기본적으로 사용하던 wget, unzip, clear 명령 등이 없어서 설치해줘야 한다. 
     - 위 이미지는 postgis 만을 위한 image 이므로 다른 것을 사용 하려면 용도에 맞는 이미지를 별도의 container 로 실행시켜야 한다. 
     - 필요에 따라 n 개의 container 를 생성 및 실행하고 각각 관리해야하는 불편함이 있다. 
 
 ### 2. docker image 에 몽땅 넣어 사용하기 
-- centos 이미지를 받아서 거기에 db, tomcat, java, rabbitmq 등을 몽땅 설치해서 image 로 배포 해서 사용 
+- centos image 를 받아서 거기에 db, tomcat, java, rabbitmq 등을 몽땅 설치해서 image 로 배포 해서 사용 
 ~~~ cmd
     docker container run --privileged  -d -p 15432:5432 -p 18080:8080 -v "D:\data\geoserver":"/data/geoserver_data" --name "mago3d" gaia3d/mago3d /sbin/init
 ~~~
@@ -34,12 +34,20 @@ changefreq : daily
 - 필요한 환경 구성을 Dockerfile 에 작성하고 docker compose 를 이용해서 관리하기  
 
 #### 3.1. postgresql
-- 커맨드창을 색감있게 보기 위한 설정 파일과 vim 에디터 설정 파일을 복사해서 빌드한다. 
+- postgis image 에 타임존, 디비명, 유저, 패스워드 인코딩, 허용ip 를 설정해준다. 디비명은 변수로 지정한 이름으로 만들어진다. 
+- shell, vim 의 가독성을 위한 설정파일을 복사한다. 
 ~~~ dockerfile
     FROM postgis/postgis:12-master
     
     COPY .vimrc /root/.vimrc
     COPY bashrc /color-config
+    
+    ENV TZ=Asia/Seoul
+    ENV POSTGRES_DB=oim
+    ENV POSTGRES_USER=postgres
+    ENV POSTGRES_PASSWORD=postgres
+    ENV POSTGRES_INITDB_ARGS="--encoding=UTF-8"
+    ENV ALLOW_IP_RANGE=0.0.0.0/0
     
     RUN \
         apt-get update && \
@@ -49,6 +57,7 @@ changefreq : daily
 
 #### 3.2. geoserver
 - tomcat image 에 geoserver war 를 받아서 압축을 풀고 cors 설정을 해준다. 
+- setenv 파일을 복사하지 않고 ENV 로 geoserver 데이터 경로나 캐시 경로를 설정 해줄 수 있다. 
 ~~~ dockerfile
     FROM tomcat:9.0.38-jdk11-adoptopenjdk-openj9
     
@@ -83,6 +92,7 @@ changefreq : daily
 ~~~
 
 #### 3.3. rabbitmq
+- rabbitmq 의 관리자 플러그인을 사용하기 위해 기본 rabbitmq 가 아닌 rabbitmq-management image 를 사용한다. 
 - rabbitmq 에서 사용할 사용자와 queue 등을 미리 작성해둔 json 파일을 image 에 복사해서 빌드한다.
 ~~~ dockerfile
     FROM rabbitmq:3.8.9-management
@@ -93,6 +103,8 @@ changefreq : daily
 ~~~
 
 #### 3.4. docker-compose
+- 초기 한번은 모든 Dockerfile 을 빌드하여 이미지를 생성하고, 변동 가능성이 적은 geoserver, rabbitmq 등은 만들어진 image 를 docker hub 에 등록하여 해당 image 를 사용한다. 
+- geoserver 에 마운트하는 볼륨 docker 내부에서 자동으로 관리하도록 한다. 
 ~~~ dockerfile
     version: '3'
     volumes:
@@ -144,7 +156,7 @@ changefreq : daily
     - docker-compose down -v
     - docker image rm openindoormap_db 
     - docker-compose up -d
-
+은
 ## Dockerfile, docker-compose.yml 파일만 변경되었을 경우에는 다시 빌드
     - docker-compose up -d --build
 
