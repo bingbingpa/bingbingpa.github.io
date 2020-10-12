@@ -1,7 +1,7 @@
 ---
 layout : post
 title : docker 로 개발환경 구성하기
-date : 2020-01-01
+date : 2020-10-13
 excerpt : "docker compose 를 활용해서 프로젝트 환경 구성하기                     "
 tags: [docker, dockerfile, docker-compose]
 categories: [Server]
@@ -104,6 +104,8 @@ changefreq : daily
 
 #### 3.4. docker-compose
 - 초기 한번은 모든 Dockerfile 을 빌드하여 이미지를 생성하고, 변동 가능성이 적은 geoserver, rabbitmq 등은 만들어진 image 를 docker hub 에 등록하여 해당 image 를 사용한다. 
+- geoserver, rabbitmq 등의 버전을 변경하거나 Dockerfile 에 변경사항이 있을 경우에는 주석된 build 부분을 해제하고 image 를 주석하고 실행하면 된다. 
+- db 는 docker-entrypoint-initdb.d 경로에 스크립트나 sql 을 복사해두면 container 가 실행되면서 해당 내용들을 실행시켜준다.
 - geoserver 에 마운트하는 볼륨은 docker 내부에서 자동으로 관리하도록 한다. 
 ~~~ dockerfile
     version: '3'
@@ -147,22 +149,116 @@ changefreq : daily
           - 15672:15672
 ~~~
 
-## docker 개발환경 실행하기 
-    - docker-compose.yml 파일이 있는 경로에서 다음 실행
-    - docker-compose up -d
+#### 3.5. 실행하기 
+- docker-compose.yml 파일이 있는 경로에서 다음 실행
+- -d 는 백그라운드에서 실행한다는 옵션이고, container 가 생성되고 위에서 설정한 compose 파일에 restart 가 always 로 되어 있으므로, 개발장비가 재부팅 되어도 자동으로 실행 된다. 
+~~~ cmd
+    docker-compose up -d
+~~~
 
-## 변경된 db 반영시에는 지우고 다시 실행
-    - -v 옵션을 줘야 docker 에서 사용하는 volume(geoserver-data) 이 모두 삭제됨. geoserver 의 데이터를 유지하고 싶을 경우에는 -v 옵션 생략
-    - docker-compose down -v
-    - docker image rm openindoormap_db 
-    - docker-compose up -d
+#### 3.6. 변경된 db 반영하기 
+- -v 옵션을 줘야 docker 에서 사용하는 volume(geoserver-data) 이 모두 삭제된다. geoserver 의 데이터를 유지하고 싶을 경우에는 -v 옵션을 생략한다. 
+- db Dockerfile 을 재빌드할때는 다음의 명령어를 사용해도 되지만, 이렇게 할경우 이전에 만들어진 image 가 그대로 남아 있으므로, 기존에 생성된 이미지를 지우고 다시 빌드 하는게 더 나은것 같다. 
+~~~ cmd
+    docker-compose build --no-cache 
+~~~ 
+~~~ cmd
+    docker-compose down -v
+    docker image rm openindoormap_db 
+    docker-compose up -d
+~~~
 
-## Dockerfile, docker-compose.yml 파일만 변경되었을 경우에는 다시 빌드
-    - docker-compose up -d --build
+#### 3.7. geoserver docker 에서 호스트의 파일 사용하기
+- docker-compose 파일의 volume 마운트 하는 부분 "oim-geoserver-data:/geoserver-data" 에서 oim-geoserver-data(docker 내부에서 자동으로 관리하는 volume)을
+로컬 호스트의 경로로 마운트하고 docker-compose up -d --build 으로 실행하여 사용하거나 geoserver container 에 마운트 한 geoserver-data 폴더 안으로 파일을 복사하여 사용 할 수 있다.
+(docker container cp "로컬파일" oim-geoserver:/geoserver-data)
 
-## geoserver docker 에서 로컬 데이터 사용하기
-    - docker-compose 파일의 volume 마운트 하는 부븐 "oim-geoserver-data:/geoserver-data" 에서 oim-geoserver-data(docker 내부에서 자동으로 관리하는 volume)을
-    로컬 호스트의 경로로 마운트하고 docker-compose up -d --build 으로 실행하여 사용하거나 geoserver container 에 마운트 한 geoserver-data 폴더 안으로 파일을 복사하여 사용
-    (docker container cp "로컬파일" oim-geoserver:/geoserver-data)
+### 4. 삽질한 내용... 
+- Dockerfile 에 RUN 명령은 가급적 **\\**(개행) 과 **&&** 을 써서 하나의 RUN 명령에 이어서 쓰는것이 좋다. RUN, COPY, CMD 등 Dockerfile 에서 사용가능한 명령어 마다 레이어(image) 가 생성되므로, 불필요하게 많은 
+레이어가 생성되지 않도록 하기 위해 하나의 RUN 명령에 작성하도록 한다. 
+    - RUN 명령 2개로 Dockerfile 을 작성하는 경우
+    ~~~ dockerfile
+        RUN \
+            apt-get update && \
+            apt-get install -y vim wget unzip && \
+            rm -rf /usr/local/tomcat/webapps/* && \
+            cd /tmp && wget http://sourceforge.net/projects/geoserver/files/GeoServer/2.17.3/geoserver-2.17.3-war.zip && \
+            unzip /tmp/geoserver-2.17.3-war.zip -d /usr/local/tomcat/webapps && \
+            rm -rf /tmp/geoserver-2.17.3-war.zip
+        
+        # Enable CORS
+        RUN sed -i '\:</web-app>:i\
+        <filter>\n\
+            <filter-name>CorsFilter</filter-name>\n\
+            <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>\n\
+            <init-param>\n\
+                <param-name>cors.allowed.origins</param-name>\n\
+                <param-value>*</param-value>\n\
+            </init-param>\n\
+            <init-param>\n\
+                <param-name>cors.allowed.methods</param-name>\n\
+                <param-value>GET,POST,HEAD,OPTIONS,PUT</param-value>\n\
+            </init-param>\n\
+        </filter>\n\
+        <filter-mapping>\n\
+            <filter-name>CorsFilter</filter-name>\n\
+            <url-pattern>/*</url-pattern>\n\
+        </filter-mapping>' /usr/local/tomcat/conf/web.xml
+    ~~~ 
+    - <img src="/static/img/docker-compose-use/run-one.png">
+    - 하나의 커맨드 마다 RUN 명령을 사용하는 경우
+    ~~~ dockerfile
+        RUN apt-get update
+        RUN apt-get install -y vim wget unzip
+        RUN rm -rf /usr/local/tomcat/webapps/*
+        RUN cd /tmp && wget http://sourceforge.net/projects/geoserver/files/GeoServer/2.17.3/geoserver-2.17.3-war.zip
+        RUN unzip /tmp/geoserver-2.17.3-war.zip -d /usr/local/tomcat/webapps
+        RUN rm -rf /tmp/geoserver-2.17.3-war.zip
+        
+        # Enable CORS
+        RUN sed -i '\:</web-app>:i\
+        <filter>\n\
+            <filter-name>CorsFilter</filter-name>\n\
+            <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>\n\
+            <init-param>\n\
+                <param-name>cors.allowed.origins</param-name>\n\
+                <param-value>*</param-value>\n\
+            </init-param>\n\
+            <init-param>\n\
+                <param-name>cors.allowed.methods</param-name>\n\
+                <param-value>GET,POST,HEAD,OPTIONS,PUT</param-value>\n\
+            </init-param>\n\
+        </filter>\n\
+        <filter-mapping>\n\
+            <filter-name>CorsFilter</filter-name>\n\
+            <url-pattern>/*</url-pattern>\n\
+        </filter-mapping>' /usr/local/tomcat/conf/web.xml
+    ~~~
+    - <img src="/static/img/docker-compose-use/run-multi.png"> 
+- Dockerfile 로부터 이미지를 만들 때 docker build 명령은 Dockerfile 을 포함하는 디렉토리(서브디렉토리를 포함한다)를 모두 Docker 데몬으로 전송한다.
+ 그래서 Dockerfile 의 저장 위치는 빈 디렉토리를 만들고 거기에 Dockerfile 을 놓아두고 이미지를 작성하는 방법을 권장한다.
+    - Dockerfile 경로에 파일이 없는 경우
+    - <img src="/static/img/docker-compose-use/dockerfile-build1.png"> 
+    - Dockerfile 경로에 파일이 있는 경우 
+    - <img src="/static/img/docker-compose-use/dockerfile-build2.png">
+- postgis image 는 타임존이 한국시간이 아니므로 반드시 Dockerfile 작성시 환경변수로 **ENV TZ=Asia/Seoul** 과 같이 줘야지 제대로 된 시간을 사용 할 수 있다. 
+- postgis image 에서 psql 은 **docker-entrypoint-initdb.d** 폴더에 작성한 스크립트만 실행이 가능하다. 
+- 컨테이너간 네트워크를 공유하는 경우에는 다음과 같이 설정해줘야 한다.(예를 들어 geoserver container 에서 db container 의 네트워크를 공유해서 postgis 저장소를 등록하는 경우)
+    - service:"docker-compose 파일에 기술한 서비스명"
+    ~~~ dockerfile
+        services:
+              db:
+                build:
+                  context: ./doc/docker/postgres
+                  dockerfile: Dockerfile
+                ports:
+                  - 15432:5432
+                  - 18080:8080
+            
+              geoserver:
+                image: gaia3d/geoserver:oim-2.17.3
+                network_mode: "service:db"
+    ~~~
+        
 
 
