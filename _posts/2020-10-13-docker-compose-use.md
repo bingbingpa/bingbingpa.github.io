@@ -158,14 +158,9 @@ changefreq : daily
 
 #### 3.6. 변경된 db 반영하기 
 - -v 옵션을 줘야 docker 에서 사용하는 volume(geoserver-data) 이 모두 삭제된다. geoserver 의 데이터를 유지하고 싶을 경우에는 -v 옵션을 생략한다. 
-- db Dockerfile 을 재빌드할때는 다음의 명령어를 사용해도 되지만, 이렇게 할경우 이전에 만들어진 image 가 그대로 남아 있으므로, 기존에 생성된 이미지를 지우고 다시 빌드 하는게 더 나은것 같다. 
-~~~ cmd
-    docker-compose build --no-cache 
-~~~ 
 ~~~ cmd
     docker-compose down -v
-    docker image rm openindoormap_db 
-    docker-compose up -d
+    docker-compose up --build -d
 ~~~
 
 #### 3.7. geoserver docker 에서 호스트의 파일 사용하기
