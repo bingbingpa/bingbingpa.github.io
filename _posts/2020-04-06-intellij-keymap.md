@@ -143,6 +143,8 @@ changefreq : daily
 - 선택된 파일 또는 패키지/모듈 컴파일 : Ctrl + Shift + F9
 - 선택된 configuration run/debug : Alt + Shift + F10/F9
 - **Run/Debug : Shift + F10/F9**
+- **서비스 시작 : Shift + Alt + F10**
+- 서비스 멈춤 : Ctrl + F2
 
 ### Usage Search
 - **전체 찾기(tool window) / 파일에서 찾기 : Alt + F7 / Ctrl + F7**
