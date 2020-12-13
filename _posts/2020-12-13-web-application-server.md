@@ -120,7 +120,7 @@ changefreq : daily
     - 멀티스레딩 지원
     - 선언적인 보안 관리
 - 컨테이너의 동작 과정
-- <img src="/static/img/was/container-flow1.png
+- <img src="/static/img/was/container-flow1.png>
 - <img src="/static/img/was/container-flow2.png">
       
 
