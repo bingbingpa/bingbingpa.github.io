@@ -30,8 +30,8 @@ changefreq : daily
     - HttpServlet 추상 클래스를 상속받는 클래스 구현 
         - 자바의 유료화 정책으로 openJDK 를 사용하는데, openJDK 는 Java SE(Standard Edtion) 를 오픈 소스로 구현한 것이기 때문에 Java EE(Enterprise Edtion) 에서 지원하던 Servlet 관련 도구가 없다.
         - was(tomcat 사용) 에 내장되어 있는 servlet-api.jar 를 사용한다.
+        
     ~~~ java
-    
         import javax.servlet.ServletConfig;
         import javax.servlet.ServletException;
         import javax.servlet.http.HttpServlet;
