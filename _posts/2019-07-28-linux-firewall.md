@@ -4,7 +4,7 @@ title : 방화벽 정책 설정
 date : 2019-07-30
 excerpt : "Centos7에서 firewall을 이용해서 방화벽 설정하기                                         "
 tags: [firewall]
-categories: [Linux]
+categories: [DevOps]
 comments: true
 changefreq : daily
 ---

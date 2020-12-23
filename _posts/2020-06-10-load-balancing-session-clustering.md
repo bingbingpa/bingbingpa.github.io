@@ -4,7 +4,7 @@ title : Load Balancing, Session Clustering
 date : 2020-06-10
 excerpt : "Centos8 에서 haproxy, apache, tomcat 으로 Load Balancing, Session Clustering 환경 구축 하기"
 tags: [apache, tomcat, Load Balancing, Session Clustering]
-categories: [Server]
+categories: [DevOps]
 comments: true
 changefreq : daily
 ---

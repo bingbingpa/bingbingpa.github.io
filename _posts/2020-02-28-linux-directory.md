@@ -4,7 +4,7 @@ title : 리눅스 디렉토리 구조 정리
 date : 2020-02-28
 excerpt : "리눅스 디렉토리 구조 정리                                                       "
 tags: [Ubuntu]
-categories: [Linux]
+categories: [DevOps]
 comments: true
 changefreq : daily
 ---

@@ -4,7 +4,7 @@ title : facebook 댓글 플러그인 추가
 date : 2019-07-14
 excerpt : "github 페이지에 facebook 댓글 플러그인을 추가하는 방법           "
 tags: [facebook 댓글 플러그인]
-categories: [Jekyll]
+categories: [기타]
 comments: true
 changefreq : daily
 ---

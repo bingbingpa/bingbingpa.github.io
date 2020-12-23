@@ -4,7 +4,7 @@ title : 리눅스에서 톰캣 서비스 등록하기
 date : 2019-07-27
 excerpt : "리눅스에서 톰캣 서비스 등록하고 자동 시작하는 방법                "
 tags: [centos, service]
-categories: [Linux]
+categories: [DevOps]
 comments: true
 changefreq : daily
 ---
