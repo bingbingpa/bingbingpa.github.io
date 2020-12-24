@@ -22,12 +22,21 @@ layout: default
             {{content}}
           </article>
           <hr class="boundary">
-          <div class="fb-comments" 
-            data-href="{{ site.url | append: page.url }}" 
-            data-width="820" 
-            data-numposts="5" 
-            data-order-by="time">
-        </div>
+            <div>
+                <script src="https://utteranc.es/client.js"
+                        repo="bingbingpa/blog-comments"
+                        issue-term="pathname"
+                        theme="github-light"
+                        crossorigin="anonymous"
+                        async>
+                </script>
+            </div>
+<!--          <div class="fb-comments" -->
+<!--            data-href="{{ site.url | append: page.url }}" -->
+<!--            data-width="820" -->
+<!--            data-numposts="5" -->
+<!--            data-order-by="time">-->
+<!--        </div>-->
         </div>
         <div class="pad-min"></div>
         <div id="post-comment" class="sheet post hidden">
