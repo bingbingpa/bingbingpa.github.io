@@ -22,7 +22,7 @@ changefreq : daily
     - JDK 와 JRE 의 차이
 
 ### 1. JAVA, JVM, JDK , JRE
-- <img src="/static/img/whiteship-live-study-jvm/jdk-structure.png" alt="jdk-structure">
+- <img src="/static/img/whiteship-live-study-week1/jdk-structure.png" alt="jdk-structure">
 
 #### JVM (Java Virtual Machine)
 - 자바 가상 머신으로 자바 바이트 코드(.class 파일)를 **OS에 특화된 코드로 변환**(인터프리터와 JIT 컴파일러)하여 실행한다.
@@ -30,7 +30,7 @@ changefreq : daily
     - 자바 컴파일: javac "자바파일명"
     - 자바 바이트코드 확인: javap -c "클래스파일"
         - 자바 바이트코드 : 자바 가상 머신이 이해할 수 있는 언어로 변환된 자바 소스 코드. 확장자는 .class 를 가지고, 자바 가상 머신만 설치 되어 있으면, 어떤 OS 에서도 실행될 수 있다.
-        - <img src="/static/img/whiteship-live-study-jvm/java-byte.png" alt="java-byte">   
+        - <img src="/static/img/whiteship-live-study-week1/java-byte.png" alt="java-byte">   
     - 위의 javac, javap 등은 jre 에는 포함되지 않는다.
 - 바이트 코드를 실행하는 표준(JVM 자체는 표준)이자 구현체(특정 밴더가 구현한 JVM)다.
 - [JVM 스팩](https://docs.oracle.com/javase/specs/jvms/se11/html/)
@@ -43,9 +43,9 @@ changefreq : daily
 - 개발 관련 도구는 포함하지 않는다. (그건 JDK 에서 제공)
 - 자바 개발툴은 제공되지 않는다.(javac 가 없다!)
     - jre 구성요소
-        - <img src="/static/img/whiteship-live-study-jvm/jre.png" alt="jre">
+        - <img src="/static/img/whiteship-live-study-week1/jre.png" alt="jre">
     - jdk 구성요소 
-        - <img src="/static/img/whiteship-live-study-jvm/jdk.png" alt="jdk">
+        - <img src="/static/img/whiteship-live-study-week1/jdk.png" alt="jdk">
         
 #### JDK (Java Development Kit): JRE + 개발 툴
 - JRE + 개발에 필요할 툴
@@ -69,7 +69,7 @@ changefreq : daily
 - [JDK, JRE 그리고 JVM](https://howtodoinjava.com/java/basics/jdk-jre-jvm/)
 
 ### 2. JVM 구조
-- <img src="/static/img/whiteship-live-study-jvm/jvm-structure.png" alt="jvm-structure">
+- <img src="/static/img/whiteship-live-study-week1/jvm-structure.png" alt="jvm-structure">
 
 #### 클래스 로더 시스템
 - .class 에서 바이트코드를 읽고 메모리에 저장
@@ -107,7 +107,7 @@ changefreq : daily
 - [http://blog.jamesdbloom.com/JVMInternals.html](http://blog.jamesdbloom.com/JVMInternals.html)
 
 ### 3. 클래스 로더
-- <img src="/static/img/whiteship-live-study-jvm/class-loader.png" alt="class-loader">
+- <img src="/static/img/whiteship-live-study-week1/class-loader.png" alt="class-loader">
 - 로딩, 링크, 초기화 순으로 진행된다.
 - 로딩
     - 클래스 로더가 .class 파일을 읽고 그 내용에 따라 적절한 바이너리 데이터를 만들고 “메소드” 영역에 저장.
