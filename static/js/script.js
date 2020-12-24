@@ -1,6 +1,6 @@
----
-    layout: null
----
+// ---
+//     layout: null
+// ---
 
 $(document).ready(function() {
 
@@ -9,7 +9,7 @@ $(document).ready(function() {
 });
 
 /**
- * 맨위로 이동 
+ * 맨위로 이동
  */
 function backToTop() {
     $("[data-toggle='tooltip']").tooltip();

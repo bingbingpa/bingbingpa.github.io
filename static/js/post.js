@@ -1,8 +1,6 @@
----
-    layout: null
----
-
-
+// ---
+//     layout: null
+// ---
 $(document).ready(function() {
     generateContent();
      //share();
@@ -10,7 +8,7 @@ $(document).ready(function() {
 });
 
 /**
- * 사이트 디렉토리 
+ * 사이트 디렉토리
  */
 function generateContent() {
     var $mt = $('.toc');
