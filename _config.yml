@@ -14,7 +14,6 @@ paginate_path: "page/:num"
 baseurl: ""
 
 
-
 defaults:
   -
     scope:
@@ -23,8 +22,6 @@ defaults:
     values:
       layout: post
       styles : [highlight.css,post.css]
-      scripts : [post.js]
-
 
 
 title: "삽질저장소"
@@ -35,8 +32,4 @@ github:
 
 url: "https://bingbingpa.github.io"
 imgrepo: "https://bingbingpa.github.io/static/img"
-
-
-#url: "http://127.0.0.1:4000"
-#imgrepo: "http://127.0.0.1:4000/static/img"
 
