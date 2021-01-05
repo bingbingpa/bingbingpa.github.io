@@ -2,7 +2,7 @@
 layout : post
 title : 자바 상속
 date : 2021-01-03
-excerpt : "자바의 상속에 대해 학습하기                            "
+excerpt : "자바의 상속에 대해 학습하기"
 tags: [whiteship/live-study, java]
 categories: [Java]
 comments: true
