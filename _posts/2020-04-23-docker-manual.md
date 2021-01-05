@@ -2,7 +2,7 @@
 layout : post
 title : docker 시작하기 
 date : 2020-04-23
-excerpt : "docker 기본적인 사용 방법 정리                    "
+excerpt : "docker 기본적인 사용 방법 정리"
 tags: [docker]
 categories: [DevOps]
 comments: true

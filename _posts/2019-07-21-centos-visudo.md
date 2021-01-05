@@ -2,7 +2,7 @@
 layout : post
 title : user 계정 sudo 권한 
 date : 2019-07-21
-excerpt : "리눅스 환경에서 일반 사용자 계정에 sudo 권한을 부여하는 방법             "
+excerpt : "리눅스 환경에서 일반 사용자 계정에 sudo 권한을 부여하는 방법"
 tags: [visudo, sudo, centos]
 categories: [DevOps]
 comments: true

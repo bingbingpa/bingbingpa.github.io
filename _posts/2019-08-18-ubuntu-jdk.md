@@ -2,7 +2,7 @@
 layout : post
 title : Ubuntu java 버전 변경하기
 date : 2019-08-18
-excerpt : "Ubuntu java 버전 변경하기                                          "
+excerpt : "Ubuntu java 버전 변경하기"
 tags: [ubuntu, openjdk]
 categories: [DevOps]
 comments: true

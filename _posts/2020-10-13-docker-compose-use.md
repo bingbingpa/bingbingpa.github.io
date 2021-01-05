@@ -2,7 +2,7 @@
 layout : post
 title : docker 로 개발환경 구성하기
 date : 2020-10-13
-excerpt : "docker compose 를 활용해서 프로젝트 환경 구성하기                     "
+excerpt : "docker compose 를 활용해서 프로젝트 환경 구성하기"
 tags: [docker, dockerfile, docker-compose]
 categories: [DevOps]
 comments: true

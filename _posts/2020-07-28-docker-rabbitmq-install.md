@@ -2,7 +2,7 @@
 layout : post
 title : docker rabbitMQ 설정 하기
 date : 2020-07-28
-excerpt : "centos 이미지 컨테이너에 rabbitMQ 설치 및 설정 하기                  "
+excerpt : "centos 이미지 컨테이너에 rabbitMQ 설치 및 설정 하기"
 tags: [docker, centos, rabbitMQ]
 categories: [DevOps]
 comments: true

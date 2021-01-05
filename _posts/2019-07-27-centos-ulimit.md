@@ -2,7 +2,7 @@
 layout : post
 title : ulimit 설정하기
 date : 2019-07-27
-excerpt : "too many file opens error를 피하기 위한 ulimit 설정방법                "
+excerpt : "too many file opens error를 피하기 위한 ulimit 설정방법"
 tags: [centos, ulimit, too many file opens]
 categories: [DevOps]
 comments: true

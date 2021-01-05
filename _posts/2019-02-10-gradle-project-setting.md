@@ -2,7 +2,7 @@
 layout : post
 title : gradle 멀티 프로젝트 세팅하기 
 date : 2019-02-10
-excerpt : "gradle과 springBoot 환경에서 멀티 프로젝트 세팅하기 "
+excerpt : "gradle 과 springBoot 환경에서 멀티 프로젝트 세팅하기"
 tags: [gradle, Java, SpringBoot, MultiProject]
 categories: [BuildTool]
 comments: true

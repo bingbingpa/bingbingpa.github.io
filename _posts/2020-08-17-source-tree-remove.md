@@ -2,7 +2,7 @@
 layout : post
 title : Windows10 source tree 완전 삭제
 date : 2020-08-17
-excerpt : "Windows10 에서 source tree 설정 파일까지 모두 삭제하기                       "
+excerpt : "Windows10 에서 source tree 설정 파일까지 모두 삭제하기"
 tags: [sourceTree, git]
 categories: [기타]
 comments: true

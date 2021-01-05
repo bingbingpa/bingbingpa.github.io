@@ -2,7 +2,7 @@
 layout : post
 title : ubuntu에서 jekyll 설치하기
 date : 2020-04-03
-excerpt : "ubuntu 환경(window ubuntu 포함)에서 jekyll 설치하는 방법 정리 "
+excerpt : "ubuntu 환경(window ubuntu 포함)에서 jekyll 설치하는 방법 정리"
 tags: [ubuntu,jekyll]
 categories: [기타]
 comments: true

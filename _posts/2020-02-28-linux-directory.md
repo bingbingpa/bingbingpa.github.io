@@ -2,7 +2,7 @@
 layout : post
 title : 리눅스 디렉토리 구조 정리
 date : 2020-02-28
-excerpt : "리눅스 디렉토리 구조 정리                                                       "
+excerpt : "리눅스 디렉토리 구조 정리"
 tags: [Ubuntu]
 categories: [DevOps]
 comments: true

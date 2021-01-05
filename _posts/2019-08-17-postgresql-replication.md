@@ -2,7 +2,7 @@
 layout : post
 title : postgreSQL Replication
 date : 2019-08-17
-excerpt : "postgreSQL Master / Slave 이중화 하기                                          "
+excerpt : "postgreSQL Master / Slave 이중화 하기"
 tags: [postgresql, replication, dbBackup]
 categories: [DataBase]
 comments: true

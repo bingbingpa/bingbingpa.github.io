@@ -2,7 +2,7 @@
 layout : post
 title : intellij 한글 깨짐 해결 방법
 date : 2020-08-12
-excerpt : "intellij 테스트 코드 한글 깨짐 해결 하기                       "
+excerpt : "intellij 테스트 코드 한글 깨짐 해결 하기"
 tags: [intellij, encoding]
 categories: [IDE]
 comments: true

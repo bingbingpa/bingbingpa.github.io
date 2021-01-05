@@ -2,7 +2,7 @@
 layout : post
 title : 자바 클래스
 date : 2020-12-30
-excerpt : "자바의 Class 에 대해 학습하기              "
+excerpt : "자바의 Class 에 대해 학습하기"
 tags: [whiteship/live-study, java]
 categories: [Java]
 comments: true

@@ -2,7 +2,7 @@
 layout : post
 title : 웹접근성 향상 시키기
 date : 2020-02-27
-excerpt : "웹접근성을 향상 시키기 위해 제대로 알고 사용하기.                    "
+excerpt : "웹접근성을 향상 시키기 위해 제대로 알고 사용하기"
 tags: [웹접근성]
 categories: [HTML]
 comments: true

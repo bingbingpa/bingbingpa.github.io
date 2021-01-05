@@ -2,7 +2,7 @@
 layout : post
 title : 대충 알고 넘어갔던 기본 개념 정리 
 date : 2019-07-28
-excerpt : "자바 기본서 보면서 맨날 대충 보고 넘어갔던 기본 개념 정리                 "
+excerpt : "자바 기본서 보면서 맨날 대충 보고 넘어갔던 기본 개념 정리"
 tags: [이진수, 자바 자료형, 리터럴, 비트연산, switch문]
 categories: [Java]
 comments: true

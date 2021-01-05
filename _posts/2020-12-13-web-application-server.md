@@ -2,7 +2,7 @@
 layout : post
 title : Web Application Server 와 servlet
 date : 2020-12-13
-excerpt : "web application server 동작 이해하기                     "
+excerpt : "web application server 동작 이해하기"
 tags: [was, servlet, java]
 categories: [Java]
 comments: true

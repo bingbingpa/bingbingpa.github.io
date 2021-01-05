@@ -2,7 +2,7 @@
 layout : post
 title : eclipse 단축키
 date : 2019-12-08
-excerpt : "마우스를 조금이라도 덜 쓰기 위해 eclipse 단축키 기억하기."
+excerpt : "마우스를 조금이라도 덜 쓰기 위해 eclipse 단축키 기억하기"
 tags: [eclipse]
 categories: [IDE]
 comments: true

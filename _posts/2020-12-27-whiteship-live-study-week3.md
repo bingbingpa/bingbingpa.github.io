@@ -2,7 +2,7 @@
 layout : post
 title : 자바에서 제공하는 연산자
 date : 2020-12-27
-excerpt : "자바가 제공하는 다양한 연산자에 대해 학습하기              "
+excerpt : "자바가 제공하는 다양한 연산자에 대해 학습하기"
 tags: [whiteship/live-study, java]
 categories: [Java]
 comments: true

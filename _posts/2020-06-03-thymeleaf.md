@@ -2,7 +2,7 @@
 layout : post
 title : springBoot Thymeleaf
 date : 2020-06-03
-excerpt : "springBoot Thymeleaf 기본 설정 방법 정리                                    "
+excerpt : "springBoot Thymeleaf 기본 설정 방법 정리"
 tags: [springBoot, thymeleaf]
 categories: [Spring]
 comments: true

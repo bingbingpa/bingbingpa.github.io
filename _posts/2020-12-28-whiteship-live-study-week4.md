@@ -2,7 +2,7 @@
 layout : post
 title : 자바 제어문
 date : 2020-12-28
-excerpt : "JUnit 을 활용한 자바 제어문 테스트하기              "
+excerpt : "JUnit 을 활용한 자바 제어문 테스트하기"
 tags: [whiteship/live-study, java]
 categories: [Java]
 comments: true

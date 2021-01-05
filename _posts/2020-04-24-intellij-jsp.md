@@ -2,7 +2,7 @@
 layout : post
 title : intellij JSP 관련 오류 해결 방법  
 date : 2020-04-24
-excerpt : "intellij spring boot multi module 환경에서 JSP 관련 오류 해결 방법                   "
+excerpt : "intellij spring boot multi module 환경에서 JSP 관련 오류 해결 방법"
 tags: [intellij]
 categories: [IDE]
 comments: true
