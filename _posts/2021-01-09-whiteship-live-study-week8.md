@@ -129,3 +129,6 @@ changefreq : daily
 - private 메소드 이기 때문에 인터페이스에서 구현이 되어 있어야 한다.
 - 구현체에서 구현할 수 없고, 자식 인터페이스에서도 상속이 불가능하다. 
 - static 메소드도 private 로 쓸 수 있다.
+
+### 참조링크
+[https://blog.baesangwoo.dev/posts/java-livestudy-8week/](https://blog.baesangwoo.dev/posts/java-livestudy-8week/)
