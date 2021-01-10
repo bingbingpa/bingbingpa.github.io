@@ -47,95 +47,95 @@ changefreq : daily
 ### 1. 선택문
 - switch 문
     - switch 에 선언된 변수가 case 의 값을 만족시킬 때 해당 부분의 실행문을 실행시킨 뒤 break 를 통해 빠져나간다.
-        - ~~~java
-            switch (변수) {
-                case 값1 : 
-                    실행문; 
-                    break;
-                case 값2 : 
-                    실행문; 
-                    break;  
-                default;    
-            }
-          ~~~
+    ~~~java
+      switch (변수) {
+          case 값1 : 
+              실행문; 
+              break;
+          case 값2 : 
+              실행문; 
+              break;  
+          default;    
+      }
+    ~~~
     - java 13 부터는 switch 문에서 **->** 와 **yield** 키워드를 사용하여 다음과 같은 형태로 사용할 수 있다. 
-        - ~~~java
-            String mode = "a";
-            int result = switch (mode) {
-                case "a" -> 1;
-                case "b", "c" -> {
-                    System.out.println("this is b or c");
-                    yield 4;
-                }
-                default -> -1;
-            };
-          ~~~
+    ~~~java
+      String mode = "a";
+      int result = switch (mode) {
+          case "a" -> 1;
+          case "b", "c" -> {
+              System.out.println("this is b or c");
+              yield 4;
+          }
+          default -> -1;
+      };
+    ~~~
 - if ~ else 문
     - if 내 선언된 조건식이 true 일 경우 실행문1을 false 일 경우 실행문2를 실행
-        - ~~~java
-            if (조건식) {
-                실행문1;
-            } else {
-                실행문2;
-            }
-          ~~~
+    ~~~java
+      if (조건식) {
+          실행문1;
+      } else {
+          실행문2;
+      }
+     ~~~
 - else if 문
     -  if 내에 선언된 조건이 일치할 경우, 그 범위 내의 실행문을 실행시키고 모두 일치하지 않을 경우 else 의 내용을 실행한다. 순차적으로 진행되기 때문에 앞 조건을 만족시킬 경우 뒷 조건을 실행하지 않는다.
-        - ~~~java
-            if (조건식) {
-                실행문1;
-            } else if (조건식) {
-                실행문2;
-            } else if (조건식) {
-                실행문3;
-            } else {
-                실행문4;
-            }
-          ~~~
+   ~~~java
+      if (조건식) {
+            실행문1;
+      } else if (조건식) {
+            실행문2;
+      } else if (조건식) {
+            실행문3;
+      } else {
+            실행문4;
+      }
+    ~~~
 
 ### 2. 반복문
 - for 문
     - for 문은 초기화한 변수가 조건식에 만족하는 경우에 해당 실행문을 실행하고, 증감식을 통해 변수의 값을 증감하는 것을 반복한다. 변수가 조건식에 만족하지 않을 경우 for 문이 종료된다. 
-        - ~~~java
-            for (변수초기화 ; 조건식 ; 증감식) {
-               실행문;
-            }
-          ~~~
+    ~~~java
+      for (변수초기화 ; 조건식 ; 증감식) {
+         실행문;
+      }
+    ~~~
 - for ~ each 문
     - 향상된 for 문이라고도 불리며, 자바 5버전부터 추가된 구문이다. 일반적으로 배열이나 Collection 클래스를 반복하는데 사용된다. 
     - 인덱스를 생성해 접근하는 단순 for 문 보다 수행속도가 조금 더 빠르고, 코드의 가독성이 더 좋다. 
-        - ~~~java
-            for ( 각 요소 값 : 배열이나 컨테이너 값 ) {
-                반복 수행할 작업
-            }
-          ~~~
+    ~~~java
+      for ( 각 요소 값 : 배열이나 컨테이너 값 ) {
+          반복 수행할 작업
+      }
+    ~~~
 - while 문
     - 조건식이 true 일 경우 코드를 실행하고 false 일 경우 반복문을 종료한다. 다만 여기서 주의해야 할 점은 조건식이 계속 참일 경우 무한 루프를 돌게 되므로 **while 내에 반드시 조건식을 빠져 나올 수 있는 구문이 있어야 한다.**
-        - ~~~java
-            while (조건식) {
-                반복 수행할 작업;
-            }
-          ~~~
+    ~~~java
+      while (조건식) {
+          반복 수행할 작업;
+      }
+    ~~~
 - do ~ while 문
     - while 문과 비슷하지만 do ~ while 문은 조건식에 상관없이 무조건 한번 수행 후에 조건식을 판별한다. 어떠한 반복 작업 수행에서 꼭 한번은 수행되어야 하는 경우가 있다면 do ~ while 을 사용한다.  
-        - ~~~java
-            do {
-                반복 수행할 작업;
-            } while (조건식);
-          ~~~
+    ~~~java
+      do {
+          반복 수행할 작업;
+      } while (조건식);
+    ~~~
 - continue 문
     - 해당 반복부분만 탈출하고 다음 반복을 이어서 수행한다.
     - 아래의 코드를 예로 들면 i 가 3인 경우는 skip 하고 반복문을 계속 수행하게 된다.
-        - ~~~java
-            for (int i=0; i < 5; i++) {
-                if (i==3) continue;
-            }
-          ~~~
+    ~~~java
+      for (int i=0; i < 5; i++) {
+          if (i==3) continue;
+      }
+    ~~~
 - break 문
     - 즉시 해당 반복문을 빠져나간다. 
     - 아래의 코드를 예로 들면 i 가 2인 경우까지 반복문이 수행후 종료된다.
-        - ~~~java
-            for (int i=0; i < 5; i++) {
-                if (i==3) break;
-            }
-          ~~~
+    ~~~java
+      for (int i=0; i < 5; i++) {
+          if (i==3) break;
+      }
+    ~~~

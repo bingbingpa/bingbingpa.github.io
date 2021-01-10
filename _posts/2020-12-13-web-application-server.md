@@ -26,82 +26,82 @@ changefreq : daily
         - process 가 할당받은 자원을 이용하는 실행의 단위
         - thread 는 프로세스 내에서 각각 stack 만 따로 할당받고 code, data, heap 영역을 공유한다.
         - <img src="/static/img/was/thread-flow.png">
-초간단 servlet 프로그램 만들기
+- 초간단 servlet 프로그램 만들기
     - HttpServlet 추상 클래스를 상속받는 클래스 구현 
         - 자바의 유료화 정책으로 openJDK 를 사용하는데, openJDK 는 Java SE(Standard Edtion) 를 오픈 소스로 구현한 것이기 때문에 Java EE(Enterprise Edtion) 에서 지원하던 Servlet 관련 도구가 없다.
         - was(tomcat 사용) 에 내장되어 있는 servlet-api.jar 를 사용한다.
         
-    ~~~ java
-        import javax.servlet.ServletConfig;
-        import javax.servlet.ServletException;
-        import javax.servlet.http.HttpServlet;
-        import javax.servlet.http.HttpServletRequest;
-        import javax.servlet.http.HttpServletResponse;
-        import java.io.IOException;
-        import java.io.PrintWriter;
-        
-        public class Servlet extends HttpServlet {
-            
-            public Servlet() {
-                System.out.println("Servlet Constructor");
-            }
-            
-            @Override
-            public void init(ServletConfig config) throws ServletException {
-                System.out.println("init called");
-                super.init();
-            }
-        
-            @Override
-            public void destroy() {
-                System.out.println("destroy called");
-                super.destroy();
-            }
-        
-            @Override
-            protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-                System.out.println("service called");
-                super.service(request, response);
-            }
-        
-            @Override
-            protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-                System.out.println("doPost called");
-            }
-        
-            @Override
-            public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-                System.out.println("doGet called");
-                PrintWriter out = response.getWriter();
-                java.util.Date today = new java.util.Date();
-                out.println("<html>" +
-                        "<body>" +
-                        "<h1 align=center>Hello Mago3D!!!!!</h1>" +
-                        "<br>" + today + "</body>" + "</html>");
-            }
-        }
-    ~~~
+~~~ java
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+public class Servlet extends HttpServlet {
+    
+    public Servlet() {
+        System.out.println("Servlet Constructor");
+    }
+    
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        System.out.println("init called");
+        super.init();
+    }
+
+    @Override
+    public void destroy() {
+        System.out.println("destroy called");
+        super.destroy();
+    }
+
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("service called");
+        super.service(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("doPost called");
+    }
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        System.out.println("doGet called");
+        PrintWriter out = response.getWriter();
+        java.util.Date today = new java.util.Date();
+        out.println("<html>" +
+                "<body>" +
+                "<h1 align=center>Hello Mago3D!!!!!</h1>" +
+                "<br>" + today + "</body>" + "</html>");
+    }
+}
+~~~
 - java 파일 컴파일 하기
-    ~~~ java
-        javac -classpath "톰캣경로"/lib/servlet-api.jar -d classes Servlet.java
-    ~~~
+~~~ java
+javac -classpath "톰캣경로"/lib/servlet-api.jar -d classes Servlet.java
+~~~
 - web.xml 이라는 배포 서술자(DD, Deployment Descriptor) 를 작성
-    ~~~ xml
-        <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-                 version="2.4">
-                <servlet>
-                    <servlet-name>hello servlet</servlet-name>
-                    <servlet-class>Servlet</servlet-class>
-                </servlet>
-        
-                <servlet-mapping>
-                    <servlet-name>hello servlet</servlet-name>
-                    <url-pattern>/hello</url-pattern>
-                </servlet-mapping>
-        </web-app>
-    ~~~
+~~~ xml
+  <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+           version="2.4">
+          <servlet>
+              <servlet-name>hello servlet</servlet-name>
+              <servlet-class>Servlet</servlet-class>
+          </servlet>
+  
+          <servlet-mapping>
+              <servlet-name>hello servlet</servlet-name>
+              <url-pattern>/hello</url-pattern>
+          </servlet-mapping>
+  </web-app>
+~~~
 
 - 톰캣에 배포하기
     - webapps 하위 경로에 contextPath 가 되는 폴더 생성

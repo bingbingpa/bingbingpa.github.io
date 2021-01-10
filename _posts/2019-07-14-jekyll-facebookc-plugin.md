@@ -22,7 +22,7 @@ changefreq : daily
 - 여기서 **data-href**는 다음처럼 써야 해당 포스트에 해당하는 댓글을 볼 수 있다.
 - " "안의 내용은 중괄호 두개로 묶어서 liquid 변수로 사용해야 한다.
 ~~~ html
-    data-href="site.url | append: page.url"
+data-href="site.url | append: page.url"
 ~~~
 
 

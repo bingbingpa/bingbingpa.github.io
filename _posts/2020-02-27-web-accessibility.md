@@ -86,29 +86,30 @@ changefreq : daily
 
 - 검색 조건과 같이 하나의 label에 여러가지 조건의 폼이 연결되어야 할 경우가 있는데, 명시적 방식과 암시적 방식 모두 웹접근성에 어긋나지 않지만 구버전의 스크린리더를 사용하는 경우에는 암시적 방식을 읽지 못하는 경우도 있다. 이 경우에는 추가적인 조건의 폼에 title을 써주고 lable을 숨김 태그로 사용하여 모든 스크린리더에서 읽을 수 있도록 처리했다. 
 ~~~ html
-    <label for="searchWord" class="hiddenTag">검색유형</label>
-    <select id="searchWord" name="searchWord" title="검색유형">
-        <option value="user_id">아이디</option>
-        <option value="user_name">사용자명</option>
-    </select>
-    <label for="searchOption" class="hiddenTag">검색옵션</label>
-    <select id="searchOption" title="검색옵션">
-        <option value="0">일치<option>
-        <option value="1">포함<option>
-    <select>
-    <label for="searchValue">검색어</label>
-    <input type="text" id="searchValue"/>
+<label for="searchWord" class="hiddenTag">검색유형</label>
+<select id="searchWord" name="searchWord" title="검색유형">
+    <option value="user_id">아이디</option>
+    <option value="user_name">사용자명</option>
+</select>
+<label for="searchOption" class="hiddenTag">검색옵션</label>
+<select id="searchOption" title="검색옵션">
+    <option value="0">일치<option>
+    <option value="1">포함<option>
+<select>
+<label for="searchValue">검색어</label>
+<input type="text" id="searchValue"/>
 ~~~
 
 ### 3. a 태그에 올바른 onclick 사용 
 
 - 잘못된 사용 방법 
-~~~ html
-    // 키보드를 통한 이벤트를 실행 시킬 수 없음.
-    <a href="#" onclick="myfunction()"> 
-
-    // href 속성에 스크립트를 사용할 수 없음.
-    <a href="javascript:myfunction()"> 
+~~~html
+// 키보드를 통한 이벤트를 실행 시킬 수 없음.
+<a href="#" onclick="myfunction()">
+~~~
+~~~html
+// href 속성에 스크립트를 사용할 수 없음.
+<a href="javascript:myfunction()"> 
 ~~~
 
 - 올바른 사용 방법 

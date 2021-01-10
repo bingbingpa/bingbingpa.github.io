@@ -16,19 +16,20 @@ changefreq : daily
 - 찾아보니 apt가 설치 진행 상황을 프로그레스바로 보여주고 업그레이드 할 수 있는 패키지 숫자도 보여주는 등 사용자가 알 수 있는 정보들이 더 많은 것 같다. 
 - 아무튼 결국 apt로 openjdk8을 설치 했다. 만약 설치할 패키지 명을 모른다면 다음과 같이 검색해서 패키지 명을 확인 후 설치 하면된다. 
 ~~~ shell
-    $ apt search openjdk*
+$ apt search openjdk*
 ~~~
 <img src="/static/img/openjdk/package.png">
 
 - 설치된 자바 리스트를 확인 한다.
-~~~ shell
-    $ update-java-alternatives --list
-
-    java-1.11.0-openjdk-amd64      1111       /usr/lib/jvm/java-1.11.0-openjdk-amd64
-    java-1.8.0-openjdk-amd64       1081       /usr/lib/jvm/java-1.8.0-openjdk-amd64
+~~~shell
+$ update-java-alternatives --list
+~~~
+~~~shell
+java-1.11.0-openjdk-amd64      1111       /usr/lib/jvm/java-1.11.0-openjdk-amd64
+java-1.8.0-openjdk-amd64       1081       /usr/lib/jvm/java-1.8.0-openjdk-amd64
 ~~~
 - 아래의 명령어에서 -s 다음에 변경하고자 하는 버전의 이름을 넣어서 실행한다. 
 ~~~ shell
-    $ update-java-alternatives -s java-1.8.0-openjdk-amd64
+$ update-java-alternatives -s java-1.8.0-openjdk-amd64
 ~~~
 - 터미널에서 **java -version** 명령어로 버전이 변경 되었는지 확인한다.

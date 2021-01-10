@@ -12,48 +12,48 @@ changefreq : daily
 ### 1. build.gradle 설정  
 - thymeleaf, layout-dialect 를 사용하기 위한 의존성을 추가한다. 
 ~~~ gradle
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.4.1'
+implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.4.1'
 ~~~
 
 ### 2. config 설정 
 - thymeleaf 레이아웃을 사용하기 위한 빈을 생성해준다. 
 ~~~ java
-    @EnableWebMvc // Spring 에서 여러 Config 값을 알아서 세팅해준다.
-    @Configuration
-    public class ServletConfig implements WebMvcConfigurer {
-        @Bean
-        public LayoutDialect layoutDialect() {
-            return new LayoutDialect();
-        }
+@EnableWebMvc // Spring 에서 여러 Config 값을 알아서 세팅해준다.
+@Configuration
+public class ServletConfig implements WebMvcConfigurer {
+    @Bean
+    public LayoutDialect layoutDialect() {
+        return new LayoutDialect();
     }
+}
 ~~~
 
 ### 3. controller 
 - view 페이지 이동을 위한 기본 컨트롤러 설정 
 ~~~ java
-    @Controller
-    @RequestMapping("/sign")
-    public class SigninController {
-    	
-    	@GetMapping("/signin")
-    	public String signin(HttpServletRequest request, Model model) {
+@Controller
+@RequestMapping("/sign")
+public class SigninController {
     
-    		return "/sign/signin";
-    	}
+    @GetMapping("/signin")
+    public String signin(HttpServletRequest request, Model model) {
+
+        return "/sign/signin";
     }
+}
 ~~~
 
 ### 4. application.properties 
 - thymeleaf 관련 설정을 해준다. 개발 단계에서는 cache 는 false 로 설정한다. 
 ~~~ properties
-    spring.thymeleaf.mode=HTML
-    spring.thymeleaf.cache=false
-    spring.resources.cache.period=0
-    spring.devtools.restart.enabled=true
-    spring.thymeleaf.prefix=classpath:/templates
-    # 재실행 트리거에서 제외할 파일 설정
-    spring.devtools.restart.exclude=static/**, templates/**
+spring.thymeleaf.mode=HTML
+spring.thymeleaf.cache=false
+spring.resources.cache.period=0
+spring.devtools.restart.enabled=true
+spring.thymeleaf.prefix=classpath:/templates
+# 재실행 트리거에서 제외할 파일 설정
+spring.devtools.restart.exclude=static/**, templates/**
 ~~~
 
 ### 5. layout 구성 

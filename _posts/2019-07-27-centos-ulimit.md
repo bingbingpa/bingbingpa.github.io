@@ -20,10 +20,10 @@ changefreq : daily
 ## 2. ulimit 설정하기
 - OS 설치시 기본값은 1024로 되어 있으며 구글링을 해보니 다음과 같이 설정하면 된다고 한다. 
 ~~~ shell
-    $ sudo vi /etc/security/limits.conf 
+  $ sudo vi /etc/security/limits.conf 
 
-    *      soft      nofile      65535
-    *      hard    nofile       65535  
+  *      soft      nofile      65535
+  *      hard    nofile       65535  
 ~~~
 - 맨 앞의 **\*** 가 있는 자리는 사용자 계정을 나타내고 **\*** 로 지정하면 모든 사용자 계정에 옵션이 적용된다. 
 - 적용 후 따로 재부팅은 필요 없고 다시 접속해서 확인해보면 변경 된 것을 확인 할 수 있다. 

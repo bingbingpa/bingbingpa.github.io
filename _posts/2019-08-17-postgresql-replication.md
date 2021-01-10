@@ -18,23 +18,24 @@ changefreq : daily
 ### 2-1. Replication(복제)를 위한 user 생성
 - Replication을 담당할 사용자 계정을 추가한다. 
 ~~~ shell
-    $ psql -U postgres 
+$ psql -U postgres 
 ~~~
 ~~~ sql
-    postgres=#  CREATE ROLE replicator WITH LOGIN REPLICATION;
+postgres=#  CREATE ROLE replicator WITH LOGIN REPLICATION;
 ~~~
 - psql에서 **\du** 명령으로 유저가 정상적으로 등록 되었는지 확인 할 수 있다.
 <img src="/static/img/replication/user.png">
 
 ### 2-2. 권한 설정 
 - 생성한 replication user가 복제할 수 있게 권한을 부여하고 외부에서 접근 할 수 있도록 postgres.conf 파일과 pg_hba.conf 파일을 수정한다.
-~~~ shell
-    $ sudo su postgres
-    bash-4.2$ vi postgres.conf
-        listen_address = ‘*’
-
-    bash-4.2$ vi pg_hba.conf
-        host    replication replicator    “Slave IP”/32    trust
+~~~shell
+$ sudo su postgres
+bash-4.2$ vi postgres.conf
+    listen_address = ‘*’
+~~~
+~~~shell
+bash-4.2$ vi pg_hba.conf
+    host    replication replicator    “Slave IP”/32    trust
 ~~~
 
 ### 2-3. replication 관련 설정 
@@ -46,23 +47,23 @@ changefreq : daily
 - max_wal_senders : 접속가능한 슬레이브의 접속수를 설정한다.( 슬레이브 수 + 1)
 - wal_keep_segments : 리플리케이션용으로 남겨둘 WAL 파일의 수를 지정한다. (8~32가 적당)
 ~~~ shell
-    $ sudo su postgres
-    bash-4.2$ vi postgres.conf
-        wal_level = hot_standby
-        archive_mode = on
-        max_wal_senders = 2
-        wal_keep_segments = 32
-        max_replication_slots = 2
+$ sudo su postgres
+bash-4.2$ vi postgres.conf
+    wal_level = hot_standby
+    archive_mode = on
+    max_wal_senders = 2
+    wal_keep_segments = 32
+    max_replication_slots = 2
 ~~~
 
 ### 2-4. Replication Slot생성
 - Replication Slot을 생성하기 위해서는 위에서 변경된 postgresql.conf가 반영된 상태에서 postgreSQL을 재시작 후에 진행 하도록 한다. (sudo service postgresql-"버전" restart)
 ~~~ shell 
-    $ sudo su postgres
-    $ psql -U postgres 
+$ sudo su postgres
+$ psql -U postgres 
 ~~~
 ~~~ sql
-    postgres=# SELECT * FROM pg_create_physical_replication_slot('replication_slot');
+postgres=# SELECT * FROM pg_create_physical_replication_slot('replication_slot');
 ~~~
 <img src="/static/img/replication/slot.png">
 
@@ -72,25 +73,25 @@ changefreq : daily
 - 복사하고자 하는 Master server 와 Slaver server 간의 포트를 열어주어야 한다.  
 - pg_basebackup을 이용해서 DB를 복사하도록 하고 pg_basebackup과 data폴더 경로는 설치하는 환경에 맞게 바꿔주어야 한다. 
 ~~~ shell
-    $ sudo su postgres 
-    bash-4.2$ /usr/pgsql-9.6/bin/pg_basebackup -R -h “마스터IP” -D /data/pg_data/ -U replicator -v -P -xlog-method=stream
+$ sudo su postgres 
+bash-4.2$ /usr/pgsql-9.6/bin/pg_basebackup -R -h “마스터IP” -D /data/pg_data/ -U replicator -v -P -xlog-method=stream
 ~~~
 
 ### 3-2. postgres.conf 설정 
 - postgres.conf 파일을 수정한다. 
 ~~~ text 
-    listen_addresses = '*'
-    hot_standby = on 
-    hot_standby_feedback = on 
+listen_addresses = '*'
+hot_standby = on 
+hot_standby_feedback = on 
 ~~~
 
 ### 3-3. recovery.conf 설정 
 - DB 복사후에 초기에는 recovery.conf 파일이 없으므로 복사한 postgres의 데이터 폴더에 파일을 생성한다. 
 - **primary_slot_name은 Master server에서 설정한 slot name을 작성한다.**
 ~~~ text
-    standby_mode = 'on'
-    primary_conninfo = 'user=replicator host=”마스터IP” port=5432 sslmode=prefer sslcompression=1 krbsrvname=postgres'
-    primary_slot_name='replication_slot'
+standby_mode = 'on'
+primary_conninfo = 'user=replicator host=”마스터IP” port=5432 sslmode=prefer sslcompression=1 krbsrvname=postgres'
+primary_slot_name='replication_slot'
 ~~~
 
 ## 4. 설정 확인
@@ -103,12 +104,12 @@ changefreq : daily
 ## 5. Test 
 - Master server에서 테이블을 하나 생성후 샘플 데이터를 넣고 Slave server에서 정상적으로 생기는지 확인한다 
     - Master Server 
-        ~~~ sql
-            postgres=# CREATE TABLE test (id serial, name character varying);
-            postgres=# INSERT INTO test (name) VALUES ('tester');
-        ~~~
+    ~~~sql
+      postgres=# CREATE TABLE test (id serial, name character varying);
+      postgres=# INSERT INTO test (name) VALUES ('tester');
+    ~~~
     - Slave server
-    ~~~ sql
-        postgres=# SELECT * FROM test;
+    ~~~sql
+      postgres=# SELECT * FROM test;
     ~~~
 

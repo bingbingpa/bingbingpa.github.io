@@ -41,13 +41,13 @@ comments: true
 ## 3. 프로젝트 설정  
 
 - 루트 폴더의 settings.gradle 파일에 프로젝트들관의 관계를 설정해준다. 
-~~~ grooby
-    rootProject.name = "gradleSample"
-    include ":test-admin"
-    include ":test-user"
-
-    project(":test-admin").projectDir = "$rootDir/test-admin" as File
-    project(":test-user").projectDir = "$rootDir/test-user" as File
+~~~ gradle
+  rootProject.name = "gradleSample"
+  include ":test-admin"
+  include ":test-user"
+  
+  project(":test-admin").projectDir = "$rootDir/test-admin" as File
+  project(":test-user").projectDir = "$rootDir/test-user" as File
 ~~~
 
 ## 4. import 
@@ -59,17 +59,16 @@ comments: true
 
 - A 프로젝트에서 B프로젝트에 있는 클래스를 사용하기 위해서는 설정을 해주어야 한다. 
 - A 프로젝트의 build.gradle 파일의 dependencies에 implementation project(":해당프로젝트명")
-### 다른 프로젝트를 import 하게 되면 테스트 코드를 작성할 때 오류가 발생하는데 테스트 코드에 클래스를 명시해 주어야 한다. 
-
+- **다른 프로젝트를 import 하게 되면 테스트 코드를 작성할 때 오류가 발생하는데 테스트 코드에 클래스를 명시해 주어야 한다.** 
 ~~~ java
-    @RunWith(SpringRunner.class)
-    @SpringBootTest(classes = TestAdmin.class)
-    public class QueryExcuteTests {
-        @Test 
-        public void testCode(){
+  @RunWith(SpringRunner.class)
+  @SpringBootTest(classes = TestAdmin.class)
+  public class QueryExcuteTests {
+      @Test 
+      public void testCode(){
 
-        }
-    }
+      }
+  }
 ~~~
 
 ## 6. build

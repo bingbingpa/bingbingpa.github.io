@@ -47,6 +47,6 @@ changefreq : daily
 - 컴파일러가 컴파일 하기 위해서 필요로 하는 참조할 클래스 파일들을 찾기 위해서 컴파일시 파일 경로를 지정해주는 옵션이다.
 - classpath 대신 단축어인 cp 를 사용해도 된다.
 - ~~~java
-    javac <options> <source files>
+  javac <options> <source files>
   ~~~
   - 예) java -classpath /home/java;/home/test/Hello.java

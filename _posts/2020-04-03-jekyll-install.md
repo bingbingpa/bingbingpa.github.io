@@ -15,31 +15,31 @@ changefreq : daily
 - 먼저 update 를 해준다. window ubuntu 일 경우 reboot 는 하지 않고 cmd 창을 다시 실행하면 된다.
 - windows ubuntu 의 경우는 권한 관련 문제가 있어서 root 계정으로 설치를 진행했다.  
 ~~~shell
-    sudo apt update
-    sudo apt -y upgrade
-    sudo reboot
+sudo apt update
+sudo apt -y upgrade
+sudo reboot
 ~~~
 ~~~shell
-    sudo apt -y install make build-essential
+sudo apt -y install make build-essential
 ~~~
 ~~~shell
-    sudo apt -y install ruby ruby-dev
+sudo apt -y install ruby ruby-dev
 ~~~
 - 이부분은 windows ubuntu 에서 root 로 진행했다면 넘어가도 된다. 
 ~~~shell
-    export GEM_HOME=$HOME/gems
-    export PATH=$HOME/gems/bin:$PATH
+export GEM_HOME=$HOME/gems
+export PATH=$HOME/gems/bin:$PATH
 ~~~
 ~~~shell
-    source ~/.bashrc
-    source ~/.zshrc
+source ~/.bashrc
+source ~/.zshrc
 ~~~
 - jekyll & bundler 설치 
 ~~~shell
-    gem install bundler
-    gem install jekyll
+gem install bundler
+gem install jekyll
 ~~~
 - 설치가 완료되면 jekyll 프로젝트 경로로 이동해서 server를 실행한다. 기본포트는 4000번이다. 
 ~~~shell
-    jekyll serve
+jekyll serve
 ~~~

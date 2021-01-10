@@ -16,7 +16,7 @@ changefreq : daily
 - 그리고 setting.json에 다음과 같이 명시적으로 적어준다. 
 
 ~~~ json 
-    "java.jdt.ls.vmargs": "-javaagent:/'파일경로'/lombok.jar -Xbootclasspath/a:/'파일경로'/lombok.jar"
+"java.jdt.ls.vmargs": "-javaagent:/'파일경로'/lombok.jar -Xbootclasspath/a:/'파일경로'/lombok.jar"
 ~~~
 
 - 혹시 안된다면 java clean 후 vscode를 리로드하면 된다. 
@@ -27,17 +27,17 @@ changefreq : daily
 - setting.json에 favoriteStaticMembers에 사용하고자 하는 static 패키지들을 추가해주는 것이다. 근데 추가한다고 해도 자동 import 단축키로는 안되고 quick fix(이클립스 기준 단축키 Ctrl + 1)에서 import할 static 메소드를 선택해줘야 한다. 그래도 일일이 치거나 복붙하는 것보단 훨씬 나아진 것 같다.
 
 ~~~ json
-    "java.completion.favoriteStaticMembers": [
-        "org.junit.Assert.*",
-        "org.junit.Assume.*",
-        "org.junit.jupiter.api.Assertions.*",
-        "org.junit.jupiter.api.Assumptions.*",
-        "org.junit.jupiter.api.DynamicContainer.*",
-        "org.junit.jupiter.api.DynamicTest.*",
-        "org.mockito.Mockito.*",
-        "org.mockito.ArgumentMatchers.*",
-        "org.mockito.Answers.*",
-        "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*",
-        "org.springframework.test.web.servlet.result.MockMvcResultMatchers.*"
-      ]
+"java.completion.favoriteStaticMembers": [
+    "org.junit.Assert.*",
+    "org.junit.Assume.*",
+    "org.junit.jupiter.api.Assertions.*",
+    "org.junit.jupiter.api.Assumptions.*",
+    "org.junit.jupiter.api.DynamicContainer.*",
+    "org.junit.jupiter.api.DynamicTest.*",
+    "org.mockito.Mockito.*",
+    "org.mockito.ArgumentMatchers.*",
+    "org.mockito.Answers.*",
+    "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*",
+    "org.springframework.test.web.servlet.result.MockMvcResultMatchers.*"
+]
 ~~~

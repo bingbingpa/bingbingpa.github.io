@@ -18,11 +18,11 @@ changefreq : daily
 
 - OS update 패키지를 받을 때 
 ~~~ shell
-    $ sudo yum update --downloadonly --downloaddir=’다운받을 디렉토리’(OS 업데이트 패키지)
+$ sudo yum update --downloadonly --downloaddir=’다운받을 디렉토리’(OS 업데이트 패키지)
 ~~~ 
 - 필요한 설치 패키지를 받을 때
 ~~~ shell
-    $ sudo yum install --downloadonly --downloaddir=’다운받을 디렉토리’  ‘설치할 패키지’
+$ sudo yum install --downloadonly --downloaddir=’다운받을 디렉토리’  ‘설치할 패키지’
 ~~~ 
 
  

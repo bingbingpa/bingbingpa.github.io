@@ -41,37 +41,37 @@ changefreq : daily
             - 클래스 변수 초기화 : 기본값 -> 명시적 초기화 -> 클래스 초기화 블록
             - 인스턴스 변수 초기화 : 기본값 -> 명시적 초기화 -> 인스턴스 초기화 블록 -> 생성자
     - 객체 생성이 각각의 초기화 블록이 실행되는 순서는 아래의 코드를 수행해보면 클래스초기화 블록 -> 인스턴스 초기화 블록 -> 생성자의 순으로 실행되는 것을 확인 할 수 있다.
-        - ~~~java
-            class Study {               // 클래스
-                static String classVar; // 클래스 변수
-            
-                static {                // 클래스 초기화 블록
-                    System.out.println("클래스 초기화 블록");
-                    classVar = "Class Variable";
-                }
-            
-                String constructor;
-                String instanceVar;     // 인스턴스 변수
-            
-                {                       // 인스턴스 초기화 블록
-                    instanceVar = "Instance Variable";
-                    System.out.println("인스턴스 초기화 블록");
-                }
-            
-                Study() {                // 생성자
-                    constructor = "Constructor";
-                    System.out.println("생성자 블록");
-                }
-            
-                static void classMethod() {   // 클래스 메서드
-                    System.out.println(classVar);
-                }
-            
-                void instanceMethod() {       // 인스턴스 메서드
-                    System.out.println(instanceVar);
-                }
-            }
-          ~~~
+    ~~~java
+      class Study {               // 클래스
+          static String classVar; // 클래스 변수
+      
+          static {                // 클래스 초기화 블록
+              System.out.println("클래스 초기화 블록");
+              classVar = "Class Variable";
+          }
+      
+          String constructor;
+          String instanceVar;     // 인스턴스 변수
+      
+          {                       // 인스턴스 초기화 블록
+              instanceVar = "Instance Variable";
+              System.out.println("인스턴스 초기화 블록");
+          }
+      
+          Study() {                // 생성자
+              constructor = "Constructor";
+              System.out.println("생성자 블록");
+          }
+      
+          static void classMethod() {   // 클래스 메서드
+              System.out.println(classVar);
+          }
+      
+          void instanceMethod() {       // 인스턴스 메서드
+              System.out.println(instanceVar);
+          }
+      }
+    ~~~
     - 접근 제어자
         - 제어자 : 클래스, 변수, 메서드의 선언부에 함계 사용되어 부가적인 의미를 부여한다.
         - 접근 제어자 : 해당 클래스 또는 멤버를 정해진 범위에서만 접근할 수 있도록 통제하는 역할을 한다. 참고로 default 는 아무것도 붙이지 않았을때를 의미한다.
@@ -106,9 +106,9 @@ changefreq : daily
 
 ### 3. 메소드 정의하는 방법
 - ~~~java
-    public String getType (String name) {
-        구현부
-    }
+  public String getType (String name) {
+      구현부
+  }
   ~~~
 - 접근 제어자 및 기타 제어자(public)
 - 변환 타입(String) : 메서드가 모든 작업을 수행한 뒤에 반환할 타입을 명시한다.
@@ -119,78 +119,78 @@ changefreq : daily
  
 ### 4. 생성자 정의하는 방법
 - 생성자를 명시하지 않으면 컴파일러가 자동으로 기본 생성자를 생성한다. 하지만 기본 생성자가 아닌 다른 형태의 생성자만 명시했다면 기본 생성자는 생성되지 않는다. 
-    ~~~ java
-        Point() {}  // 기본 생성자
-        
-        Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    ~~~
+~~~ java
+  Point() {}  // 기본 생성자
+  
+  Point(int x, int y) {
+      this.x = x;
+      this.y = y;
+  }
+~~~
   
 ### 5. this 키워드 이해하기
 - this 는 인스턴스 자신을 가르키는 참조 변수이고 this() 는 생성자를 뜻하며, 상속한 부모 클래스의 값이나 생성자를 사용할 때는 super, super() 를 사용한다. 
 - this 의 사용은 총 3가지 형태로 사용된다.
     - 클래스의 속성과 매개변수의 이름이 같을 때
-        ~~~ java
-            public Class Test{
-                   int a;
-                   
-                   public Test(int a){
-                        this.a = a;
-                   }
-            }
-        ~~~
+    ~~~ java
+      public Class Test{
+             int a;
+             
+             public Test(int a){
+                  this.a = a;
+             }
+      }
+    ~~~
         - 위 코드에서 생성자에서 클래스의 속성인 a 를 매개변수 a 로 초기화 해준다. 만약 a = a 와 같이 쓴다면 인스턴스 변수 a 는 초기화 되지 않는다. 
     - 오버로딩된 다른 생성자를 호출할 때
-        - ~~~java
-            public class Layer {
-            
-                int layerId;
-                String layerName;
-            
-                public Layer() {
-                    this(0, null);
-                }
-            
-                public Layer(int layerId) {
-                    this(layerId, null);
-                }
-            
-                public Layer(String layerName) {
-                    this(0, layerName);
-                }
-          
-                public Layer(int layerId, String layerName) {
-                    this.layerId = layerId;
-                    this.layerName = layerName;
-                }
-            }
-          ~~~
+    ~~~java
+      public class Layer {
+      
+          int layerId;
+          String layerName;
+      
+          public Layer() {
+              this(0, null);
+          }
+      
+          public Layer(int layerId) {
+              this(layerId, null);
+          }
+      
+          public Layer(String layerName) {
+              this(0, layerName);
+          }
+      
+          public Layer(int layerId, String layerName) {
+              this.layerId = layerId;
+              this.layerName = layerName;
+          }
+      }
+    ~~~
     - 인스턴스 자신의 참조값을 전달하고 싶을 때 
-        - ~~~java
-            public class Layer {
-                    
-                int layerId;
-                String layerName;
-            
-                public Layer(int layerId, String layerName) {
-                    this.layerId = layerId;
-                    this.layerName = layerName;
-                }
-          
-                public Layer getLayerInstance() {
-                    return this;
-                }
-            }
-          ~~~
+    ~~~java
+      public class Layer {
+              
+          int layerId;
+          String layerName;
+      
+          public Layer(int layerId, String layerName) {
+              this.layerId = layerId;
+              this.layerName = layerName;
+          }
+      
+          public Layer getLayerInstance() {
+              return this;
+          }
+      }
+    ~~~
         - 위와 같이 인스턴스를 리턴하는 함수와 직접 생성한 인스턴스를 비교해보면 같은 결과가 나온다.
-            - ~~~java
-                Layer layer3 = new Layer(10, "테스트");
-                Layer layer4 = layer3.getLayerInstance();
-        
-                assertThat(layer3).isEqualTo(layer4);
-              ~~~ 
+        ~~~java
+          Layer layer3 = new Layer(10, "테스트");
+          Layer layer4 = layer3.getLayerInstance();
+    
+          assertThat(layer3).isEqualTo(layer4);
+        ~~~ 
               
 ### 6. 클래스, 객체, 인스턴스
 - 클래스(Class)
@@ -201,16 +201,16 @@ changefreq : daily
     - 설계도를 바탕으로 소프트웨어 세계에 **구현된 구체적인 실체**. 객체를 소프트웨어에 실체화 하면 그것을 **인스턴스**라고 부르며, 실체화된 인스턴스는 메모리에 할당된다.
     - 객체가 메모리에 할당되어 실제 사용될 때 인스턴스라고 부른다.
 - ~~~ java
-    /* 클래스 */
-    public class Animal {
-      ...
-    }
-    /* 객체와 인스턴스 */
-    Animal cat, dog; // '객체'
+  /* 클래스 */
+  public class Animal {
+    ...
+  }
+  /* 객체와 인스턴스 */
+  Animal cat, dog; // '객체'
 
-    // 인스턴스화
-    cat = new Animal(); // cat은 Animal 클래스의 '인스턴스'(객체를 메모리에 할당)
-    dog = new Animal(); // dog은 Animal 클래스의 '인스턴스'(객체를 메모리에 할당)
+  // 인스턴스화
+  cat = new Animal(); // cat은 Animal 클래스의 '인스턴스'(객체를 메모리에 할당)
+  dog = new Animal(); // dog은 Animal 클래스의 '인스턴스'(객체를 메모리에 할당)
   ~~~ 
 - 클래스 vs 객체 
     - 클래스는 '설계도', 객체는 '설계도로 구현한 모든 대상' 을 의미한다.

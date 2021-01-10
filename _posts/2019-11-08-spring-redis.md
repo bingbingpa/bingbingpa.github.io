@@ -26,15 +26,15 @@ changefreq : daily
 - 기본포트는 6379번이고 포트를 포함한 설정정보를 수정하려면 redis.windows.conf 파일을 수정하면 된다. 
 - 서비스를 등록하고 redis 서비스를 시작한다. 
 ~~~ cmd
-    redis-server --service-install redis.windows.conf --loglevel verbose
-    redis-server --service-start
+redis-server --service-install redis.windows.conf --loglevel verbose
+redis-server --service-start
 ~~~
 - cli로 접속하여 정상적으로 접속이 되는지 확인.(아직 springboot에 redis 설정을 하지 않았으므로 아무것도 없다.)
 - redis-cli 
 ~~~ cmd
-    127.0.0.1:6379> 
-    127.0.0.1:6379> keys * 
-    (empty list or set)
+127.0.0.1:6379> 
+127.0.0.1:6379> keys * 
+(empty list or set)
 ~~~
 - flushall : 모든 세션 정보 초기화 
 - keys * : 모든 세션 정보 조회 
@@ -44,7 +44,7 @@ changefreq : daily
 
 - redis session을 사용 할 수 있도록 디펜던시 추가 
 ~~~ gradle
-    compile('org.springframework.session:spring-session-data-redis')  
+compile('org.springframework.session:spring-session-data-redis')  
 ~~~
 
 ### 5. RedisConfig 파일 추가 
@@ -52,25 +52,25 @@ changefreq : daily
 - redis 연결정보와 RedisTemplate을 Bean으로 추가한다. 
 - redisConnectionFactory로는 Jedis 보다 Lettuce가 더 낫다는 글들이 많아서 Lettuce 사용. 
 ~~~ java
-    @Configuration
-    @EnableRedisRepositories
-    public class RedisConfig {
-    
-        @Bean
-        public RedisConnectionFactory redisConnectionFactory() {
-            LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory();
-            return lettuceConnectionFactory;
-        }
+@Configuration
+@EnableRedisRepositories
+public class RedisConfig {
 
-        @Bean
-        public RedisTemplate<String, Object> redisTemplate() {
-            RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-            redisTemplate.setConnectionFactory(redisConnectionFactory());
-            redisTemplate.setKeySerializer(new StringRedisSerializer());
-            redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(MyDto.class));
-            return redisTemplate;
-        }
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory();
+        return lettuceConnectionFactory;
     }
+
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(MyDto.class));
+        return redisTemplate;
+    }
+}
 ~~~
 
 ### 6. Session에 담아줄 Dto에 Serializable 추가 
@@ -83,27 +83,27 @@ changefreq : daily
 
 - 웹 어플리케이션에 로그인시에 해당 session을 redis 설정한 어플리케이션끼리 공유하므로 session 정보를 확인 후 로그인 처리 또는 login페이지로 이동하도록 설정한다.   
 ~~~ java
-    @Controller
-    public class LoginController {
+@Controller
+public class LoginController {
 
-        /**
-        * 로그인 화면
-        * @return
-        */
-        @GetMapping("/login")
-        public String login(HttpServletRequest request, Model model) {
+    /**
+    * 로그인 화면
+    * @return
+    */
+    @GetMapping("/login")
+    public String login(HttpServletRequest request, Model model) {
 
-            //사용자 정보가 있을 경우 바로 메인 페이지로 이동 
-            MyDto session = (MyDto)request.getSession().getAttribute(MyDto.KEY);
-            if(session != null) {
-                return "redirect:/main/";
-            }
-
-            model.addAttribute("loginForm", new MyDto());
-
-            return "/login/login";
+        //사용자 정보가 있을 경우 바로 메인 페이지로 이동 
+        MyDto session = (MyDto)request.getSession().getAttribute(MyDto.KEY);
+        if(session != null) {
+            return "redirect:/main/";
         }
+
+        model.addAttribute("loginForm", new MyDto());
+
+        return "/login/login";
     }
+}
 ~~~
 
 ### 8. 확인 

@@ -13,28 +13,28 @@ changefreq : daily
 
 - maven 프로젝트를 생성하고자 하는 경로로 이동(윈도우라면 maven이 환경변수에 등록되어 있어야 한다.)
 ~~~shell
-    mvn archetype:generate
+mvn archetype:generate
 ~~~
 - 잠시 기다리면 다음과 같은 텍스트들이 출력된다. 
 ~~~shell
-    [INFO] Scanning for projects...
-    [INFO] 
-    [INFO] ------------------< org.apache.maven:standalone-pom >-------------------
-    [INFO] Building Maven Stub Project (No POM) 1
-    [INFO] --------------------------------[ pom ]---------------------------------
-    [INFO] 
-    [INFO] >>> maven-archetype-plugin:3.1.1:generate (default-cli) > generate-sources @ standalone-pom >>>
-    [INFO] 
-    [INFO] <<< maven-archetype-plugin:3.1.1:generate (default-cli) < generate-sources @ standalone-pom <<<
-    [INFO] 
-    [INFO] 
-    [INFO] --- maven-archetype-plugin:3.1.1:generate (default-cli) @ standalone-pom ---
-    [INFO] Generating project in Interactive mode
-    [INFO] No archetype defined. Using maven-archetype-quickstart (org.apache.maven.archetypes:maven-archetype-quickstart:1.0)
-    Choose archetype:
-    .... 중략 ... 
+  [INFO] Scanning for projects...
+  [INFO] 
+  [INFO] ------------------< org.apache.maven:standalone-pom >-------------------
+  [INFO] Building Maven Stub Project (No POM) 1
+  [INFO] --------------------------------[ pom ]---------------------------------
+  [INFO] 
+  [INFO] >>> maven-archetype-plugin:3.1.1:generate (default-cli) > generate-sources @ standalone-pom >>>
+  [INFO] 
+  [INFO] <<< maven-archetype-plugin:3.1.1:generate (default-cli) < generate-sources @ standalone-pom <<<
+  [INFO] 
+  [INFO] 
+  [INFO] --- maven-archetype-plugin:3.1.1:generate (default-cli) @ standalone-pom ---
+  [INFO] Generating project in Interactive mode
+  [INFO] No archetype defined. Using maven-archetype-quickstart (org.apache.maven.archetypes:maven-archetype-quickstart:1.0)
+  Choose archetype:
+  .... 중략 ... 
 
-    Choose org.apache.maven.archetypes:maven-archetype-quickstart version:
+  Choose org.apache.maven.archetypes:maven-archetype-quickstart version:
 ~~~
 - 이 상태에서 엔터를 치면 가장 최신의 maven-archetype quickstart version이 선택 된다. 
 <img src="/static/img/maven-quick-start/maven-quick-start.png">

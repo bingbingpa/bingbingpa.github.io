@@ -41,9 +41,9 @@ changefreq : daily
 
 - 같은 로직을 수행하는 case는 한번에 사용 할 수 있다. 
 ~~~ java
-    switch(value) {
-        case 1: case 2: case 3:
-            수행로직
-            break;
-    }
+switch(value) {
+    case 1: case 2: case 3:
+        수행로직
+        break;
+}
 ~~~
