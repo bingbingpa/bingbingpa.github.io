@@ -109,7 +109,7 @@ body {
     margin: 0px 0px 0px 0px;
 }
 
-body,code,pre{
+body{
     font: 400 18px/1.8 "Apple SD Gothic Neo","Nanum Barun Gothic","Nanum Gothic",Verdana,Arial,"Malgun Gothic",Dotum,sans-serif;
 }
 
@@ -118,10 +118,10 @@ body,.sheet,pre,code{
 }
 
 
-a:link {text-decoration: none}		
-a:visited {text-decoration: none}	
-a:hover {text-decoration: none}	
-a:active {text-decoration: none}	
+a:link {text-decoration: none}
+a:visited {text-decoration: none}
+a:hover {text-decoration: none}
+a:active {text-decoration: none}
 
 .main{
     min-height: 100%;
