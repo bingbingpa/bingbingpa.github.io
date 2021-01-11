@@ -216,3 +216,8 @@ changefreq : daily
       assertNotNull(bookService);
       assertNotNull(bookService.bookRepository);
     ~~~
+
+#### 참조 링크
+- [인프런- 더 자바, 애플리케이션을 조작하는 다양한 방법](https://www.inflearn.com/course/the-java-application-test)
+#### 소스 코드
+- [https://github.com/bingbingpa/study-the-java-code-manipulation](https://github.com/bingbingpa/study-the-java-code-manipulation)
