@@ -4,7 +4,7 @@ title : postgresql pg-dump
 date : 2019-07-15
 excerpt : "postgresql 다른 버전간의 pg-dump 하기"
 tags: [postgresql, backup]
-categories: [DataBase]
+categories: [Database]
 comments: true
 changefreq : daily
 ---

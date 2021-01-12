@@ -4,7 +4,7 @@ title : postgresql & postgis 설치하기
 date : 2020-02-29
 excerpt : "ubuntu 18.04 버전에서 기존 postgres삭제하고  postgresql12 & postgis3.0설치하기"
 tags: [postgresql]
-categories: [DataBase]
+categories: [Database]
 comments: true
 changefreq : daily
 ---

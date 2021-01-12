@@ -4,7 +4,7 @@ title : postgreSQL 고가용성
 date : 2020-05-31
 excerpt : "postgreSQL 12 공식 문서 postgreSQL High Availability, Load Balancing, and Replication"
 tags: [postgres, replication, high Availability, Load Balancing, 고가용성]
-categories: [DataBase]
+categories: [Database]
 comments: true
 changefreq : daily
 ---
