@@ -1,7 +1,7 @@
 ---
 layout : post 
 title : 자바 예외처리 
-date : 2021-01-15 
+date : 2021-01-16 
 excerpt : "자바의 예외 처리에 대해 학습하기"
 tags: [whiteship/live-study, java]
 categories: [Java]
@@ -58,15 +58,15 @@ changefreq : daily
 |트랜잭션|예외 발생시 롤백되지 않음|예외 발생시 롤백됨|
 
 ### 4. 자바에서 예외 처리 방법 (try, catch, finally, throw, throws, try-with-resources, Assertion)
-- try 
+- **try** 
     - 예외를 처리할 대상이 되는 코드를 입력하기 위해 사용된다.
     - catch 블록 혹은 finally 블럭이 필수로 필요하다. 
-- catch
+- **catch**
     - try 블렉에서 발생한 예외를 처리하기 위해 사용된다.
     - catch 블럭이 처리할 수 있는 타입은 **Throwable** 의 서브클래스들이다.
     - try 블럭에서 예외가 던져지면(throw) Java 인터프리터는 던져진 예외와 동일한 타입 혹은 예외의 슈퍼 클래스가 파라미터로 있는 catch 절을 찾는다.
     - java 1.7 부터 여러 예외를 공통으로 하나의 catch 블럭에서 처리 할 수 있다.
-- finally
+- **finally**
     - 일반적으로 try 블럭의 코드를 정리하는데 사용한다.
     - try 블럭의 코드의 완료와 상관없이 try 블럭이 일부만 실행되더라도 finally 블럭의 실행은 보장된다.
     ~~~ java
@@ -78,7 +78,7 @@ changefreq : daily
           // 항상 처리할 필요가 있는 코드
       }
     ~~~
-- throw
+- **throw**
     - 인위적으로 예외를 발생시킬 때 사용할 수 있는 예약어
     - 개발자가 의도하지 않은 케이스에 대해 임의로 예외를 발생시킬 때 사용되며, 특정 예외를 만났을 때 구체적인 예외로 처리하고자 할때에도 사용된다.
     ~~~ java
@@ -89,7 +89,7 @@ changefreq : daily
           System.out.println("i : " + i);
       }
     ~~~
-- throws
+- **throws**
     - 발생한 예외 객체를 메소드를 호출한 곳으로 넘긴다.
     - 예외가 발생한 지점에서 try-catch-finally 블록을 이용하여 직접 처리하지 않아도 예외가 발생한 메소드를 호출한 지점으로 예외를 전달 할 수 있다.
     ~~~ java
@@ -101,7 +101,7 @@ changefreq : daily
           throw new Exception();
       }
     ~~~
-- try-with-resources
+- **try-with-resources**
     - java 1.7 부터 사용가능한 문법으로 자동으르 메모리 해제를 해준다.
     - **모든 객체의 메모리를 해제해 주는 것은 아니고, AutoCloseable 인터페이스를 구현한 객체만 가능하다.**
     ~~~ java
@@ -117,7 +117,7 @@ changefreq : daily
           e.printStackTrace();
       }
     ~~~
-- Assertion
+- **Assertion**
     - java 1.4 부터 사용가능 하다. 
     - Assertion 은 주로 코드에서 설계를 검증하는 기능을 제공한다.
     - boolean 타입의 표현식을 만들어 평가할 수 있고, 그 결과가 false 일 경우 검사가 실패하고 **java.lang.AssertionError** 를 발생시킨다.
@@ -127,18 +127,98 @@ changefreq : daily
     assert 불리언식:수식;
     ~~~
     ~~~ java
-    assert i<0;
+    assert i < 0;
     assert age > 0 : "나이는 음수가 될 수 없습니다:" + age;
     ~~~
     - 첫번째 assert 문장은 i가 0보다 작지 않을 경우 AssertionError 를 발생시킨다. 
-    - 세번째 assert 문장의 경우는 age 가 0보다 크지 않은 경우 AssertionError 를 발생시키며, 그때 AssertionError 의 예외 메시지는 "나이는 음수가 될 수 없습니다:"와 age 변수를 연결한 문자열이 된다.
+    - 두번째 assert 문장의 경우는 age 가 0보다 크지 않은 경우 AssertionError 를 발생시키며, 그때 AssertionError 의 예외 메시지는 "나이는 음수가 될 수 없습니다:"와 age 변수를 연결한 문자열이 된다.
     
 ### 5. 커스텀한 예외 만드는 방법
+- **Exception 을 만드는데 있어 중요한 4가지 요소**
+    - Java 표준 예외를 사용하는 것보다 커스텀 예외를 사용하는게 더 많은 이익을 얻는다고 생각할 경우에만 커스텀 예외를 구현하자.
+    - 예외 클래스의 이름의 끝은 Java 기본 Exception 네이밍과 동일하게 Exception 으로 끝나도록 하자.
+    - 커스텀한 예외에 대한 문서화를 하자.
+    - 예외의 원인을 설정하는 생성자를 제공해야 한다. 다시 말해, 아래와 같은 코드에서 생성자에 e 를 누락시킨다면 이 정보를 잃게 된다. 
+    ~~~ java
+      public void wrapException(String input) throws MyBusinessException {
+          try {
+              // do something
+          } catch (NumberFormatException e) {
+              throw new MyBusinessException("A message that describes the error.", e, ErrorCode.INVALID_PORT_CONFIGURATION);
+          }
+      }
+    ~~~
+- **CheckedException 커스텀**
+    - **Exception** 클래스를 상속 받아서 구현한다.
+    ~~~ java
+      public class MyBusinessException extends Exception {
+          private static final long serialVersionUID = 7718828512143293558L;
+          private final ErrorCode code;
+    
+          public MyBusinessException(ErrorCode code) {
+              super();
+              this.code = code;
+          }
+        
+          public MyBusinessException(String message, Throwable cause, ErrorCode code) {
+              super(message, cause);
+              this.code = code;
+          }
+        
+          public MyBusinessException(String message, ErrorCode code) {
+              super(message);
+              this.code = code;
+          }
+        
+          public MyBusinessException(Throwable cause, ErrorCode code) {
+              super(cause);
+              this.code = code;
+          }
+        
+          public ErrorCode getCode() {
+            return this.code;
+          }
+      }
+    ~~~
+- **UncheckedException 커스텀**
+    - **RuntimeException** 클래스를 상속 받아서 구현한다.
+    ~~~ java
+      public class MyUncheckedBusinessException extends RuntimeException {
+          private static final long serialVersionUID = -8460356990632230194L;
+          private final ErrorCode code;
+      
+          public MyUncheckedBusinessException(ErrorCode code) {
+              super();
+              this.code = code;
+          }
+      
+          public MyUncheckedBusinessException(String message, Throwable cause, ErrorCode code) {
+              super(message, cause);
+              this.code = code;
+          }
+      
+          public MyUncheckedBusinessException(String message, ErrorCode code) {
+              super(message);
+              this.code = code;
+          }
+      
+          public MyUncheckedBusinessException(Throwable cause, ErrorCode code) {
+              super(cause);
+              this.code = code;
+          }
+      
+          public ErrorCode getCode() {
+              return this.code;
+          }
+      }
+    ~~~
 
 #### 참고
 - [https://blog.baesangwoo.dev/posts/java-livestudy-9week/#error--exception](https://blog.baesangwoo.dev/posts/java-livestudy-9week/#error--exception)
 - [https://www.notion.so/3565a9689f714638af34125cbb8abbe8](https://www.notion.so/3565a9689f714638af34125cbb8abbe8)
 - [https://softm.tistory.com/entry/Java-Assertion](https://softm.tistory.com/entry/Java-Assertion)
 - [https://javacan.tistory.com/entry/79](https://javacan.tistory.com/entry/79)
+- [https://dzone.com/articles/implementing-custom-exceptions-in-java?fromrel=true](https://dzone.com/articles/implementing-custom-exceptions-in-java?fromrel=true)
 
-    
+#### 작성한 코드 저장소
+
