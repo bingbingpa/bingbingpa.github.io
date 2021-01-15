@@ -36,15 +36,15 @@ changefreq : daily
 - **Exception 의 서브 클래스 중 RuntimeException 을 제외한 모든 클래스는 CheckedException 이며, RuntimeException 과 그 서브 클래스들은 UnCheckedException 이다.**
 - CheckedException
     - 컴파일 시점에 확인되는 예외
-    - 아래와 같은 코드는 컴파일이 불가능 하다.(Cannot resolve symbol 'text')
+    - 반드시 try catch 를 해서 에러를 잡든 throws 를 통해서 호출한 메서드로 예외를 던져야 한다.
+    - 가급적이면 해당 에러를 사용자에게 처리하라는 의도를 api 에서 가지고 있기 때문에 밖으로 전파하기 보다는 호출하는 곳에서 처리해 주는 것이 좋다.
     ~~~ java
-      public class Study {
-          private text;
-      }
+      Class clazz = Class.forName("java.lang.String2");
     ~~~
 - UncheckedException
     - CheckedException 과 반대로 컴파일 시점에 확인할 수 없는 예외
     - **모든 UncheckedException 은 RuntimeException** 을 상속한다.
+    - 주로 복구가 불가능하거나 해당 에러를 다루었을 때 득보다 실이 많은 경우에 사용된다.
     ~~~ java
     List<String> list = new ArrayList<>();
     list.get(0)
@@ -150,6 +150,7 @@ changefreq : daily
     ~~~
 - **CheckedException 커스텀**
     - **Exception** 클래스를 상속 받아서 구현한다.
+    - **반드시 try catch 를 해서 에러를 잡든 throws 를 통해서 호출한 메서드로 예외를 던져야 한다.**
     ~~~ java
       public class MyBusinessException extends Exception {
           private static final long serialVersionUID = 7718828512143293558L;
@@ -182,6 +183,7 @@ changefreq : daily
     ~~~
 - **UncheckedException 커스텀**
     - **RuntimeException** 클래스를 상속 받아서 구현한다.
+    - **명시적인 예외 처리를 강제하지 않기 때문에 catch 로 잡거나 throw 로 호출한 메서드로 예외를 던지지 않아도 상관없다.**
     ~~~ java
       public class MyUncheckedBusinessException extends RuntimeException {
           private static final long serialVersionUID = -8460356990632230194L;
