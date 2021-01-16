@@ -30,6 +30,7 @@ changefreq : daily
 - **Exception**
     - 애플리케이션 내에서 핸들링 할 수 있는 에러들을 이야기 하며 **예외**라고 한다. 
     - **NullPointerException**, **FileNotFountException** 등이 있다.
+    - **예외의 비용은 비싸다.** 가급적 비즈니스 로직으로 처리를 하도록 해보자.
 
 ### 3. RuntimeException 과 RE 가 아닌 것의 차이는?
 - **RuntimeException 은 CheckedException 과 UnCheckedException 을 구분하는 기준이다.**
@@ -55,7 +56,6 @@ changefreq : daily
 |확인 가능 시점|컴파일 시점|런타임 시점|
 |구분|RuntimeException 을 상속하지 않은 예외|RuntimeException 과 이를 상속한 예외|
 |예외 처리|명시적인 예외 처리가 강제됨|예외 처리가 강제되지 않음|
-|트랜잭션|예외 발생시 롤백되지 않음|예외 발생시 롤백됨|
 
 ### 4. 자바에서 예외 처리 방법 (try, catch, finally, throw, throws, try-with-resources, Assertion)
 - **try** 
@@ -66,9 +66,12 @@ changefreq : daily
     - catch 블럭이 처리할 수 있는 타입은 **Throwable** 의 서브클래스들이다.
     - try 블럭에서 예외가 던져지면(throw) Java 인터프리터는 던져진 예외와 동일한 타입 혹은 예외의 슈퍼 클래스가 파라미터로 있는 catch 절을 찾는다.
     - java 1.7 부터 여러 예외를 공통으로 하나의 catch 블럭에서 처리 할 수 있다.
+        - 잡으려는 예외들이 상속관계일 경우는 불가능하다.
+    - **여러개의 catch 를 잡을 경우 순서에 주의해야 한다.** 예를들어 IllegalArgumentException, RuntimeException 이 있다면 IllegalArgumentException 을 먼저 잡아야 한다.
 - **finally**
     - 일반적으로 try 블럭의 코드를 정리하는데 사용한다.
     - try 블럭의 코드의 완료와 상관없이 try 블럭이 일부만 실행되더라도 finally 블럭의 실행은 보장된다.
+    - **finally 블럭에서는 return 을 하거나 예외를 던지는 등의 흐름을 바꾸는 코드는 쓰지 말자.**
     ~~~ java
       try {
           // 예외 발생 가능성이 있는 코드
