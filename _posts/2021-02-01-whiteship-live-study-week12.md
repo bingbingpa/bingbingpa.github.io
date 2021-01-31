@@ -43,7 +43,7 @@ changefreq : daily
         int number() default  100;
     }
     ~~~
-  의
+  
 <br>
 
 ### 2. @retention
