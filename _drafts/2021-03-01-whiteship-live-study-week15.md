@@ -20,5 +20,26 @@ changefreq : daily
 
 <br>
 
+### 1. 람다식 사용법
+- 람다 표현식은 익명 클래스를 단순화하여 그 표현식을 메서드의 인수로 전달하거나 인터페이스의 객체를 생성할 수 있는 기능을 제공한다. 
+
+
+<br>
+
+### 2. 함수형 인터페이스
+
+<br>
+
+### 3. Variable Capture
+
+<br>
+
+### 4. 메소드, 생성자 레퍼런스
+
+<br>
+
 #### 참조
 - Practical 모던 자바 *-인사이트-*
+
+#### 작성한 코드 저장소
+- [https://github.com/bingbingpa/whiteship-live-study](https://github.com/bingbingpa/whiteship-live-study)
