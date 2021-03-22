@@ -4,7 +4,7 @@ title : Geoserver Clustering
 date : 2020-06-13
 excerpt : "JMS cluster plugin 을 사용 해서 geoserver clustering 하기"
 tags: [geoserver, clustering, gis]
-categories: [GIS]
+categories: [기타]
 comments: true
 changefreq : daily
 ---
