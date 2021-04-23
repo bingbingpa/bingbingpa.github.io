@@ -2,7 +2,7 @@
 layout : post
 title : 토비의 스프링 3.1(vol1) - 1장 오브젝트와 의존관계 
 date : 2021-04-19
-excerpt : "토비의 스프링 1장 최신 스프릥 버전에서 학습하기"
+excerpt : "토비의 스프링 1장 최신 스프링 버전에서 학습하기"
 tags: [java, 객체지향, spring, toby-spring]
 categories: [Spring]
 comments: true
