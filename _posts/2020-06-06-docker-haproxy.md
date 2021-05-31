@@ -4,7 +4,7 @@ title : docker 에 haproxy 설치
 date : 2020-06-06
 excerpt : "centos8 docker image 에 haproxy 컴파일 하기"
 tags: [docker, haproxy, systemctl]
-categories: [DevOps]
+categories: [Infra]
 comments: true
 changefreq : daily
 ---

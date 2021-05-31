@@ -4,7 +4,7 @@ title : docker container 기본 설정
 date : 2020-06-30
 excerpt : "centos 이미지 컨테이너에 필요한 패키지 설치 및 timezone 설정하기"
 tags: [docker, centos]
-categories: [DevOps]
+categories: [Infra]
 comments: true
 changefreq : daily
 ---

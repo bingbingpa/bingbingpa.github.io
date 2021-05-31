@@ -4,7 +4,7 @@ title : Dockerfile 작성 방법 정리
 date : 2020-08-20
 excerpt : "Dockerfile  작성 방법 정리"
 tags: [docker, Dockerfile]
-categories: [DevOps]
+categories: [Infra]
 comments: true
 changefreq : daily
 ---

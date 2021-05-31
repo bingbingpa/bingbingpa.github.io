@@ -4,7 +4,7 @@ title : rpm download 하기
 date : 2019-07-27
 excerpt : "인터넷이 되지 않는 환경에서 서버 구축시 rpm 다운받아서 설치하기"
 tags: [centos, rpm, downloadonly]
-categories: [DevOps]
+categories: [Infra]
 comments: true
 changefreq : daily
 ---

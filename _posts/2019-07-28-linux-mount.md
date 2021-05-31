@@ -4,7 +4,7 @@ title : fdisk 를 통한 파티션 분할
 date : 2019-07-30
 excerpt : "fdisk 를 통한 파티션 분할"
 tags: [fdisk, mount]
-categories: [DevOps]
+categories: [Infra]
 comments: true
 changefreq : daily
 ---
