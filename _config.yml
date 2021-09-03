@@ -12,7 +12,7 @@ plugins:
 paginate: 10
 paginate_path: "page/:num"
 baseurl: ""
-
+bgtext: "ABCFGHKLMNPQRSVWXYZabcdefghijklmnopqrstuvwxyz@#$%&*+-;/[]<>~" # texts randomly displayed in background
 
 defaults:
   -
