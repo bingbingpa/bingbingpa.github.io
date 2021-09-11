@@ -16,6 +16,7 @@ import {
 
 import config from "../../../content/meta/config";
 
+// 미사용
 const PostShare = props => {
   const {
     post: {

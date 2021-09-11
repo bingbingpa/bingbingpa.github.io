@@ -52,11 +52,7 @@ class Layout extends React.Component {
   };
 
   isHomePage = () => {
-    if (this.props.location.pathname === "/") {
-      return true;
-    }
-
-    return false;
+    return this.props.location.pathname === "/";
   };
 
   loadFont = (name, family, weight) => {
@@ -92,7 +88,6 @@ class Layout extends React.Component {
                   }
                   frontmatter {
                     title
-                    menuTitle
                   }
                 }
               }
