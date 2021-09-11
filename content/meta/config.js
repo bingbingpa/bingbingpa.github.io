@@ -1,8 +1,8 @@
 module.exports = {
-  siteTitle: "HeroBlog - a GatsbyJS starter", // <title>
+  siteTitle: "삽질저장소", // <title>
   shortSiteTitle: "HeroBlog - GatsbyJS starter", // <title> ending for posts and pages
   siteDescription: "HeroBlog is a GatsbyJS starter.",
-  siteUrl: "https://gatsby-starter-hero-blog.greglobinski.com",
+  siteUrl: "https://bingbingpa.github.io",
   // pathPrefix: "",
   siteImage: "preview.jpg",
   siteLanguage: "en",
@@ -12,8 +12,8 @@ module.exports = {
   authorTwitterAccount: "greglobinski",
 
   /* info */
-  headerTitle: "greg lobinski",
-  headerSubTitle: "presents another one GatsbyJS starter",
+  headerTitle: "삽질저장소",
+  headerSubTitle: "",
 
   /* manifest.json */
   manifestName: "HeroBlog - a GatsbyJS starter",
@@ -27,8 +27,7 @@ module.exports = {
   // Use your Gravatar image. If empty then will use src/images/jpg/avatar.jpg
   // Replace your email adress with md5-code.
   // Example https://www.gravatar.com/avatar/g.strainovic@gmail.com ->
-  // gravatarImgMd5: "https://www.gravatar.com/avatar/1db853e4df386e8f699e4b35505dd8c6",
-  gravatarImgMd5: "",
+  gravatarImgMd5: "https://avatars.githubusercontent.com/u/6446144?v=4",
 
   // social
   authorSocialLinks: [
