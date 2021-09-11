@@ -9,7 +9,7 @@ import Seo from "../components/Seo";
 class IndexPage extends React.Component {
   separator = React.createRef();
 
-  scrollToContent = e => {
+  scrollToContent = () => {
     this.separator.current.scrollIntoView({ block: "start", behavior: "smooth" });
   };
 
@@ -88,7 +88,6 @@ export const query = graphql`
           frontmatter {
             title
             category
-            author
             cover {
               children {
                 ... on ImageSharp {
@@ -126,5 +125,3 @@ export const query = graphql`
     }
   }
 `;
-
-//hero-background

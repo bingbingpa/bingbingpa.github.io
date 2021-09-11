@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { FaArrowDown } from "react-icons/fa/";
+import config from "../../../content/meta/config";
 
 const Hero = props => {
   const { scrollToContent, theme } = props;
@@ -9,7 +10,7 @@ const Hero = props => {
     const ctx = c.getContext("2d");
     c.height = window.innerHeight;
     c.width = window.innerWidth - 15;
-    const texts = "{{site.bgtext}}".split("");
+    const texts = config.matrixTest.split("");
     const fontSize = 12;
     const columns = c.width / fontSize;
     const drops = [];
