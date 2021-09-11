@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: http://bingbingpa.github.io/sitemap.xml
