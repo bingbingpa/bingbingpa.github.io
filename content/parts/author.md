@@ -1,5 +1,6 @@
 ---
 title: author
 ---
-
-**Mr. Gatsby** Proin ornare ligula eu tellus tempus elementum. Aenean [bibendum](/) iaculis mi, nec blandit lacus interdum vitae. Vestibulum non nibh risus, a scelerisque purus. Blandit lacus interdum vitae. Vestibulum non nibh risus, a scelerisque purus.
+**OpenSesame**
+- 안되면 될 때 까지!
+- 무분별한 정보 보다는 정확한 정보를 전달하도록 노력하기.
