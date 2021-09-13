@@ -47,8 +47,7 @@ const Hero = props => {
 };
 
 Hero.propTypes = {
-  scrollToContent: PropTypes.func.isRequired,
-  backgrounds: PropTypes.object.isRequired
+  scrollToContent: PropTypes.func.isRequired
 };
 
 export default Hero;

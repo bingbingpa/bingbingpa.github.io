@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { graphql } from "gatsby";
-import { ThemeContext } from "../layouts";
 import Blog from "../components/Blog";
 import Hero from "../components/Hero";
 import Seo from "../components/Seo";
@@ -19,41 +18,18 @@ class IndexPage extends React.Component {
     const {
       data: {
         posts: { edges: posts = [] },
-        bgDesktop: {
-          resize: { src: desktop }
-        },
-        bgTablet: {
-          resize: { src: tablet }
-        },
-        bgMobile: {
-          resize: { src: mobile }
-        },
         site: {
           siteMetadata: { facebook }
         }
       }
     } = this.props;
 
-    const backgrounds = {
-      desktop,
-      tablet,
-      mobile
-    };
-
     return (
       <React.Fragment>
-        <ThemeContext.Consumer>
-          {theme => (
-            <Hero scrollToContent={this.scrollToContent} backgrounds={backgrounds} theme={theme} />
-          )}
-        </ThemeContext.Consumer>
-
+        <Hero scrollToContent={this.scrollToContent} />
         <hr className="hr-index" ref={this.separator} />
 
-        <ThemeContext.Consumer>
-          {theme => <Blog posts={posts} theme={theme} />}
-        </ThemeContext.Consumer>
-
+        <Blog posts={posts} />
         <Seo facebook={facebook} />
       </React.Fragment>
     );
@@ -92,21 +68,6 @@ export const query = graphql`
         facebook {
           appId
         }
-      }
-    }
-    bgDesktop: imageSharp(fluid: { originalName: { regex: "/hero-background/" } }) {
-      resize(width: 1200, quality: 90, cropFocus: CENTER) {
-        src
-      }
-    }
-    bgTablet: imageSharp(fluid: { originalName: { regex: "/hero-background/" } }) {
-      resize(width: 800, height: 1100, quality: 90, cropFocus: CENTER) {
-        src
-      }
-    }
-    bgMobile: imageSharp(fluid: { originalName: { regex: "/hero-background/" } }) {
-      resize(width: 450, height: 850, quality: 90, cropFocus: CENTER) {
-        src
       }
     }
   }
