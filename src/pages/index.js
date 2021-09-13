@@ -17,10 +17,7 @@ class IndexPage extends React.Component {
   render() {
     const {
       data: {
-        posts: { edges: posts = [] },
-        site: {
-          siteMetadata: { facebook }
-        }
+        posts: { edges: posts = [] }
       }
     } = this.props;
 
@@ -30,7 +27,7 @@ class IndexPage extends React.Component {
         <hr className="hr-index" ref={this.separator} />
 
         <Blog posts={posts} />
-        <Seo facebook={facebook} />
+        <Seo />
       </React.Fragment>
     );
   }
@@ -60,13 +57,6 @@ export const query = graphql`
             title
             category
           }
-        }
-      }
-    }
-    site {
-      siteMetadata {
-        facebook {
-          appId
         }
       }
     }
