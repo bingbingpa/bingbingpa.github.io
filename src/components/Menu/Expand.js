@@ -15,8 +15,7 @@ const Expand = props => {
 };
 
 Expand.propTypes = {
-  onClick: PropTypes.func,
-  theme: PropTypes.object.isRequired
+  onClick: PropTypes.func
 };
 
 export default Expand;

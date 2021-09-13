@@ -18,8 +18,7 @@ const Post = props => {
     authornote,
     facebook,
     next: nextPost,
-    prev: prevPost,
-    theme
+    prev: prevPost
   } = props;
 
   return (
@@ -32,7 +31,7 @@ const Post = props => {
       <footer>
         {/*<Share post={post} theme={theme} />*/}
         <Author note={authornote} />
-        <NextPrev next={nextPost} prev={prevPost} theme={theme} />
+        <NextPrev next={nextPost} prev={prevPost} />
         {/*<Comments slug={slug} facebook={facebook} theme={theme} />*/}
       </footer>
     </React.Fragment>
@@ -44,8 +43,7 @@ Post.propTypes = {
   authornote: PropTypes.string.isRequired,
   facebook: PropTypes.object.isRequired,
   next: PropTypes.object,
-  prev: PropTypes.object,
-  theme: PropTypes.object.isRequired
+  prev: PropTypes.object
 };
 
 export default Post;

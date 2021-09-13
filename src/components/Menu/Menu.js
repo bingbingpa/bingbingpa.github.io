@@ -44,8 +44,7 @@ class Menu extends React.Component {
     fixed: PropTypes.bool.isRequired,
     screenWidth: PropTypes.number.isRequired,
     fontLoaded: PropTypes.bool.isRequired,
-    pages: PropTypes.array.isRequired,
-    theme: PropTypes.object.isRequired
+    pages: PropTypes.array.isRequired
   };
 
   componentDidMount() {
@@ -140,7 +139,7 @@ class Menu extends React.Component {
   };
 
   render() {
-    const { screenWidth, theme } = this.props;
+    const { screenWidth } = this.props;
     const { open } = this.state;
 
     return (
@@ -148,14 +147,14 @@ class Menu extends React.Component {
         <nav className={`menu ${open ? "open" : ""}`} rel="js-menu">
           <ul className="itemList" ref={this.itemList}>
             {this.items.map(item => (
-              <Item item={item} key={item.label} icon={item.icon} theme={theme} />
+              <Item item={item} key={item.label} icon={item.icon} />
             ))}
           </ul>
-          {this.state.hiddenItems.length > 0 && <Expand onClick={this.toggleMenu} theme={theme} />}
+          {this.state.hiddenItems.length > 0 && <Expand onClick={this.toggleMenu} />}
           {open && screenWidth >= 1024 && (
             <ul className="hiddenItemList">
               {this.state.hiddenItems.map(item => (
-                <Item item={item} key={item.label} hiddenItem theme={theme} />
+                <Item item={item} key={item.label} hiddenItem />
               ))}
             </ul>
           )}

@@ -7,10 +7,6 @@ module.exports = {
   siteImage: "preview.jpg",
   siteLanguage: "en",
 
-  /* author */
-  authorName: "greg lobinski",
-  authorTwitterAccount: "greglobinski",
-
   /* info */
   headerTitle: "삽질저장소",
   headerSubTitle: "",
@@ -28,13 +24,6 @@ module.exports = {
   // Replace your email adress with md5-code.
   // Example https://www.gravatar.com/avatar/g.strainovic@gmail.com ->
   gravatarImgMd5: "https://avatars.githubusercontent.com/u/6446144?v=4",
-
-  // social
-  authorSocialLinks: [
-    { name: "github", url: "https://github.com/greglobinski" },
-    { name: "twitter", url: "https://twitter.com/greglobinski" },
-    { name: "facebook", url: "http://facebook.com/greglobinski" }
-  ],
 
   matrixTest: "ABCFGHKLMNPQRSVWXYZabcdefghijklmnopqrstuvwxyz@#$%&*+-;/[]<>~"
 };

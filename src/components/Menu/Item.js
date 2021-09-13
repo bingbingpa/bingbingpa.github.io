@@ -25,8 +25,7 @@ Item.propTypes = {
   item: PropTypes.object,
   hidden: PropTypes.bool,
   onClick: PropTypes.func,
-  icon: PropTypes.func,
-  theme: PropTypes.object.isRequired
+  icon: PropTypes.func
 };
 
 export default Item;

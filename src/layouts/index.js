@@ -12,8 +12,6 @@ export const ThemeContext = React.createContext(null);
 export const ScreenWidthContext = React.createContext(0);
 export const FontLoadedContext = React.createContext(false);
 
-import themeObjectFromYaml from "../theme/theme.yaml";
-
 import "./index.scss";
 
 class Layout extends React.Component {
@@ -24,8 +22,7 @@ class Layout extends React.Component {
       font400loaded: false,
       font600loaded: false,
       screenWidth: 0,
-      headerMinimized: false,
-      theme: themeObjectFromYaml
+      headerMinimized: false
     };
 
     if (typeof window !== `undefined`) {
@@ -64,7 +61,6 @@ class Layout extends React.Component {
 
     font.load(null, 10000).then(
       () => {
-        console.log(`${name} is available`);
         this.setState({ [`${name}loaded`]: true });
       },
       () => {
@@ -108,21 +104,15 @@ class Layout extends React.Component {
           } = data;
 
           return (
-            <ThemeContext.Provider value={this.state.theme}>
-              <FontLoadedContext.Provider value={this.state.font400loaded}>
-                <ScreenWidthContext.Provider value={this.state.screenWidth}>
-                  <React.Fragment>
-                    <Header
-                      path={this.props.location.pathname}
-                      pages={pages}
-                      theme={this.state.theme}
-                    />
-                    <main>{children}</main>
-                    <Footer html={footnoteHTML} theme={this.state.theme} />
-                  </React.Fragment>
-                </ScreenWidthContext.Provider>
-              </FontLoadedContext.Provider>
-            </ThemeContext.Provider>
+            <FontLoadedContext.Provider value={this.state.font400loaded}>
+              <ScreenWidthContext.Provider value={this.state.screenWidth}>
+                <React.Fragment>
+                  <Header path={this.props.location.pathname} pages={pages} />
+                  <main>{children}</main>
+                  <Footer html={footnoteHTML} />
+                </React.Fragment>
+              </ScreenWidthContext.Provider>
+            </FontLoadedContext.Provider>
           );
         }}
       />

@@ -6,7 +6,7 @@ import config from "../../../content/meta/config";
 import "./hero.scss";
 
 const Hero = props => {
-  const { scrollToContent, theme } = props;
+  const { scrollToContent } = props;
   useEffect(() => {
     const c = document.getElementById("matrixCanvas");
     const ctx = c.getContext("2d");
@@ -48,8 +48,7 @@ const Hero = props => {
 
 Hero.propTypes = {
   scrollToContent: PropTypes.func.isRequired,
-  backgrounds: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired
+  backgrounds: PropTypes.object.isRequired
 };
 
 export default Hero;
