@@ -28,7 +28,6 @@ const Post = props => {
       </header>
       <Bodytext html={html} />
       <footer>
-        {/*<Share post={post} theme={theme} />*/}
         <Author note={authornote} />
         <NextPrev next={nextPost} prev={prevPost} />
         {/*<Comments slug={slug} facebook={facebook} theme={theme} />*/}

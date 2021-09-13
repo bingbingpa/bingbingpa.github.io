@@ -1,36 +1,67 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { InstantSearch, SearchBox, Hits, Stats, Pagination } from "react-instantsearch/dom";
-
-import Hit from "./Hit";
+import List from "../List";
+import Article from "../Article";
+import { AiOutlineSearch } from "react-icons/all";
 
 import "./search.scss";
+import Blog from "../Blog";
 
 const Search = props => {
-  const { algolia } = props;
+  const { edges } = props;
+  const emptyQuery = "";
+
+  const [state, setState] = useState({
+    filteredData: [],
+    query: emptyQuery
+  });
+
+  const handleInputChange = event => {
+    const query = event.target.value;
+    const posts = edges || [];
+
+    const filteredData = posts.filter(post => {
+      const { description, title } = post.node.frontmatter;
+      return (
+        (description && description.toLowerCase().includes(query.toLowerCase())) ||
+        (title && title.toLowerCase().includes(query.toLowerCase()))
+      );
+    });
+
+    setState({
+      query,
+      filteredData
+    });
+  };
+
+  const renderSearchResult = () => {
+    const { query, filteredData } = state;
+    const hasSearchResults = filteredData && query !== emptyQuery;
+    const posts = hasSearchResults ? filteredData : [];
+
+    return (
+      posts &&
+      posts.map((node, index) => {
+        return node;
+      })
+    );
+  };
 
   return (
     <React.Fragment>
-      <div className="search">
-        {algolia && algolia.appId && (
-          <InstantSearch
-            appId={algolia.appId}
-            apiKey={algolia.searchOnlyApiKey}
-            indexName={algolia.indexName}
-          >
-            <SearchBox translations={{ placeholder: "Search" }} />
-            <Stats />
-            <Hits hitComponent={Hit} />
-            <Pagination />
-          </InstantSearch>
-        )}
-      </div>
+      <Article>
+        <div className="form-search">
+          <input className="input-search" placeholder="search" onChange={handleInputChange} />
+          <AiOutlineSearch />
+        </div>
+        <Blog posts={renderSearchResult()} />
+      </Article>
     </React.Fragment>
   );
 };
 
 Search.propTypes = {
-  algolia: PropTypes.object.isRequired
+  edges: PropTypes.array.isRequired
 };
 
 export default Search;

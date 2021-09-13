@@ -1,40 +1,22 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { graphql } from "gatsby";
-require("core-js/fn/array/find");
 
-import Article from "../components/Article";
 import Search from "../components/Search";
-import { ThemeContext } from "../layouts";
 import Seo from "../components/Seo";
 
 import "./search.scss";
 
-import AlgoliaIcon from "!svg-react-loader!../images/svg-icons/search-by-algolia.svg?name=AlgoliaLogo";
-
 const SearchPage = props => {
   const {
     data: {
-      site: {
-        siteMetadata: { algolia }
-      }
+      search: { edges: edges }
     }
   } = props;
 
   return (
     <React.Fragment>
-      <ThemeContext.Consumer>
-        {theme => (
-          <Article theme={theme}>
-            <div className="icon">
-              <AlgoliaIcon />
-            </div>
-
-            <Search algolia={algolia} theme={theme} />
-          </Article>
-        )}
-      </ThemeContext.Consumer>
-
+      <Search edges={edges} />
       <Seo />
     </React.Fragment>
   );
@@ -49,12 +31,22 @@ export default SearchPage;
 //eslint-disable-next-line no-undef
 export const query = graphql`
   query SearchQuery {
-    site {
-      siteMetadata {
-        algolia {
-          appId
-          searchOnlyApiKey
-          indexName
+    search: allMarkdownRemark(
+      filter: { fileAbsolutePath: { regex: "//posts/[0-9]+.*--/" } }
+      sort: { order: DESC, fields: frontmatter___title }
+    ) {
+      edges {
+        node {
+          excerpt(pruneLength: 200)
+          id
+          frontmatter {
+            title
+            category
+          }
+          fields {
+            slug
+            prefix
+          }
         }
       }
     }

@@ -42,23 +42,19 @@ const CategoryPage = props => {
 
   return (
     <React.Fragment>
-      <ThemeContext.Consumer>
-        {theme => (
-          <Article theme={theme}>
-            <header>
-              <Headline title="Posts by categories" theme={theme} />
-            </header>
-            {categoryList.map(item => (
-              <section key={item[0]}>
-                <h2 className="h2-category">
-                  <FaTag /> {item[0]}
-                </h2>
-                <List edges={item[1]} theme={theme} />
-              </section>
-            ))}
-          </Article>
-        )}
-      </ThemeContext.Consumer>
+      <Article>
+        <header>
+          <Headline title="Posts by categories" />
+        </header>
+        {categoryList.map(item => (
+          <section key={item[0]}>
+            <h2 className="h2-category">
+              <FaTag /> {item[0]}
+            </h2>
+            <List edges={item[1]} />
+          </section>
+        ))}
+      </Article>
 
       <Seo />
     </React.Fragment>

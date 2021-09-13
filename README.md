@@ -20,3 +20,8 @@
     - gatsby-plugin-sass 추가하고, gatsby-plugin-styled-jsx, gatsby-plugin-styled-jsx-postcss 2개는 주석처리
   - theme.yaml 삭제 및 관련 의존성 삭제. style 관리는 styled-jsx 로 하지 않고 전역 scss 에서 관리
   - react-helmet 버전업(콘솔에 경고창 해결)
+
+- 20210914
+  - 검색 기능 추가
+    - graphql 로 markdown 데이터 읽어 와서 map 으로 filter 한 결과 출력
+    - 추후 데이터가 많아지면 다른 방법을 생각해 보자.
