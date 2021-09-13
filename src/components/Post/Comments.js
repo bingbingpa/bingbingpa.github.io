@@ -4,8 +4,10 @@ import FacebookProvider, { Comments as FBComments } from "react-facebook";
 
 import config from "../../../content/meta/config";
 
+import "./comment.scss";
+
 const Comments = props => {
-  const { facebook, slug, theme } = props;
+  const { facebook, slug } = props;
 
   return (
     <React.Fragment>
@@ -14,21 +16,13 @@ const Comments = props => {
           <FBComments href={`${config.siteUrl}${slug}`} width="100%" colorscheme="light" />
         </FacebookProvider>
       </div>
-
-      {/* --- STYLES --- */}
-      <style jsx>{`
-        .comments {
-          margin: 0 -8px ${theme.space.default};
-        }
-      `}</style>
     </React.Fragment>
   );
 };
 
 Comments.propTypes = {
   slug: PropTypes.string.isRequired,
-  facebook: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired
+  facebook: PropTypes.object.isRequired
 };
 
 export default Comments;

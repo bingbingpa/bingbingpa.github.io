@@ -8,6 +8,8 @@ import Headline from "../components/Article/Headline";
 import List from "../components/List";
 import Seo from "../components/Seo";
 
+import "./category.scss";
+
 const CategoryPage = props => {
   const {
     data: {
@@ -51,22 +53,12 @@ const CategoryPage = props => {
             </header>
             {categoryList.map(item => (
               <section key={item[0]}>
-                <h2>
+                <h2 className="h2-category">
                   <FaTag /> {item[0]}
                 </h2>
                 <List edges={item[1]} theme={theme} />
               </section>
             ))}
-            {/* --- STYLES --- */}
-            <style jsx>{`
-              h2 {
-                margin: 0 0 0.5em;
-              }
-              h2 :global(svg) {
-                height: 0.8em;
-                fill: ${theme.color.brand.primary};
-              }
-            `}</style>
           </Article>
         )}
       </ThemeContext.Consumer>

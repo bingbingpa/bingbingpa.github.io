@@ -11,3 +11,10 @@
     - content/pages 에 추가된 폴더를 기준으로 카테고리를 나열한다.
   - 리스트에서 섬네일 이미지, author 제거
     - post list 쿼리는 src/pages/index.js 에서 IndexQuery 수정
+- 20210912
+  - gatsby-plugin-styled-jsx gatsby-plugin-styled-jsx-postcss 삭제
+    - gatsby-plugin-styled-jsx-postcss 플러그인이 node12 이상에서는 빌드시 무한루프에 빠지는 것 같다.
+    - 해결방법은 노드 버전을 낮추거나 해당 플러그인을 안쓰는 방법밖에는 없는듯하다?
+  - npm install node-sass gatsby-plugin-sass 모듈 추가
+  - gatsby-config.js 정리
+    - gatsby-plugin-sass 추가하고, gatsby-plugin-styled-jsx, gatsby-plugin-styled-jsx-postcss 2개는 주석처리

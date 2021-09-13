@@ -25,13 +25,13 @@ const Post = props => {
   return (
     <React.Fragment>
       <header>
-        <Headline title={title} theme={theme} />
-        <Meta prefix={prefix} category={category} theme={theme} />
+        <Headline title={title} />
+        <Meta prefix={prefix} category={category} />
       </header>
-      <Bodytext html={html} theme={theme} />
+      <Bodytext html={html} />
       <footer>
         {/*<Share post={post} theme={theme} />*/}
-        <Author note={authornote} theme={theme} />
+        <Author note={authornote} />
         <NextPrev next={nextPost} prev={prevPost} theme={theme} />
         {/*<Comments slug={slug} facebook={facebook} theme={theme} />*/}
       </footer>

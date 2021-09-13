@@ -1,0 +1,47 @@
+@import "../theme/theme.scss";
+
+html {
+   box-sizing: border-box;
+ }
+   *,
+   *:after,
+   *:before {
+     box-sizing: inherit;
+     margin: 0;
+     padding: 0;
+   }
+   body {
+     font-family: 'Open Sans', sans-serif;
+
+     h1,
+     h2,
+     h3 {
+       font-weight: 600;
+       line-height: 1.1;
+       letter-spacing: -0.03em;
+       margin: 0;
+     }
+
+     h1 {
+       letter-spacing: -0.04em;
+     }
+
+     p {
+       margin: 0;
+     }
+
+     strong {
+       font-weight: 600;
+     }
+
+     a {
+       text-decoration: none;
+       color: #666;
+     }
+
+     main {
+       width: auto;
+       display: block;
+       min-height: 80vh;
+     }
+   }

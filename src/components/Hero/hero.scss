@@ -1,0 +1,54 @@
+@import "../../theme/theme.scss";
+
+.matrix {
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.hero {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.button-matrix {
+  position: absolute;
+  top: 80%;
+  background: $background-color-brand;
+  border: 0;
+  border-radius: 50%;
+  font-size: $font-size-m;
+  padding: $space-s $space-m;
+  cursor: pointer;
+  width: $space-xl;
+  height: $space-xl;
+
+  &:focus {
+    outline-style: none;
+    background: $color-brand-primaryActive;
+  }
+
+  :global(svg) {
+    position: relative;
+    top: 5px;
+    fill: $color-neutral-white;
+    stroke-width: 40;
+    stroke: $color-neutral-white;
+    animation-duration: $time-duration-long;
+    animation-name: buttonIconMove;
+    animation-iteration-count: infinite;
+  }
+}
+
+@keyframes buttonIconMove {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

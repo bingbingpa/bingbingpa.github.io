@@ -1,0 +1,9 @@
+.icon {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+.icon :global(svg) {
+  height: 30px;
+}
+

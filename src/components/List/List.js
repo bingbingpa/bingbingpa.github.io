@@ -2,12 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "gatsby";
 
+import "./list.scss";
+
 const List = props => {
-  const { edges, theme } = props;
+  const { edges } = props;
 
   return (
     <React.Fragment>
-      <ul>
+      <ul className="ul-list">
         {edges.map(edge => {
           const {
             node: {
@@ -17,33 +19,18 @@ const List = props => {
           } = edge;
 
           return (
-            <li key={slug}>
+            <li className="li-list" key={slug}>
               <Link to={slug}>{title}</Link>
             </li>
           );
         })}
       </ul>
-
-      {/* --- STYLES --- */}
-      <style jsx>{`
-        ul {
-          margin: ${theme.space.stack.m};
-          padding: ${theme.space.m};
-          list-style: circle;
-        }
-        li {
-          padding: ${theme.space.xs} 0;
-          font-size: ${theme.font.size.s};
-          line-height: ${theme.font.lineHeight.l};
-        }
-      `}</style>
     </React.Fragment>
   );
 };
 
 List.propTypes = {
-  edges: PropTypes.array.isRequired,
-  theme: PropTypes.object.isRequired
+  edges: PropTypes.array.isRequired
 };
 
 export default List;

@@ -8,6 +8,8 @@ import Search from "../components/Search";
 import { ThemeContext } from "../layouts";
 import Seo from "../components/Seo";
 
+import "./search.scss";
+
 import AlgoliaIcon from "!svg-react-loader!../images/svg-icons/search-by-algolia.svg?name=AlgoliaLogo";
 
 const SearchPage = props => {
@@ -34,18 +36,6 @@ const SearchPage = props => {
       </ThemeContext.Consumer>
 
       <Seo facebook={facebook} />
-
-      {/* --- STYLES --- */}
-      <style jsx>{`
-        .icon {
-          display: flex;
-          justify-content: flex-end;
-          margin-bottom: 20px;
-        }
-        .icon :global(svg) {
-          height: 30px;
-        }
-      `}</style>
     </React.Fragment>
   );
 };
