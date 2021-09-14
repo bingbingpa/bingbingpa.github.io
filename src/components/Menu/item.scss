@@ -1,0 +1,73 @@
+@import "../../theme/theme.scss";
+
+.item, .showItem {
+  background: transparent;
+  transition: all $time-duration-default;
+  display: flex;
+  align-items: center;
+
+  :global(a) {
+    padding: $space-inset-s;
+    display: flex;
+    align-items: center;
+  }
+
+  :global(svg) {
+    margin: $space-inline-xs;
+    opacity: 0.3;
+  }
+}
+
+:global(.itemList .hideItem) {
+  display: none;
+}
+
+//desktop
+@media screen and (min-width: 1024px) {
+  .item {
+    :global(a) {
+      color: $text-color-primary;
+      padding: $space-inset-s;
+      transition: all $time-duration-default;
+      border-radius: $size-radius-small;
+    }
+
+    :global(.homepage):not(.fixed) & :global(a) {
+      color: $color-neutral-white;
+    }
+
+    :global(a:hover) {
+      color: $color-brand-primary;
+      background: rgba(255, 255,255, 0.4);
+    }
+
+    :global(svg) {
+      transition: all $time-duration-default;
+    }
+
+    &:hover :global(svg) {
+      fill: $color-brand-primary;
+      opacity: 1;
+
+      :global(.hero) & :global(svg) {
+        fill: green;
+      }
+    }
+  }
+
+  .showItem {
+    display: none;
+  }
+
+  .hiddenItem {
+    text-align: left;
+    padding: $space-xs;
+
+    & :global(a.inHiddenItem) {
+      color: $text-color-primary;
+      &:hover {
+        color: $color-brand-primary;
+      }
+    }
+  }
+}
