@@ -1,5 +1,5 @@
 # gatsby template
-- https://github.com/greglobinski/gatsby-starter-hero-blog
+- [사용 템플릿](https://github.com/greglobinski/gatsby-starter-hero-blog)
 
 ### 수정 사항
 - 20210911
