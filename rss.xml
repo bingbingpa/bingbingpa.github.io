@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 14 Sep 2021 06:07:56 GMT</lastBuildDate><item><title><![CDATA[토비의 스프링 3.1(vol1) - 2장 테스트]]></title><description><![CDATA[토비의 스프링 2장을 보고 최신 스프링버전에서 테스트 해보고 정리한 내용. 애플리케이션이 계속 변하고 복잡해져 가는데 그에 대응하는 첫번째 전략이 확장과 변화를 고려한 객체지향적 설계와 그것을 효과적으로 담아낼 수 있는 IoC/DI…]]></description><link>https://bingbingpa.github.io/toby-spring-vol1-ch2/</link><guid isPermaLink="false">https://bingbingpa.github.io/toby-spring-vol1-ch2/</guid><pubDate>Sun, 25 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;ul&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 14 Sep 2021 06:46:25 GMT</lastBuildDate><item><title><![CDATA[토비의 스프링 3.1(vol1) - 2장 테스트]]></title><description><![CDATA[토비의 스프링 2장을 보고 최신 스프링버전에서 테스트 해보고 정리한 내용. 애플리케이션이 계속 변하고 복잡해져 가는데 그에 대응하는 첫번째 전략이 확장과 변화를 고려한 객체지향적 설계와 그것을 효과적으로 담아낼 수 있는 IoC/DI…]]></description><link>https://bingbingpa.github.io/toby-spring-vol1-ch2/</link><guid isPermaLink="false">https://bingbingpa.github.io/toby-spring-vol1-ch2/</guid><pubDate>Sun, 25 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;ul&gt;
 &lt;li&gt;토비의 스프링 2장을 보고 최신 스프링버전에서 테스트 해보고 정리한 내용.&lt;/li&gt;
 &lt;li&gt;애플리케이션이 계속 변하고 복잡해져 가는데 그에 대응하는 &lt;strong&gt;첫번째 전략&lt;/strong&gt;이 확장과 변화를 고려한 객체지향적 설계와 그것을 효과적으로 담아낼 수 있는 &lt;strong&gt;IoC/DI&lt;/strong&gt; 같은 기술 이라면,
 &lt;strong&gt;두 번째 전략&lt;/strong&gt;은 만들어진 코드를 확신할 수 있게 해주고, 변화에 유연하게 대처할 수 있는 자신감을 주는 &lt;strong&gt;테스트 기술&lt;/strong&gt;이다.&lt;/li&gt;
@@ -10993,28 +10993,6 @@ $ &lt;span class=&quot;token function&quot;&gt;time&lt;/span&gt; &lt;span class=
     &lt;span class=&quot;token keyword&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[fdisk 를 통한 파티션 분할]]></title><description><![CDATA[서버 세팅할 때 문서를 제대로 안만들어서 이건 그냥 안까먹게 정리용으로… fdisk -l 명령어로 물리적인 하드웨어 구성 확인 fdisk 파티션나눌 disk경로 나는 start는 default로 하고 end는 할당할 사이즈 만큼 했다. 예) +500G…]]></description><link>https://bingbingpa.github.io/linux-mount/</link><guid isPermaLink="false">https://bingbingpa.github.io/linux-mount/</guid><pubDate>Sun, 28 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;서버 세팅할 때 문서를 제대로 안만들어서 이건 그냥 안까먹게 정리용으로…&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;fdisk -l&lt;/strong&gt; 명령어로 물리적인 하드웨어 구성 확인&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;fdisk &lt;strong&gt;파티션나눌 disk경로&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;p -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 파티션 출력
-n -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 새로운 파티션 생성
-p or e -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 기본 파티션 또는 확장파티션 생성
-&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt; ~ &lt;span class=&quot;token number&quot;&gt;4&lt;/span&gt; -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 파티션 번호 생성
-+5G -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 파티션 용량 설정&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;나는 start는 default로 하고 end는 할당할 사이즈 만큼 했다. &lt;strong&gt;예) +500G&lt;/strong&gt;(해당 파티션에 500G를 할당)&lt;/li&gt;
-&lt;li&gt;w 로 저장.&lt;/li&gt;
-&lt;li&gt;mkfs -t “파일type” “경로” -&gt;  파일시스템 생성. 나같은 경우은 ext4로 했던거 같다. 이게 뭔지는… 찾아봤었는데 기억이… 이래서 정리가 필요하다!&lt;/li&gt;
-&lt;li&gt;영구적으로 마운트 하기 위해서는 /etc/fstab에 등록해야 한다.&lt;/li&gt;
-&lt;li&gt;마운트되는 경로가 변경되도 설정을 변경하지 않기 위해 uuid를 이용하여 설정한다.&lt;/li&gt;
-&lt;li&gt;blkid 명령어로 uuid 확인&lt;/li&gt;
-&lt;li&gt;/etc/fstab에 UUID로 마운트할 경로 설정하고 저장.&lt;/li&gt;
-&lt;li&gt;mount -a 로 설정이 정상적으로 되었는지 확인(비정상이라면 에러 메시지가 나온다.)&lt;/li&gt;
-&lt;li&gt;mount 명령어로 정상적으로 마운트 되었는지 확인&lt;/li&gt;
-&lt;li&gt;혹시 모르니 재부팅 한번 해보고 마운트가 유지되는지 확인.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;이건 자꾸 까먹어서 정리. init 0 -&gt;시스템 종료, init 6 -&gt; 시스템 재부팅&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[방화벽 정책 설정]]></title><description><![CDATA[1. firewall 명령어로 포트 열기 firewall 명령어를 통해 포트를 열 수 있다. zone은 서버의 용도에 맞게 사전에 정의된 네트워크의 신뢰 레벨을 의미한다는데… 난 아직까지는 zone을 따로 추가하지 않고 그냥 public…]]></description><link>https://bingbingpa.github.io/linux-firewall/</link><guid isPermaLink="false">https://bingbingpa.github.io/linux-firewall/</guid><pubDate>Sun, 28 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. firewall 명령어로 포트 열기&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;firewall 명령어를 통해 포트를 열 수 있다. &lt;strong&gt;zone은 서버의 용도에 맞게 사전에 정의된 네트워크의 신뢰 레벨&lt;/strong&gt;을 의미한다는데… 난 아직까지는 zone을 따로 추가하지 않고 그냥 public으로 쓰고 있다.&lt;/li&gt;
@@ -11038,6 +11016,41 @@ p or e -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 기본 �
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;port&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;tcp&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;22&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;accept&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;rule&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[fdisk 를 통한 파티션 분할]]></title><description><![CDATA[서버 세팅할 때 문서를 제대로 안만들어서 이건 그냥 안까먹게 정리용으로… fdisk -l 명령어로 물리적인 하드웨어 구성 확인 fdisk 파티션나눌 disk경로 나는 start는 default로 하고 end는 할당할 사이즈 만큼 했다. 예) +500G…]]></description><link>https://bingbingpa.github.io/linux-mount/</link><guid isPermaLink="false">https://bingbingpa.github.io/linux-mount/</guid><pubDate>Sun, 28 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;서버 세팅할 때 문서를 제대로 안만들어서 이건 그냥 안까먹게 정리용으로…&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;fdisk -l&lt;/strong&gt; 명령어로 물리적인 하드웨어 구성 확인&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;fdisk &lt;strong&gt;파티션나눌 disk경로&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;p -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 파티션 출력
+n -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 새로운 파티션 생성
+p or e -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 기본 파티션 또는 확장파티션 생성
+&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt; ~ &lt;span class=&quot;token number&quot;&gt;4&lt;/span&gt; -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 파티션 번호 생성
++5G -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 파티션 용량 설정&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;나는 start는 default로 하고 end는 할당할 사이즈 만큼 했다. &lt;strong&gt;예) +500G&lt;/strong&gt;(해당 파티션에 500G를 할당)&lt;/li&gt;
+&lt;li&gt;w 로 저장.&lt;/li&gt;
+&lt;li&gt;mkfs -t “파일type” “경로” -&gt;  파일시스템 생성. 나같은 경우은 ext4로 했던거 같다. 이게 뭔지는… 찾아봤었는데 기억이… 이래서 정리가 필요하다!&lt;/li&gt;
+&lt;li&gt;영구적으로 마운트 하기 위해서는 /etc/fstab에 등록해야 한다.&lt;/li&gt;
+&lt;li&gt;마운트되는 경로가 변경되도 설정을 변경하지 않기 위해 uuid를 이용하여 설정한다.&lt;/li&gt;
+&lt;li&gt;blkid 명령어로 uuid 확인&lt;/li&gt;
+&lt;li&gt;/etc/fstab에 UUID로 마운트할 경로 설정하고 저장.&lt;/li&gt;
+&lt;li&gt;mount -a 로 설정이 정상적으로 되었는지 확인(비정상이라면 에러 메시지가 나온다.)&lt;/li&gt;
+&lt;li&gt;mount 명령어로 정상적으로 마운트 되었는지 확인&lt;/li&gt;
+&lt;li&gt;혹시 모르니 재부팅 한번 해보고 마운트가 유지되는지 확인.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;이건 자꾸 까먹어서 정리. init 0 -&gt;시스템 종료, init 6 -&gt; 시스템 재부팅&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[rpm download 하기]]></title><description><![CDATA[rpm 패키지 다운받기 인터넷이 되지 않은 로컬 환경에서 설치하기 위해서는 rpm파일들을 미리 준비해야 하는데 그 방법은 다음과 같다. centos 7을 기준으로 했을때 yum에 —downloadonly 라는 옵션이 있다. 만약 yum —help…]]></description><link>https://bingbingpa.github.io/centos-rpm-download/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-rpm-download/</guid><pubDate>Sat, 27 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;rpm 패키지 다운받기&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;인터넷이 되지 않은 로컬 환경에서 설치하기 위해서는 rpm파일들을 미리 준비해야 하는데 그 방법은 다음과 같다.&lt;/li&gt;
+&lt;li&gt;centos 7을 기준으로 했을때 yum에 —downloadonly 라는 옵션이 있다. 만약 yum —help 목록에서 이 옵션이 없다면 &lt;strong&gt;sudo yum install yum-downloadonly&lt;/strong&gt; 명령어를 통해 해당 플러그인을 설치한다.&lt;/li&gt;
+&lt;li&gt;rpm을 다운받을 때는 아무것도 설치 되어 있지 않은 클린한 OS에서 하는 것을 추천하는데 이유는 기존에 사용중인 OS일경우 다운로드 받고자 하는 패키지와 의존성이 있는 것들이 설치 되어 있을 수도 있기 때문이다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;OS update 패키지를 받을 때&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; yum update --downloadonly --downloaddir&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;’다운받을 디렉토리’&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;OS 업데이트 패키지&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;필요한 설치 패키지를 받을 때&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; yum &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; --downloadonly --downloaddir&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;’다운받을 디렉토리’  ‘설치할 패키지’&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[리눅스에서 톰캣 서비스 등록하기]]></title><description><![CDATA[1. Centos7 환경에서 톰캣 서비스 등록 /usr/lib/systemd/system/ 경로에 등록하고자 하는 서비스명.service 파일을 생성한다. 대략 다음과 같이 서비스 파일을 만들면 된다. user와 ExecStart/ExecStop…]]></description><link>https://bingbingpa.github.io/centos-service/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-service/</guid><pubDate>Sat, 27 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. Centos7 환경에서 톰캣 서비스 등록&lt;/h2&gt;
 &lt;ul&gt;
@@ -11161,19 +11174,6 @@ p or e -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 기본 �
   
   &lt;/a&gt;
     &lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[rpm download 하기]]></title><description><![CDATA[rpm 패키지 다운받기 인터넷이 되지 않은 로컬 환경에서 설치하기 위해서는 rpm파일들을 미리 준비해야 하는데 그 방법은 다음과 같다. centos 7을 기준으로 했을때 yum에 —downloadonly 라는 옵션이 있다. 만약 yum —help…]]></description><link>https://bingbingpa.github.io/centos-rpm-download/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-rpm-download/</guid><pubDate>Sat, 27 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;rpm 패키지 다운받기&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;인터넷이 되지 않은 로컬 환경에서 설치하기 위해서는 rpm파일들을 미리 준비해야 하는데 그 방법은 다음과 같다.&lt;/li&gt;
-&lt;li&gt;centos 7을 기준으로 했을때 yum에 —downloadonly 라는 옵션이 있다. 만약 yum —help 목록에서 이 옵션이 없다면 &lt;strong&gt;sudo yum install yum-downloadonly&lt;/strong&gt; 명령어를 통해 해당 플러그인을 설치한다.&lt;/li&gt;
-&lt;li&gt;rpm을 다운받을 때는 아무것도 설치 되어 있지 않은 클린한 OS에서 하는 것을 추천하는데 이유는 기존에 사용중인 OS일경우 다운로드 받고자 하는 패키지와 의존성이 있는 것들이 설치 되어 있을 수도 있기 때문이다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;OS update 패키지를 받을 때&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; yum update --downloadonly --downloaddir&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;’다운받을 디렉토리’&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;OS 업데이트 패키지&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;필요한 설치 패키지를 받을 때&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; yum &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; --downloadonly --downloaddir&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;’다운받을 디렉토리’  ‘설치할 패키지’&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[user 계정 sudo 권한]]></title><description><![CDATA[일반 사용자 계정에  root 권한 주기 리눅스에서 일반 사용자 계정을 사용하다 보면 root의 권한이 필요할 경우가 있다. 그럴때마다 root로 계정을 변경해서 사용 할 수 도 있지만 해당 user계정에 root…]]></description><link>https://bingbingpa.github.io/centos-visudo/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-visudo/</guid><pubDate>Sun, 21 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;일반 사용자 계정에  root 권한 주기&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;리눅스에서 일반 사용자 계정을 사용하다 보면 root의 권한이 필요할 경우가 있다. 그럴때마다 root로 계정을 변경해서 사용 할 수 도 있지만 해당 user계정에 root 권한을 부여하여 사용 할 수 있다.&lt;/li&gt;
