@@ -1,11 +1,11 @@
 module.exports = {
   siteTitle: "삽질저장소", // <title>
-  shortSiteTitle: "HeroBlog - GatsbyJS starter", // <title> ending for posts and pages
-  siteDescription: "HeroBlog is a GatsbyJS starter.",
+  shortSiteTitle: "삽질 저장소", // <title> ending for posts and pages
+  siteDescription: "삽질한 내용들을 정리하는 블로그",
   siteUrl: "https://bingbingpa.github.io",
   // pathPrefix: "",
   siteImage: "preview.jpg",
-  siteLanguage: "en",
+  siteLanguage: "ko",
 
   /* info */
   headerTitle: "삽질저장소",

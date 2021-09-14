@@ -1,6 +1,7 @@
 ---
 title : ubuntu에서 jekyll 설치하기
 category: "etc"
+author: bingbingpa
 ---
 
 - ubuntu 에서 jekyll 을 설치하는 방법을 정리. 참고로 windows 에서 ubuntu 를 사용하기 위해서는 제어판 - 프로그램 및 기능 - windows 기능 켜기/끄기 에서 Linux 용 Windows 하위 시스템을 체크하고 재부팅이 필요하다.

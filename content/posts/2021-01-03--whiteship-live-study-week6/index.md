@@ -1,6 +1,7 @@
 ---
 title : 자바 상속
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 6주차 정리

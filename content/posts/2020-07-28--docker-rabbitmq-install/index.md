@@ -1,6 +1,7 @@
 ---
 title : docker rabbitMQ 설정 하기
 category: "infra"
+author: bingbingpa
 ---
 
 ### 1. 필요 패키지 다운로드

@@ -1,6 +1,7 @@
 ---
 title : postgresql & postgis 설치하기
 category: "database"
+author: bingbingpa
 ---
 
 #### 1. 기존에 설치된 postgresql 삭제

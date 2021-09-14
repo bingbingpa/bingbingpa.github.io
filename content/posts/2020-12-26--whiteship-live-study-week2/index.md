@@ -1,6 +1,7 @@
 ---
 title : 자바 데이터 타입, 변수 그리고 배열
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 2주차 정리

@@ -1,6 +1,7 @@
 ---
 title : postgresql pg-dump
 category: "database"
+author: bingbingpa
 ---
 
 ##  postgresql 백업하기!

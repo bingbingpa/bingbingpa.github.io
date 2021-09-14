@@ -1,6 +1,7 @@
 ---
 title : docker 에 haproxy 설치
 category: "infra"
+author: bingbingpa
 ---
 
 ### 1. DockerFile 작성

@@ -1,6 +1,7 @@
 ---
 title: gradle 멀티 프로젝트 세팅하기
 category: "build-tool"
+author: bingbingpa
 ---
 
 ## 1. spring.io에서 springboot 프로젝트 생성하기

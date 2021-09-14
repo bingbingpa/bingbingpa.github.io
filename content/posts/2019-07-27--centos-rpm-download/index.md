@@ -1,6 +1,7 @@
 ---
 title : rpm download 하기
 category: "infra"
+author: bingbingpa
 ---
 
 

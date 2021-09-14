@@ -1,6 +1,7 @@
 ---
 title : 대충 알고 넘어갔던 기본 개념 정리
 category: "java"
+author: bingbingpa
 ---
 
 

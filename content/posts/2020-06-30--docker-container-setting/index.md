@@ -1,6 +1,7 @@
 ---
 title : docker container 기본 설정
 category: "infra"
+author: bingbingpa
 ---
 
 ### 1. 업데이트 및 필요 패키지 설치

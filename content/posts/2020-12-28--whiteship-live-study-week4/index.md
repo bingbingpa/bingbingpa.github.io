@@ -1,6 +1,7 @@
 ---
 title : 자바 제어문
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 4주차 정리

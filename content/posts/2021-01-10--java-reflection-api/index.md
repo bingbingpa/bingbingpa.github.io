@@ -1,6 +1,7 @@
 ---
 title : 자바 reflection API
 category: "java"
+author: bingbingpa
 ---
 
 ### 1. Java Reflection 정의

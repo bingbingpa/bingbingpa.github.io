@@ -1,6 +1,7 @@
 ---
 title : 자바 제네릭
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 14주차 정리

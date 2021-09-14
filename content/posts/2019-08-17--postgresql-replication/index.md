@@ -1,6 +1,7 @@
 ---
 title : postgreSQL Replication
 category: "database"
+author: bingbingpa
 ---
 
 

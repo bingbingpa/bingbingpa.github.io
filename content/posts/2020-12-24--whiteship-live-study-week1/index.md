@@ -1,6 +1,7 @@
 ---
 title : JVM 이해하기
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 1주차 정리

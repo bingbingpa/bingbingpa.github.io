@@ -1,6 +1,7 @@
 ---
 title : Windows10 source tree 완전 삭제
 category: "etc"
+author: bingbingpa
 ---
 
 #### 1. 제어판 - 프로그램 제거에서 Source Tree 삭제

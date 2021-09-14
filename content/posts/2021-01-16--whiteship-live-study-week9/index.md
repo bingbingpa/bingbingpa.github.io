@@ -1,6 +1,7 @@
 ---
 title : 자바 예외처리
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 9주차 정리

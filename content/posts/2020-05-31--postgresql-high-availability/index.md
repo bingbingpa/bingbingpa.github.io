@@ -1,6 +1,7 @@
 ---
 title : postgreSQL 고가용성
 category: "databse"
+author: bingbingpa
 ---
 
 ### 1. 정의

@@ -1,6 +1,7 @@
 ---
 title : Ubuntu java 버전 변경하기
 category: "infra"
+author: bingbingpa
 ---
 
 

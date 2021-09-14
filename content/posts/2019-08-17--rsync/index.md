@@ -1,6 +1,7 @@
 ---
 title : rsync를 이용한 파일 동기화
 category: "infra"
+author: bingbingpa
 ---
 
 

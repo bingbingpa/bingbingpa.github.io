@@ -1,6 +1,7 @@
 ---
 title : 자바 애노테이션
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 12주차 정리

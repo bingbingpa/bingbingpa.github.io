@@ -1,6 +1,7 @@
 ---
 title : 웹접근성 향상 시키기
 category: "etc"
+author: bingbingpa
 ---
 
 ### 1. 접근 가능한 숨김 텍스트

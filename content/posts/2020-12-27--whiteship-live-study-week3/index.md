@@ -1,6 +1,7 @@
 ---
 title : 자바에서 제공하는 연산자
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 3주차 정리

@@ -1,6 +1,7 @@
 ---
 title : docker 로 개발환경 구성하기
 category: "infra"
+author: bingbingpa
 ---
 
 ### 1. docker image 사용하기

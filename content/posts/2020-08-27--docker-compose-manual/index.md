@@ -1,6 +1,7 @@
 ---
 title : Docker Compose 작성 방법 및 명령어 정리
 category: "infra"
+author: bingbingpa
 ---
 
 ### Docker Compose

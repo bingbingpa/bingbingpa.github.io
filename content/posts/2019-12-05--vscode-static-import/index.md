@@ -1,6 +1,7 @@
 ---
 title : vscode lombok & static import 설정
 category: "ide"
+author: bingbingpa
 ---
 
 ### 1. vscode에서 lombok 사용하기

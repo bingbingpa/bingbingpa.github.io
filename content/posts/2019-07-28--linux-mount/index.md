@@ -1,6 +1,7 @@
 ---
 title : fdisk 를 통한 파티션 분할
 category: "infra"
+author: bingbingpa
 ---
 
 

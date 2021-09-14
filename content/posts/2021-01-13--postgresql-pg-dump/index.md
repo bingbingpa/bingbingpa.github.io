@@ -1,6 +1,7 @@
 ---
 title : PostgreSQL pg_dump
 category: "database"
+author: bingbingpa
 ---
 
 #### 특정 테이블을 insert sql 로 덤프

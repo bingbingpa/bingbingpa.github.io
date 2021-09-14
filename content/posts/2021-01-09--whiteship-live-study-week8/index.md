@@ -1,6 +1,7 @@
 ---
 title : 자바 인터페이스
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 8주차 정리

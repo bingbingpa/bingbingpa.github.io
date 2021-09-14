@@ -1,6 +1,7 @@
 ---
 title : Intellij 시작 오류 조치
 category: "ide"
+author: bingbingpa
 ---
 
 - intellij 시작시 다음과 같은 오류가 발생할경우 아래와 같이 조치가 가능하다.

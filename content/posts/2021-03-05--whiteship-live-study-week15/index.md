@@ -1,6 +1,7 @@
 ---
 title : 자바 람다식
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 15주차 정리

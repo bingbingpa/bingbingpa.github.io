@@ -1,6 +1,7 @@
 ---
 title : 방화벽 정책 설정
 category: "infra"
+author: bingbingpa
 ---
 
 

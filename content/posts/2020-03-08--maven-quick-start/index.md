@@ -1,8 +1,7 @@
 ---
 title : maven 프로젝트 생성
 category: "build-tool"
-comments: true
-changefreq : daily
+author: bingbingpa
 ---
 
 ## maven project 생성하기(archetype:generate)

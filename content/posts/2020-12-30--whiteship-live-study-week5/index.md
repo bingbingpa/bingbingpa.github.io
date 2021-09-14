@@ -1,6 +1,7 @@
 ---
 title : 자바 클래스
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 5주차 정리

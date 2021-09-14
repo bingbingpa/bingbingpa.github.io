@@ -1,6 +1,7 @@
 ---
 title : docker 시작하기
 category: "infra"
+author: bingbingpa
 ---
 
 ## docker image, container

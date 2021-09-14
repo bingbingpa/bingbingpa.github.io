@@ -1,6 +1,7 @@
 ---
 title : Dockerfile 작성 방법 정리
 category: "infra"
+author: bingbingpa
 ---
 
 ### Dockerfile 이란?

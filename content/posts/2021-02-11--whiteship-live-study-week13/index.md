@@ -1,6 +1,7 @@
 ---
 title : 자바 I/O
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 13주차 정리

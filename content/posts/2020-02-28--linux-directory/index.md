@@ -1,6 +1,7 @@
 ---
 title : 리눅스 디렉토리 구조 정리
 category: "infra"
+author: bingbingpa
 ---
 
 ## 리눅스 데이터 디렉토리 구조 정리

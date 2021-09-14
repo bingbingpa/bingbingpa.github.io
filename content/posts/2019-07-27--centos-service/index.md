@@ -1,6 +1,7 @@
 ---
 title : 리눅스에서 톰캣 서비스 등록하기
 category: "infra"
+author: bingbingpa
 ---
 
 

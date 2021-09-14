@@ -1,8 +1,7 @@
 ---
 title : Web Application Server 와 servlet
 category: "java"
-comments: true
-changefreq : daily
+author: bingbingpa
 ---
 
 - DB 조회나 다양한 로직 처리를 요구하는 동적인 컨텐츠를 제공하기 위해 만들어진 Application Server

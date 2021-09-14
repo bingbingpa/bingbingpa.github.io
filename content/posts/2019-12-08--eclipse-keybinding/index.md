@@ -1,6 +1,7 @@
 ---
 title : eclipse 단축키
 category: "ide"
+author: bingbingpa
 ---
 
 #### vscode로 자바웹개발을 하려다보니 안되는 것들이 많아서 결국 다시 eclipse를 쓰기로 했다. eclipse라도 제대로 쓰기 위해 유용한 단축키를 정리해 본다.

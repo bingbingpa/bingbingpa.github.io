@@ -25,3 +25,8 @@
   - 검색 기능 추가
     - graphql 로 markdown 데이터 읽어 와서 map 으로 filter 한 결과 출력
     - 추후 데이터가 많아지면 다른 방법을 생각해 보자.
+  - 포스팅 데이터 마이그레이션
+  - 검색 엔진 최적화
+    - yarn add gatsby-plugin-canonical-urls(Canonical Link Element 를 위한 라이브러리 세팅)
+    - yarn add gatsby-plugin-sitemap(sitemap 생성을 위한 라이브러리 세팅)
+    - yarn add gatsby-plugin-robots-txt(robots.txt 파일 생성을 위한 라이브러리 세팅)

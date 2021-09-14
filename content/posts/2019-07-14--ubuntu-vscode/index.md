@@ -1,6 +1,7 @@
 ---
 title : Ubuntu vscode 한글 관련 오류 해결
 category: "ide"
+author: bingbingpa
 ---
 
 

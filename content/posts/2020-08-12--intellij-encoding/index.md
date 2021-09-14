@@ -1,6 +1,7 @@
 ---
 title : intellij 테스트 코드 한글 깨짐 해결 방법
 category: "ide"
+author: bingbingpa
 ---
 
 - intellij 에서 테스트 코드에 한글이 깨지는 경우

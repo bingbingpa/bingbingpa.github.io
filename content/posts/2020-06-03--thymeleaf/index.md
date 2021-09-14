@@ -1,6 +1,7 @@
 ---
 title : springBoot Thymeleaf
 category: "spring"
+author: bingbingpa
 ---
 
 ### 1. build.gradle 설정

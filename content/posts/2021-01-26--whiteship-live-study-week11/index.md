@@ -1,6 +1,7 @@
 ---
 title : 자바 열거형
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 11주차 정리

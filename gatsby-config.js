@@ -44,10 +44,24 @@ module.exports = {
     // `gatsby-plugin-styled-jsx`, // the plugin's code is inserted directly to gatsby-node.js and gatsby-ssr.js files
     // `gatsby-plugin-styled-jsx-postcss`, // as above
     "gatsby-plugin-sass",
+    "gatsby-plugin-sitemap",
+    {
+      resolve: "gatsby-plugin-canonical-urls",
+      options: {
+        siteUrl: config.siteUrl,
+        stripQueryString: true
+      }
+    },
     {
       resolve: `gatsby-plugin-layout`,
       options: {
         component: require.resolve(`./src/layouts/`)
+      }
+    },
+    {
+      resolve: "gatsby-plugin-robots-txt",
+      options: {
+        policy: [{ userAgent: "*", allow: "/" }]
       }
     },
     {

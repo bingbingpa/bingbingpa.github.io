@@ -1,6 +1,7 @@
 ---
 title : Springboot Redis 세션 공유
 category: "spring"
+author: bingbingpa
 ---
 
 ### 1. Springboot Redis 세션 클러스터링을 사용하는 이유

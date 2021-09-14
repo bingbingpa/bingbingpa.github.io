@@ -1,6 +1,7 @@
 ---
 title : Load Balancing, Session Clustering
 category: "infra"
+author: bingbingpa
 ---
 
 ### 1. 테스트 환경 및 버전
@@ -431,7 +432,7 @@ sudo systemctl restart httpd
 
 #### 7.8. container 생성
 - 테스트를 위해 생성한 temp container 를 삭제하고 지금까지 설정한 내용을 기반으로 container 를 생성한다.
-~~~ cmd
+~~~ bash
 cmd> docker container stop temp
 cmd> docker container rm temp
 cmd> docker container commit apache-tomcat1 apache-tomcat2

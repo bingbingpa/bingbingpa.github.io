@@ -1,6 +1,7 @@
 ---
 title : user 계정 sudo 권한
 category: "infra"
+author: bingbingpa
 ---
 
 ## 일반 사용자 계정에  root 권한 주기

@@ -1,6 +1,7 @@
 ---
 title : 자바 패키지
 category: "java"
+author: bingbingpa
 ---
 
 ## whiteship/live-study 7주차 정리

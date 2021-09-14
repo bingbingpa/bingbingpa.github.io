@@ -1,6 +1,7 @@
 ---
 title : ulimit 설정하기
 category: "infra"
+author: bingbingpa
 ---
 
 ## 1. ulimit?

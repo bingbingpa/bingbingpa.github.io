@@ -1,7 +1,7 @@
 ---
 title : 토비의 스프링 3.1(vol1) - 1장 오브젝트와 의존관계
 category: "spring"
-comments: true
+author: bingbingpa
 ---
 
 - 토비의 스프링 1장을 보고 최신 스프링버전에서 테스트 해보고 정리한 내용.

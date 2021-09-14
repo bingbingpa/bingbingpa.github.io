@@ -1,6 +1,7 @@
 ---
 title : intellij 단축키
 category: "ide"
+author: bingbingpa
 ---
 
 ### 꼭 기억해야 할 단축키

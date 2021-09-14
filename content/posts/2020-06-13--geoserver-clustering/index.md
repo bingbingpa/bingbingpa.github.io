@@ -1,6 +1,7 @@
 ---
 title : Geoserver Clustering
 category: "etc"
+author: bingbingpa
 ---
 
 ### 1. jms 클러스터링 구성
