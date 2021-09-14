@@ -30,3 +30,5 @@
     - yarn add gatsby-plugin-canonical-urls(Canonical Link Element 를 위한 라이브러리 세팅)
     - yarn add gatsby-plugin-sitemap(sitemap 생성을 위한 라이브러리 세팅)
     - yarn add gatsby-plugin-robots-txt(robots.txt 파일 생성을 위한 라이브러리 세팅)
+  - 배포
+    - yarn add gh-pages --dev

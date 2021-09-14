@@ -3,6 +3,8 @@ module.exports = {
   shortSiteTitle: "삽질 저장소", // <title> ending for posts and pages
   siteDescription: "삽질한 내용들을 정리하는 블로그",
   siteUrl: "https://bingbingpa.github.io",
+  author: "bingbingpa",
+
   // pathPrefix: "",
   siteImage: "preview.jpg",
   siteLanguage: "ko",
