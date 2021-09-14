@@ -1,0 +1,42 @@
+@import "../../theme/theme.scss";
+
+.h1-headline {
+  font-size: $font-size-xxl;
+  margin: $space-stack-l;
+  animation-name: headlineEntry;
+  animation-duration: $time-duration-long;
+
+  :global(span) {
+    font-weight: $font-weight-standard;
+    display: block;
+    font-size: 0.5em;
+    letter-spacing: 0;
+    margin: $space-stack-xs;
+  }
+
+  :global(svg) {
+    height: 0.75em;
+    fill: $color-brand-primary;
+  }
+}
+
+@keyframes headlineEntry {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .h1-headline {
+    font-size: calc(#{$font-size-xl} * 1.2);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .h1-headline {
+    font-size: calc(#{$font-size-xl} * 1.4);
+  }
+}

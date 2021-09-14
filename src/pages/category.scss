@@ -1,0 +1,9 @@
+@import "../theme/theme.scss";
+
+.h2-category {
+  margin: 0 0 0.5em;
+}
+.h2-category :global(svg) {
+  height: 0.8em;
+  fill: $color-brand-primary;
+}

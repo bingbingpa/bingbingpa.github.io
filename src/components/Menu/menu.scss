@@ -1,0 +1,114 @@
+@import "../../theme/theme.scss";
+
+.menu {
+  align-items: center;
+  background: $color-neutral-white;
+  bottom: 0;
+  display: flex;
+  flex-grow: 1;
+  left: 0;
+  //max-height: ${open ? "1000px" : "50px"};
+  padding: 0 $space-inset-s;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  transition: all $time-duration-default;
+}
+
+.itemList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0; /* 0 ${theme.space.s}; */
+  position: relative;
+  width: 100%;
+}
+
+// !desktop
+@media screen and (max-width: 1023px) {
+  .menu {
+    &::after {
+      position: absolute;
+      content: "";
+      left: $space-m;
+      right: $space-m;
+      top: 0;
+      height: 1px;
+      background: $color-brand-primary;
+    }
+
+    &.open {
+      padding: $space-inset-m;
+    }
+
+    :global(.homepage):not(.fixed) & {
+      bottom: -100px;
+    }
+  }
+}
+
+//desktop
+@media screen and (min-width: 1024px) {
+  .menu {
+    border-top: none;
+    background: transparent;
+    display: flex;
+    position: relative;
+    justify-content: flex-end;
+    padding-left: 50px;
+    transition: none;
+  }
+
+  .itemList {
+    justify-content: flex-end;
+    padding: 0;
+  }
+
+  .hiddenItemList {
+    list-style: none;
+    margin: 0;
+    position: absolute;
+    background: $background-color-primary;
+    border: 1px solid $line-color;
+    top: 48px;
+    right: $space-s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: $space-m;
+    border-radius: $size-radius-small 0 $size-radius-small $size-radius-small;
+
+
+    &:after {
+      content: "";
+      background: $background-color-primary;
+      z-index: 10;
+      top: -10px;
+      right: -1px;
+      width: 44px;
+      height: 10px;
+      position: absolute;
+      border-left: 1px solid $line-color;
+      border-right: 1px solid $line-color;
+    }
+
+    :global(.homepage):not(.fixed) & {
+      border: 1px solid transparent;
+      background: color(white alpha(-10%));
+      top: 50px;
+
+      &:after {
+        top: -11px;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
+        background: color(white alpha(-10%));
+      }
+    }
+
+    :global(.fixed) & {
+      top: 44px;
+    }
+  }
+}
