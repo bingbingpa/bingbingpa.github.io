@@ -34,6 +34,8 @@ const Seo = props => {
       <meta property="og:image" content={image} />
       <meta property="og:url" content={url} />
       <meta property="og:type" content="website" />
+
+      <meta name="google-site-verification" content="05n7EQOUWLW-NVaGmvLtb2mFwNCQlApz6zHbZyGwW58" />
     </Helmet>
   );
 };
