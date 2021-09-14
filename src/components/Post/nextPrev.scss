@@ -1,0 +1,65 @@
+@import "../../theme/theme.scss";
+
+.links {
+  display: flex;
+  flex-direction: column;
+  padding: 0 $space-m $space-l;
+  border-bottom: 1px solid $line-color;
+  margin: $space-stack-l;
+
+  :global(a) {
+    display: flex;
+  }
+
+  :global(a:nth-child(2)) {
+    margin: $space-default 0 0;
+  }
+
+  :global(svg) {
+    fill: $color-special-attention;
+    width: $space-m;
+    height: $space-m;
+    flex-shrink: 0;
+    flex-grow: 0;
+    margin: $space-inset-m;
+  }
+}
+
+h4 {
+  font-weight: 600;
+  margin: 0;
+  font-size: 1.1em;
+}
+time {
+  color: $color-neutral-gray-g;
+  display: block;
+  font-weight: 400;
+  font-size: 0.8em;
+  margin-top: 0.5em;
+}
+
+//desktop
+@media screen and (min-width: 1024px) {
+  .links {
+    flex-direction: row-reverse;
+    justify-content: center;
+
+    :global(a) {
+      flex-basis: 50%;
+    }
+
+    :global(a:nth-child(2)) {
+      margin: 0;
+    }
+    :global(svg) {
+      transition: all 0.5s;
+      margin: $space-inset-s;
+    }
+  }
+
+  @media (hover: hover) {
+    .links :global(a:hover svg) {
+      transform: scale(1.5);
+    }
+  }
+}

@@ -1,0 +1,16 @@
+.form-search {
+  position: relative;
+  border-bottom: 1px solid #aaa;
+  display: flex;
+  justify-content: space-between;
+}
+.input-search {
+  border: 0;
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2em;
+  font-size: 1.4em;
+  flex-grow: 1;
+}
