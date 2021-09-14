@@ -7,7 +7,7 @@ module.exports = {
   repo: "bingbingpa/bingbingpa.github.io",
 
   // pathPrefix: "",
-  siteImage: "preview.jpg",
+  siteImage: "preview.png",
   siteLanguage: "ko",
 
   /* info */
