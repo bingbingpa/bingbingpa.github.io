@@ -7,12 +7,13 @@ import Bodytext from "../Article/Bodytext";
 import Meta from "./Meta";
 import Author from "./Author";
 import NextPrev from "./NextPrev";
+import Comments from "./Comments";
 
 const Post = props => {
   const {
     post: {
       html,
-      fields: { prefix, slug },
+      fields: { prefix },
       frontmatter: { title, category }
     },
     authornote,
@@ -30,7 +31,7 @@ const Post = props => {
       <footer>
         <Author note={authornote} />
         <NextPrev next={nextPost} prev={prevPost} />
-        {/*<Comments slug={slug} facebook={facebook} theme={theme} />*/}
+        <Comments />
       </footer>
     </React.Fragment>
   );

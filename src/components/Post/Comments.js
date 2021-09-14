@@ -1,28 +1,32 @@
-import React from "react";
-import PropTypes from "prop-types";
-import FacebookProvider, { Comments as FBComments } from "react-facebook";
-
+import React, { createRef, useEffect } from "react";
 import config from "../../../content/meta/config";
 
-import "./comment.scss";
+const src = "https://utteranc.es/client.js";
+const Comments = () => {
+  const element = createRef();
 
-const Comments = props => {
-  const { facebook, slug } = props;
+  useEffect(() => {
+    if (element.current === null) return;
+    const utterances = document.createElement("script");
 
-  return (
-    <React.Fragment>
-      <div id="post-comments" className="comments">
-        <FacebookProvider appId={facebook.appId}>
-          <FBComments href={`${config.siteUrl}${slug}`} width="100%" colorscheme="light" />
-        </FacebookProvider>
-      </div>
-    </React.Fragment>
-  );
-};
+    const attributes = {
+      src,
+      repo: config.repo,
+      "issue-term": "pathname",
+      label: "Comment",
+      theme: `github-light`,
+      crossorigin: "anonymous",
+      async: "true"
+    };
 
-Comments.propTypes = {
-  slug: PropTypes.string.isRequired,
-  facebook: PropTypes.object.isRequired
+    Object.entries(attributes).forEach(([key, value]) => {
+      utterances.setAttribute(key, value);
+    });
+
+    element.current.appendChild(utterances);
+  }, []);
+
+  return <div ref={element} />;
 };
 
 export default Comments;

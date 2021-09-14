@@ -4,6 +4,7 @@ module.exports = {
   siteDescription: "삽질한 내용들을 정리하는 블로그",
   siteUrl: "https://bingbingpa.github.io",
   author: "bingbingpa",
+  repo: "bingbingpa/bingbingpa.github.io",
 
   // pathPrefix: "",
   siteImage: "preview.jpg",
