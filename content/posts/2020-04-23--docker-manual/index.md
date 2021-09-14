@@ -10,15 +10,15 @@ category: "infra"
 
 ## 1. docker 상태 확인
 - 버전 확인 : docker 의 버전이나 go 언어의 버전, OS, 아키텍처를 확인 할 수 있다.
-~~~ cmd
+~~~ shell
     docker version
 ~~~
 - 실행 환경 확인 : docker 실행 환경의 상세 설정 표시(컨테이너 수, docker 버전, 스토리지 드라이버 종류, OS 종류, 아키텍처 등)
-~~~ cmd
+~~~ shell
     docker system info
 ~~~
 - 디스크 이용 상황 : 상세 내용을 확인할 때는 --v 옵션을 지정한다.
-~~~ cmd
+~~~ shell
     docker system df
 ~~~
 
@@ -34,7 +34,7 @@ category: "infra"
     ~~~
     - 이미지명에 취득할 url 을 지정할 수도 있다. url 은 프로토콜(https://)을 제외하고 지정한다.
 - 이미지 목록 표시
-~~~ css
+~~~ shell
     docker image ls [옵션] [리포지토리명]
 ~~~
 
@@ -48,19 +48,19 @@ category: "infra"
         |\--quiet, -q|docker 이미지 ID만 표시|
 
 - 이미지 상세 정보 확인 : 이미지 ID, 작성일, docker 버전, cpu 아키텍처 등을 JSON 형태로 표시한다.
-~~~ css
+~~~ shell
     docker image inspect <이미지명>
 ~~~
 - 이미지 commit 히스토리 보기
-~~~ css
+~~~ shell
     docker image history <이미지명>
 ~~~
 - 이미지 태그 설정 : **docker hub 에 등록하기 위해서는 [사용자명/repository명:태그명] 과 같은 명명 규칙을 사용해야 한다.**
-~~~ css
+~~~ shell
     docker image tag [원본이미지명] [변경할이미지명:태그명]
 ~~~
 - 이미지 검색 : docker hub 에 공개되어 있는 이미지를 검색한다.
-~~~ css
+~~~ shell
     docker search [옵션] <검색 키워드>
 ~~~
 
@@ -73,7 +73,7 @@ category: "infra"
         |\--filter=stars=n|즐겨찾기의 수(n 이상)를 지정|
 
 - 이미지 삭제
-~~~ css
+~~~ shell
     docker image rm [옵션] 이미지명 [이미지명]
 ~~~
 
@@ -85,7 +85,7 @@ category: "infra"
         |\--no-prune|중간 이미지를 삭제하지 않음|
 
 - 사용하지 않는 이미지 삭제
-~~~ css
+~~~ shell
     docker image prune [옵션]
 ~~~
 
@@ -97,7 +97,7 @@ category: "infra"
         |\--force, -f|이미지를 강제로 삭제|
 
 - docker hub 에 로그인
-~~~ css
+~~~ shell
     docker login [옵션] [서버]
 ~~~
 
@@ -109,22 +109,22 @@ category: "infra"
         |\--username, -u|사용자명|
 
 - 이미지 업로드 : **업로드 하는 이미지명은 유저명/repository:태그명 이어야 하고, repository 는 docker hub 에서 생성해 주어야 한다.** 태그명이 없을 경우 latest 버전으로 업로드 된다.
-~~~ css
+~~~ shell
     docker image push 이미지명[:태그명]
 ~~~
 
 ## 3. docker 컨테이너 생성 / 시작 / 정지
 
 - 컨테이너 생성 : 이미지로부터 컨테이너를 생성한다. 이미지의 실체는 'docker 에서 서버 기능을 작동 시키기 위해 필요한 디렉토리 및 파일들' 이다. 구체적으로는 Linux의 작동에 필요한 /etc 나 /bin 등과 같은 디렉토리 및 파일들이다.
-~~~ css
+~~~ shell
     docker container create [이미지명]
 ~~~
 - 컨테이너 상세 정보 확인
-~~~ css
+~~~ shell
     docker container inspect <컨테이너 식별자>
 ~~~
 - 컨테이너 생성 및 시작
-~~~ css
+~~~ shell
     docker container run [옵션] 이미지명[:태그명] [인수]
 ~~~
 
@@ -149,7 +149,7 @@ category: "infra"
 
 
 - 컨테이너의 백그라운드 실행
-~~~ css
+~~~ shell
     docker container run [실행 옵션] 이미지명[:태그명] [인수]
 ~~~
 
@@ -181,7 +181,7 @@ category: "infra"
         - /bin/ping localhost : 컨테이너에서 실행할 명령
 
 - 컨테이너의 네트워크 설정
-~~~ css
+~~~ shell
     docker container run [네트워크 옵션] 이미지명[:태그명] [인수]
 ~~~
 
@@ -204,7 +204,7 @@ category: "infra"
         ~~~
 
 - 자원을 지정하여 컨테이너 생성 및 실행
-~~~ css
+~~~ shell
     docker container run [자원 옵션] 이미지명[:태그명] [인수]
 ~~~
 
@@ -225,7 +225,7 @@ category: "infra"
         ~~~
 
 - 컨테이너를 생성 및 시작하는 환경을 지정
-~~~ css
+~~~ shell
     docker container run [환경설정 옵션] 이미지명[:태그명] [인수]
 ~~~
 
@@ -240,7 +240,7 @@ category: "infra"
         |-\--user=[사용자명], -u|사용자명 또는 UID를 지정한다.|
 
 - 가동 컨테이너 목록 표시
-~~~ css
+~~~ shell
     docker container ls [옵션]
 ~~~
 
@@ -266,19 +266,19 @@ category: "infra"
         ~~~
 
 - 컨테이너 가동 확인 : 상태 확인 종료는 Ctrl + c
-~~~ css
+~~~ shell
     docker container stats [컨테이너 식별자]
 ~~~
 - 컨테이너에서 실행 중인 프로세스 확인
-~~~ css
+~~~ shell
     docker container top [컨테이너 식별자]
 ~~~
 - 실행중인 컨테이너 size 확인
-~~~ css
+~~~ shell
     docker ps --size
 ~~~
 - 정지하고 있는 컨테이너 시작
-~~~ css
+~~~ shell
     docker container start [옵션] <컨테이너 식별자> [컨테이너 식별자]
 ~~~
 
@@ -290,7 +290,7 @@ category: "infra"
         |\--interactive, -i|컨테이너의 표준 입력을 연다.|
 
 - 컨테이너 정지
-~~~ css
+~~~ shell
     docker container stop [옵션] <컨테이너 식별자> [컨테이너 식별자]
 ~~~
 
@@ -301,7 +301,7 @@ category: "infra"
         |\--time, -t|컨테이너의 정지 시간을 지정(default:10초)|
 
 - 컨테이너 재시작
-~~~ css
+~~~ shell
     docker container restart [옵션] <컨테이너 식별자> [컨테이너 식별자]
 ~~~
 
@@ -312,7 +312,7 @@ category: "infra"
         |\--time, -t|컨테이너의 정지 시간을 지정(default:10초)|
 
 - 컨테이너 삭제
-~~~ css
+~~~ shell
     docker container rm [옵션] <컨테이너 식별자> [컨테이너 식별자]
 ~~~
 
@@ -324,16 +324,16 @@ category: "infra"
         |\--volumes, -v|할당한 볼륨을 삭제|
 
 - 정지 중인 모든 컨테이너 삭제
-~~~ cmd
+~~~ shell
     docker container prune
 ~~~
 - 컨테이너 중단/재개
-~~~ css
+~~~ shell
     docker container pause/unpause <컨테이너 식별자> [컨테이너 식별자]
 ~~~
 
 - 네트워크 목록 표시 : docker 는 기본값으로 bridge, host, none 이 세 개의 네트워크를 만들고, 컨테이너 시작 시에 네트워크를 지정하지 않을 때는 기본값인 bridge 로 컨테이너가 시작된다.
-~~~ css
+~~~ shell
     docker network ls [옵션]
 ~~~
 
@@ -346,7 +346,7 @@ category: "infra"
         |\--quite, -q|네트워크 ID만 표시|
 
 - 네트워크 작성
-~~~ css
+~~~ shell
     docker network create [옵션] 네트워크 컨테이너명
 ~~~
 
@@ -361,7 +361,7 @@ category: "infra"
         |\--lable|네트워크에 설정하는 라벨|
 
 - 네트워크 연결/연결해제
-~~~ css
+~~~ shell
     docker network connect/disconnect [옵션] 네트워크 컨테이너명
 ~~~
 
@@ -375,11 +375,11 @@ category: "infra"
         |\--link|다른 컨테이너에 대한 링크|
 
 - 네트워크 상세 정보 확인
-~~~ css
+~~~ shell
     docker network inspect [옵션] 네트워크 컨테이너명
 ~~~
 - 네트워크 삭제 : 네트워크를 삭제하려면 docker network disconnect 명령을 사용하여 연결 중인 모든 컨테이너와의 연결을 해제해야 한다.
-~~~ css
+~~~ shell
     docker network rm [옵션] 네트워크 컨테이너명
 ~~~
 
@@ -388,12 +388,12 @@ category: "infra"
 - 가동 컨테이너 연결
     - **-d 옵션으로 백그라운드에서 실행중인 컨테이너에는 attach 할 수 없다.**
     - 컨테이너에서 분리 : Ctrl + p, Ctrl + q
-~~~ css
+~~~ shell
     docker container attach [컨테이너 식별자]
 ~~~
 
 - 가동 컨테이너에서 프로세스 실행 : 실행 중인 컨테이너에서만 실행 가능.
-~~~ css
+~~~ shell
     docker container exec [옵션] <컨테이너 식별자> <실행할 명령> [인수]
 ~~~
 
@@ -412,27 +412,27 @@ category: "infra"
     ~~~
 
 - 컨테이너 이름 변경
-~~~ css
+~~~ shell
     docker container rename [현재이름] [변경할이름]
 ~~~
 
 - 컨테이너 안의 파일을 복사
-~~~ css
+~~~ shell
     docker container cp [컨테이너 식별자]:[컨테이너 안의 파일 경로] [호스트의 디렉토리 경로]
 ~~~
-~~~ css
+~~~ shell
     docker container cp [호스트의 파일] [컨테이너 식별자]:[컨테이너 안의 파일 경로]
 ~~~
 
 - 컨테이너 조작의 변경 내용 확인 : A-파일 추가, D-파일 삭제, C-파일 수정
-~~~ css
+~~~ shell
     docker container diff [컨테이너 식별자]
 ~~~
 
 ## 5. docker 이미지 생성
 
 - 컨테이너로부더 이미지 작성
-~~~ css
+~~~ shell
     docker container commit [옵션] <컨테이너 식별자> [이미지명:[태그명]]
 ~~~
 
@@ -446,7 +446,7 @@ category: "infra"
         |\--pause, -p|컨테이너를 일시 정지하고 commit|
 
 - 컨테이너를 tar 파일로 출력
-~~~ css
+~~~ shell
     docker container export [컨테이너 식별자] > [출력경로\파일명].tar
 ~~~
     - 예시
@@ -455,7 +455,7 @@ category: "infra"
     ~~~
 
 - tar 파일로부터 이미지 작성
-~~~ css
+~~~ shell
     docker image import [파일 또는 URL]  [이미지명:[태그명]]
 ~~~
     - 예시
@@ -464,17 +464,17 @@ category: "infra"
     ~~~
 
 - 이미지 저장
-~~~ css
+~~~ shell
    docker image save -o [출력경로\파일명].tar [이미지명]
 ~~~
 
 - 이미지 읽어 들이기 : 파일명이 아닌 save 로 저장한 이미지명으로 읽어 들인다.
-~~~ css
+~~~ shell
     docker image load -i [입력경로\파일명].tar
 ~~~
 
 - 불필요한 이미지/컨테이너 일괄 삭제
-~~~ css
+~~~ shell
     docker system prune [옵션]
 ~~~
 

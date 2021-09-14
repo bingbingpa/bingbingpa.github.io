@@ -6,23 +6,23 @@ category: "infra"
 ### 1. 업데이트 및 필요 패키지 설치
 
 ~~~ bash
-    dnf install -y epel-release
-    dnf update -y
-    dnf install -y vim unzip make wget sudo ncurses
+dnf install -y epel-release
+dnf update -y
+dnf install -y vim unzip make wget sudo ncurses
 ~~~
 
 ### 2. container timezone 설정
 
 ~~~ bash
-    timedatectl set-timezone Asia/Seoul
+timedatectl set-timezone Asia/Seoul
 ~~~
 
 ### 3. postgresql timezone 설정
 
 - postgresql.conf 파일을 다음과 같이 수정 후 재시작한다.
-~~~ conf
-    timezone = 'Asia/Seoul'
-    log_timezone = 'Asia/Seoul'
+~~~ vim
+timezone = 'Asia/Seoul'
+log_timezone = 'Asia/Seoul'
 ~~~
 
 ### 4. vim 설정
@@ -30,7 +30,7 @@ category: "infra"
 ~~~ bash
     vi ~/.vimrc
 ~~~
-~~~ vimrc
+~~~ vim
     set hlsearch " 검색어 하이라이팅
     set nu " 줄번호
     set autoindent " 자동 들여쓰기
@@ -73,7 +73,7 @@ category: "infra"
 
 ### 5. bash 컬러 설정
 - /etc/bashrc 파일의 하단에 다음과 같이 추가 후 저장
-~~~ bashrc
+~~~ vim
     PS1='\[\e[01;36m\]\u\[\e[01;37m\]@\[\e[01;33m\]\H\[\e[01;37m\]:\[\e[01;32m\]\w\[\e[01;37m\]\$\[\033[0;37m\] '
 
     if [ -x /usr/bin/dircolors ]; then

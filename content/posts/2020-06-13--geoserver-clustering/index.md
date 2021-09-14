@@ -8,7 +8,7 @@ category: "etc"
 
 ### 2. geoserver 기본 설정
 - docker container 생성 및 시작
-~~~ cmd
+~~~ shell
     cmd> docker network create --subnet=172.18.0.0/16 mynetwork
     cmd> docker container run --privileged  -d --net mynetwork --ip 172.18.0.100 -p 18888:8080 -v "D:\geoserver\gwc-data":"/home/gaia3d/gwc-data" -v "D:\geoserver\map-data":"/home/gaia3d/map-data" --name "geoserver1" gaia3d/geoserver /sbin/init
     cmd> docker container run --privileged  -d --net mynetwork --ip 172.18.0.200 -p 28888:8080 -v "D:\geoserver\gwc-data":"/home/gaia3d/gwc-data" -v "D:\geoserver\map-data":"/home/gaia3d/map-data" --name "geoserver2" gaia3d/geoserver /sbin/init
@@ -16,7 +16,7 @@ category: "etc"
 - geoserver data 는 독립적으로 사용하고 tiff 파일과 캐시 데이터는 공유 디렉토리를 마운트해서 사용한다.
 - **타일 캐시와 관련된 설정은 동기화 되지 않으며, gwc data 디렉토리를 공유해서 사용할 경우 master 의 변경 사항은 slave 에서 reload 후에 적용 된다.**
 - geoserver applictaion 배치 및 서비스 시작(geoserver1, geoserver2 동일하게 실행)
-~~~ bash
+~~~ shell
     su gaia3d
     mkdir /home/gaia3d/tools/geoserver-tomcat/webapps/geoserver
     unzip /home/gaia3d/setup/geoserver.war -d /home/gaia3d/tools/geoserver-tomcat/webapps/geoserver

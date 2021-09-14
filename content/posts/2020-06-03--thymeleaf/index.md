@@ -5,7 +5,7 @@ category: "spring"
 
 ### 1. build.gradle 설정
 - thymeleaf, layout-dialect 를 사용하기 위한 의존성을 추가한다.
-~~~ gradle
+~~~ properties
 implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.4.1'
 ~~~

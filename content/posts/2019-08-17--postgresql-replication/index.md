@@ -73,7 +73,7 @@ bash-4.2$ /usr/pgsql-9.6/bin/pg_basebackup -R -h “마스터IP” -D /data/pg_d
 
 ### 3-2. postgres.conf 설정
 - postgres.conf 파일을 수정한다.
-~~~ vim
+~~~ properties
 listen_addresses = '*'
 hot_standby = on
 hot_standby_feedback = on
@@ -82,7 +82,7 @@ hot_standby_feedback = on
 ### 3-3. recovery.conf 설정
 - DB 복사후에 초기에는 recovery.conf 파일이 없으므로 복사한 postgres의 데이터 폴더에 파일을 생성한다.
 - **primary_slot_name은 Master server에서 설정한 slot name을 작성한다.**
-~~~ vim
+~~~ properties
 standby_mode = 'on'
 primary_conninfo = 'user=replicator host=”마스터IP” port=5432 sslmode=prefer sslcompression=1 krbsrvname=postgres'
 primary_slot_name='replication_slot'

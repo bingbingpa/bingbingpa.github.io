@@ -5,7 +5,7 @@ category: "infra"
 
 ### 1. docker image 사용하기
 - docker hub 에 있는 image 를 받아서 사용
-~~~ cmd
+~~~ shell
     docker container run -d  -p 15432:5432 --name "postgres" -e POSTGRES_PASSWORD=postgres postgis/postgis:12-master
 ~~~
 - 문제점
@@ -15,7 +15,7 @@ category: "infra"
 
 ### 2. docker image 에 몽땅 넣어 사용하기
 - centos image 를 받아서 거기에 db, tomcat, java, rabbitmq 등을 몽땅 설치해서 image 로 배포 해서 사용
-~~~ cmd
+~~~ shell
     docker container run --privileged  -d -p 15432:5432 -p 18080:8080 -v "D:\data\geoserver":"/data/geoserver_data" --name "mago3d" gaia3d/mago3d /sbin/init
 ~~~
 - 문제점
@@ -146,13 +146,13 @@ category: "infra"
 #### 3.5. 실행하기
 - docker-compose.yml 파일이 있는 경로에서 다음 실행
 - -d 는 백그라운드에서 실행한다는 옵션이고, container 가 생성되고 위에서 설정한 compose 파일에 restart 가 always 로 되어 있으므로, 개발장비가 재부팅 되어도 자동으로 실행 된다.
-~~~ cmd
+~~~ shell
     docker-compose up -d
 ~~~
 
 #### 3.6. 변경된 db 반영하기
 - -v 옵션을 줘야 docker 에서 사용하는 volume(geoserver-data) 이 모두 삭제된다. geoserver 의 데이터를 유지하고 싶을 경우에는 -v 옵션을 생략한다.
-~~~ cmd
+~~~ shell
     docker-compose down -v
     docker-compose up --build -d
 ~~~

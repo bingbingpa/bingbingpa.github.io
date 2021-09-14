@@ -36,7 +36,7 @@ category: "build-tool"
 ## 3. 프로젝트 설정
 
 - 루트 폴더의 settings.gradle 파일에 프로젝트들관의 관계를 설정해준다.
-~~~ gradle
+~~~ properties
   rootProject.name = "gradleSample"
   include ":test-admin"
   include ":test-user"

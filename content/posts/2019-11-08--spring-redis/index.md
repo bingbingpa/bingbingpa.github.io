@@ -19,13 +19,13 @@ category: "spring"
 - 별도의 인스톨은 필요하지 않고 해당 zip파일을 받아서 conf파일을 각자의 설정에 맞게 수정 후 서비스로 등록 후 시작해주면 된다.
 - 기본포트는 6379번이고 포트를 포함한 설정정보를 수정하려면 redis.windows.conf 파일을 수정하면 된다.
 - 서비스를 등록하고 redis 서비스를 시작한다.
-~~~ cmd
+~~~ shell
 redis-server --service-install redis.windows.conf --loglevel verbose
 redis-server --service-start
 ~~~
 - cli로 접속하여 정상적으로 접속이 되는지 확인.(아직 springboot에 redis 설정을 하지 않았으므로 아무것도 없다.)
 - redis-cli
-~~~ cmd
+~~~ shell
 127.0.0.1:6379>
 127.0.0.1:6379> keys *
 (empty list or set)
@@ -37,7 +37,7 @@ redis-server --service-start
 ### 4. build.gradle 설정
 
 - redis session을 사용 할 수 있도록 디펜던시 추가
-~~~ gradle
+~~~ properties
 compile('org.springframework.session:spring-session-data-redis')
 ~~~
 
