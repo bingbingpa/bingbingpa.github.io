@@ -33,7 +33,9 @@ const Hero = props => {
       }
     }
 
-    setInterval(draw, 33);
+    setTimeout(function() {
+      setInterval(draw, 33);
+    }, 10);
   }, []);
 
   return (
