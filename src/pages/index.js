@@ -29,7 +29,9 @@ class IndexPage extends React.Component {
         </ThemeContext.Consumer>
         <hr className="hr-index" ref={this.separator} />
 
-        <Blog posts={posts} />
+        <ThemeContext.Consumer>
+          {theme => <Blog posts={posts} theme={theme} />}
+        </ThemeContext.Consumer>
         <Seo />
       </React.Fragment>
     );
