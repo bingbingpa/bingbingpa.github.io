@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { graphql } from "gatsby";
-import { ThemeContext } from "../layouts";
 import Blog from "../components/Blog";
 import Hero from "../components/Hero";
 import Seo from "../components/Seo";
@@ -24,14 +23,10 @@ class IndexPage extends React.Component {
 
     return (
       <React.Fragment>
-        <ThemeContext.Consumer>
-          {theme => <Hero scrollToContent={this.scrollToContent} theme={theme} />}
-        </ThemeContext.Consumer>
+        <Hero scrollToContent={this.scrollToContent} />
         <hr className="hr-index" ref={this.separator} />
 
-        <ThemeContext.Consumer>
-          {theme => <Blog posts={posts} theme={theme} />}
-        </ThemeContext.Consumer>
+        <Blog posts={posts} />
         <Seo />
       </React.Fragment>
     );
