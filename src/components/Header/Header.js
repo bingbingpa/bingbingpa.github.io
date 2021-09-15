@@ -61,7 +61,8 @@ class Header extends React.Component {
           </FontLoadedContext.Consumer>
         </header>
         <VisibilitySensor onChange={this.visibilitySensorChange}>
-          <div className={path === "/" ? "sensor-homepage" : "sensor-default"} />
+          {/*<div className={path === "/" ? "sensor-homepage" : "sensor-default"} />*/}
+          <div className="sensor-default" />
         </VisibilitySensor>
       </React.Fragment>
     );
