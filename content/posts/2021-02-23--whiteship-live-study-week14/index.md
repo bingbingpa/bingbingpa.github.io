@@ -1,6 +1,6 @@
 ---
 title : 자바 제네릭
-category: "java"
+category: "whiteship-live-study"
 author: bingbingpa
 ---
 

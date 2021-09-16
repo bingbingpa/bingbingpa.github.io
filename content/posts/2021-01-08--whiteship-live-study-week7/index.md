@@ -1,6 +1,6 @@
 ---
 title : 자바 패키지
-category: "java"
+category: "whiteship-live-study"
 author: bingbingpa
 ---
 

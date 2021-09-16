@@ -1,6 +1,6 @@
 ---
 title : docker rabbitMQ 설정 하기
-category: "infra"
+category: "docker"
 author: bingbingpa
 ---
 

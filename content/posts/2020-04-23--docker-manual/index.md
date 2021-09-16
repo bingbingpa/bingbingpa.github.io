@@ -1,6 +1,6 @@
 ---
 title : docker 시작하기
-category: "infra"
+category: "docker"
 author: bingbingpa
 ---
 

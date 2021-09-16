@@ -1,6 +1,6 @@
 ---
 title : docker 로 개발환경 구성하기
-category: "infra"
+category: "docker"
 author: bingbingpa
 ---
 

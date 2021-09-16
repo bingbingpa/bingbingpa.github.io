@@ -1,6 +1,6 @@
 ---
 title : docker container 기본 설정
-category: "infra"
+category: "docker"
 author: bingbingpa
 ---
 

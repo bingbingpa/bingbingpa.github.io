@@ -1,6 +1,6 @@
 ---
 title : 자바 예외처리
-category: "java"
+category: "whiteship-live-study"
 author: bingbingpa
 ---
 

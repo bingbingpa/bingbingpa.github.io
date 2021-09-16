@@ -1,6 +1,6 @@
 ---
 title : 자바 애노테이션
-category: "java"
+category: "whiteship-live-study"
 author: bingbingpa
 ---
 

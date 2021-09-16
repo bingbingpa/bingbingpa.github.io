@@ -1,6 +1,6 @@
 ---
 title : JVM 이해하기
-category: "java"
+category: "whiteship-live-study"
 author: bingbingpa
 ---
 

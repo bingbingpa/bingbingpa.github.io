@@ -1,6 +1,6 @@
 ---
 title : Dockerfile 작성 방법 정리
-category: "infra"
+category: "docker"
 author: bingbingpa
 ---
 

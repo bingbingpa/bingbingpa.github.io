@@ -1,6 +1,6 @@
 ---
 title : 자바 멀티쓰레드 프로그래밍
-category: "java"
+category: "whiteship-live-study"
 author: bingbingpa
 ---
 

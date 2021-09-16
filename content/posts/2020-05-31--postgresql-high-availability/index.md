@@ -1,6 +1,6 @@
 ---
 title : postgreSQL 고가용성
-category: "databse"
+category: "database"
 author: bingbingpa
 ---
 

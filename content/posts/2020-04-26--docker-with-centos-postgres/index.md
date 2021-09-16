@@ -1,6 +1,6 @@
 ---
 title : centos8 postgresql12&postgis 설치하기
-category: "database"
+category: "docker"
 author: bingbingpa
 ---
 

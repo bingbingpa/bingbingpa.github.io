@@ -1,6 +1,6 @@
 ---
 title : 토비의 스프링 3.1(vol1) - 2장 테스트
-category: "spring"
+category: "toby-spring"
 author: bingbingpa
 ---
 

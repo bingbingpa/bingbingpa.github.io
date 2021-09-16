@@ -1,6 +1,6 @@
 ---
 title : 자바 클래스
-category: "java"
+category: "whiteship-live-study"
 author: bingbingpa
 ---
 

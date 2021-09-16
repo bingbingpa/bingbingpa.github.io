@@ -1,6 +1,6 @@
 ---
 title : 토비의 스프링 3.1(vol1) - 1장 오브젝트와 의존관계
-category: "spring"
+category: "toby-spring"
 author: bingbingpa
 ---
 

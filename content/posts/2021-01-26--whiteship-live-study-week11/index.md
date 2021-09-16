@@ -1,6 +1,6 @@
 ---
 title : 자바 열거형
-category: "java"
+category: "whiteship-live-study"
 author: bingbingpa
 ---
 

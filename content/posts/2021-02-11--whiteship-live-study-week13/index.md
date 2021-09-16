@@ -1,6 +1,6 @@
 ---
 title : 자바 I/O
-category: "java"
+category: "whiteship-live-study"
 author: bingbingpa
 ---
 

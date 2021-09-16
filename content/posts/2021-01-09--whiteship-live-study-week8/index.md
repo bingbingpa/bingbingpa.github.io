@@ -1,6 +1,6 @@
 ---
 title : 자바 인터페이스
-category: "java"
+category: "whiteship-live-study"
 author: bingbingpa
 ---
 
