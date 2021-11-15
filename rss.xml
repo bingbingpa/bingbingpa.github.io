@@ -1,4 +1,1224 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 08 Nov 2021 12:03:16 GMT</lastBuildDate><item><title><![CDATA[토비의 스프링 3.1(vol1) - 2장 테스트]]></title><description><![CDATA[토비의 스프링 2장을 보고 최신 스프링버전에서 테스트 해보고 정리한 내용. 애플리케이션이 계속 변하고 복잡해져 가는데 그에 대응하는 첫번째 전략이 확장과 변화를 고려한 객체지향적 설계와 그것을 효과적으로 담아낼 수 있는 IoC/DI…]]></description><link>https://bingbingpa.github.io/toby-spring-vol1-ch2/</link><guid isPermaLink="false">https://bingbingpa.github.io/toby-spring-vol1-ch2/</guid><pubDate>Sun, 25 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;ul&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 15 Nov 2021 00:40:15 GMT</lastBuildDate><item><title><![CDATA[jenkins 를 이용한 빌드 & 배포]]></title><description><![CDATA[목표 git repository 의 특정 브랜치에 소스가 push 되면, git repository 의 webhook 설정에 의해 jenkins 의 아이템을 실행한다. item 은 pipeLine 으로 구성하고, Jenkinsfile…]]></description><link>https://bingbingpa.github.io/jenkins-build-deploy/</link><guid isPermaLink="false">https://bingbingpa.github.io/jenkins-build-deploy/</guid><pubDate>Mon, 15 Nov 2021 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;목표&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;git repository 의 특정 브랜치에 소스가 push 되면, git repository 의 webhook 설정에 의해 jenkins 의 아이템을 실행한다.&lt;/li&gt;
+&lt;li&gt;item 은 pipeLine 으로 구성하고, Jenkinsfile 을 작성하여 빌드 및 배포 구성을 코드로 관리한다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;빌드 구성&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;gradlew clean build&lt;/li&gt;
+&lt;li&gt;build 결과물을 바탕으로 Dockerfile build&lt;/li&gt;
+&lt;li&gt;docker compose 로  n 개의 springBoot app, maria-db container 를 실행&lt;/li&gt;
+&lt;li&gt;slack 으로 배포 결과 알림&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;포스팅에 사용한 저장소: &lt;a href=&quot;https://github.com/bingbingpa/spring-boot-with-docker&quot;&gt;https://github.com/bingbingpa/spring-boot-with-docker&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;1. 젠킨스 설치&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;저장소 키 다운로드&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;wget&lt;/span&gt; -q -O - https://pkg.jenkins.io/debian/jenkins.io.key &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; apt-key &lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt; -&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;sources.list 에 추가&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; deb http://pkg.jenkins.io/debian-stable binary/ &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; /etc/apt/sources.list.d/jenkins.list&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;젠킨스 설치&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; update &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; jenkins&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;초기 설치시 기본 포트는 8080 이며, 필요하다면 변경해주도록 한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;vi&lt;/span&gt; /etc/default/jenkins&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/71f71ae8f0de61490d62aa4d132d9294/9144d/jenkins-port.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 401px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 23%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA10lEQVQY05WPwXKDMAxE+ZMOyLJDwYQmDMRA7KQEJ20O7f//zNbgTqfNrYc3q5U0Gm1i7AtSYyGnGTxfwe4MvsygbY2MFUjl/yLpB40nVYIKDSq3IB14Ln8WlqMZ8TcSmQjITdSVMJcq7gUSc6yRdiPk0YL2DUTXg7oDqD1AhG9F04JPr5HF9yPErglpPPg8ga2DaA349g72Hsno9uinKwYfCLHn+x3DxePt4xPGOaSbAlTVkeX7sooJHr2O6RJnK6Qih8oL5GEog8q11quu8Vj95bH3y38BV1OYk/qySzAAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;jenkins-port&quot;
+        title=&quot;&quot;
+        src=&quot;/static/71f71ae8f0de61490d62aa4d132d9294/9144d/jenkins-port.png&quot;
+        srcset=&quot;/static/71f71ae8f0de61490d62aa4d132d9294/772e8/jenkins-port.png 200w,
+/static/71f71ae8f0de61490d62aa4d132d9294/e17e5/jenkins-port.png 400w,
+/static/71f71ae8f0de61490d62aa4d132d9294/9144d/jenkins-port.png 401w&quot;
+        sizes=&quot;(max-width: 401px) 100vw, 401px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;젠킨스의 pipeline 으로 docker 를 실행하기 위해 권한을 부여한다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;/usr/bin/docker 의 사용자그룹을 jenkins 에 추가해준다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;usermod&lt;/span&gt; -aG root jenkins&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;서비스를 재시작하고 잘 기동 되었는지 확인한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl restart jenkins
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl status jenkins&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;localhost:8091 로 접속 후 /var/lib/jenkins/ 경로의 secrets 폴더에서 initialAdminPassword 의 내용을 확인해서 입력한다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/4f778b925c8c96d14cfa5e7257c74106/0a867/jenkins-init-password.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 40.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABCElEQVQoz4WRzW7DIBCE/f4v1lZO5UvUUyr5mFBgAduAf6csMVGSVu1Kn1hZu+MZqLTWkFLCuQ7btmXWdUUp7pdl+ReeY6oYY26ICEopGGPQdR34R0zf95imKTNPM+b5J/fCWZCHm6bBoa7xcTzi83TC2+sL3g812rbFtrssLp6d8VnSVSzGH6yzUMnlWdsdB0EdJDsnDZXcCvGVXTvncoqeSQkY1uCq5l09WIdBGRhpEw6U4LOXhEFqBOMwxjGn+a1uDovdwVh4MvCarnCfGBRdIYsYAviKvPcPD3cvehO8CIGzuECkFw9pKYwjIjPtpD4kwULZK/fKfY5cso+84B+H/6IIPQt+A2s3beeL+bYEAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;init-password&quot;
+        title=&quot;&quot;
+        src=&quot;/static/4f778b925c8c96d14cfa5e7257c74106/5a190/jenkins-init-password.png&quot;
+        srcset=&quot;/static/4f778b925c8c96d14cfa5e7257c74106/772e8/jenkins-init-password.png 200w,
+/static/4f778b925c8c96d14cfa5e7257c74106/e17e5/jenkins-init-password.png 400w,
+/static/4f778b925c8c96d14cfa5e7257c74106/5a190/jenkins-init-password.png 800w,
+/static/4f778b925c8c96d14cfa5e7257c74106/0a867/jenkins-init-password.png 986w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;install suggested plugins 를 선택해서 추천 설정으로 설치한다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/e472196db878f36ccf641bb198c5273f/508ef/install-suggested.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 578px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 54%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAABjklEQVQoz4WTCU+DQBCF+f//y5hqTEy8oKWtpRxll7tQlkL7nJlIRa1xk8cekG/f7jyssiyRJAmKosD5fMbpdBLx+Nr8L3Hj76y6rrHf72GM+fZyOubW9z2Ox6P0Uw3D8E0WU9u2RRAE8DxPtNlsEIahrK3Xa5mPG15zO12z+MFA13Vh2zYWiwWc+Ryr1Yq0hOM4oqqqxGHXdSLegHt2NT2R9fMexsbznj7m3ce5HJnWjOnEBEMZOGVY9MRwOmMe53hYR7CjFE9bDb9ooA9HJI2BUpqO/k5XECKMItR1g47gbWt+O2RgTy4etwlu3AC2KrFMa2wrA48UlAeoOJYrybIMnAp2dzg0kgxW0zSXe7SY3vUD3gj0Ehd4JfH4eZfjTVd4z2rkeQZN0eJ4aa2x2+0Q0yb6M24j9AI0BLz3U9x6GjPSHbllzbYpHF2KQ67+WHnf9wWolKJi7SV2XDSJzQgUd+RsqidaWxIwp6MmaYo0zUSKXIZhRFBFsK8cS7D/+wMuWZuM2QlXfBQHfGwf9GROdGZTWBUAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;install&quot;
+        title=&quot;&quot;
+        src=&quot;/static/e472196db878f36ccf641bb198c5273f/508ef/install-suggested.png&quot;
+        srcset=&quot;/static/e472196db878f36ccf641bb198c5273f/772e8/install-suggested.png 200w,
+/static/e472196db878f36ccf641bb198c5273f/e17e5/install-suggested.png 400w,
+/static/e472196db878f36ccf641bb198c5273f/508ef/install-suggested.png 578w&quot;
+        sizes=&quot;(max-width: 578px) 100vw, 578px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/2cf32cdd6c424d4e1c9a6dd5665d4bf5/e4900/jenkins-install.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 85.50000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsTAAALEwEAmpwYAAACB0lEQVQ4y62T22/TMBTG8///J+OJFy4PvGwSAmmbGEgL20ga283ddtykbXpJ2m8+LqnaUhCIRfpkO+fz7/j44imlkOc5qO37HpvN5hdtt9u/lrdYLLBer+3ErVPfb5yoTwYCUvxUXdedlbdcLp2hzFPIIkVtFIwqUckCsixQSumgtPrfVXAoz2W05DeX17h4d4WLt5d4/eEzXr3/iKtP1wiDwBlPVzIkGETV0Od13Rq9neAnDe5EjTs+wRdmcMsmmLS9M627MyX2x/D9HmKDF/08X3xHkIdgiiOyekif4I8fMK4TsIrjnvt4TB4RaWYVISxHzh83CVRl99sYzGazvbxrdoOb6BZf0294Uj/Ac4FRPEJuCqQ6Q2j743IMUYwRqxRZlcO0xkkIDsEFylKiaRonL+Aj8IQjkxkKe7rGTKClwqQyqLRBFEZgEUMsYjeudGXjGu2shdYaaZo6EF0/ujGesEZlr4ayEK00dFXZjCWm0ykqW8697yMIAzdRWQDFiiJHbSH0GIqicKBBHuPcmSlAZmnBeZahrmsHCMLQvSSKkW9QZj30nzHm2vl8vttDIQSSJEEcx07UP6chfugb+lQNAUlHwHMTzyUaxkpJZHa1VP6+5FPgn3SYdAdUrqXDIRgdzD8Bj8B2ZdLuK40bW/LLAO3tSJNdyavV6j+BP0umPoHbtnXAZ3PyAw3mzHH/AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;install&quot;
+        title=&quot;&quot;
+        src=&quot;/static/2cf32cdd6c424d4e1c9a6dd5665d4bf5/5a190/jenkins-install.png&quot;
+        srcset=&quot;/static/2cf32cdd6c424d4e1c9a6dd5665d4bf5/772e8/jenkins-install.png 200w,
+/static/2cf32cdd6c424d4e1c9a6dd5665d4bf5/e17e5/jenkins-install.png 400w,
+/static/2cf32cdd6c424d4e1c9a6dd5665d4bf5/5a190/jenkins-install.png 800w,
+/static/2cf32cdd6c424d4e1c9a6dd5665d4bf5/e4900/jenkins-install.png 988w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;설치가 끝나면 적절한 계정을 생성하고, url 에 별도의 컨텍스트가 필요하다면 추가한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br&gt;
+&lt;h3&gt;2. 젠킨스 아이템 설정&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;repository 에 Jenkinsfile 추가하기&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;젠킨스 pipeline 에서 사용할 Jenkinsfile 을 프로젝트의 루트 경로에 다음과 같이 작성하고 커밋 &amp;#x26; 푸쉬&lt;/li&gt;
+&lt;li&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;  pipeline &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+      agent any
+      stages &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+          stage&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;test&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+              steps &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                  script &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                      &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;echo test&apos;&lt;/span&gt;
+                  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+              &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+          &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;github token 생성하기&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;jenkins 에서 github repository 인증을 위해 사용할 token 을 생성한다.&lt;/li&gt;
+&lt;li&gt;settings - Developer settings - Personal access tokens - Generate new token 선택해서 토큰 생성&lt;/li&gt;
+&lt;li&gt;repo, admin:repo_hook 만 체크하고 생성한다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/f737f40944ed9980ffa372241a07f456/d54e4/github-token.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 747px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 80%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB00lEQVQ4y41UB27DMAz0/z/ZFlmNNWx5L4nlMZLiIAMVQMiJReqOd3Rx0BPVriHvA4UQZPe89/1ATdvtoqV5XuIZfzv3FJ6KflxIa03GWJqmWRKwWi5iq5qMrahpWlqWVZI+LeQW27aS0YYuv1eqaye3SMGOC3IxY29F13XNSa8iF1y3jZTSVJYqJ2EBlZGClaBvuz4nfUS4LIskGGuFZroRzxUjRn8dB/aN0ecehvAQ6f9iGAa6liXNXBgriTOMI3V9T/0wikAdIwSbBPAV7VtBTjyfL/T1/UOuafJhoFLakmb0EAeBZ8X9huo+on0qOE2T9O94PFHFSakgepgKgS7oI9Lvu838I2Woeb5cRNFxnLIXkw8hBui2MRxfhDagRT7yf/DhNM+MsBSKexUhSh3FqJ2TdsBWLqIF0p77P3LLkj+jDzdGZ8Uee1GQbG2daeP9fscQAMzILfM79QtQu15LKpUSJCHehJuFLr/HDjThjQ/vojBCz5OiuNiBRVE8gikBAsGfpTIi0KcpSTnoaaHblenVUqCJxsaLYbj5EIKABT4M7z8K0eCgrJuZjqez2AYjmBaaj+mB9yACevVp7LIowW+c7IQuiqSUNHoIIPwPZex/wsnf4m4RKfsAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;github-token&quot;
+        title=&quot;&quot;
+        src=&quot;/static/f737f40944ed9980ffa372241a07f456/d54e4/github-token.png&quot;
+        srcset=&quot;/static/f737f40944ed9980ffa372241a07f456/772e8/github-token.png 200w,
+/static/f737f40944ed9980ffa372241a07f456/e17e5/github-token.png 400w,
+/static/f737f40944ed9980ffa372241a07f456/d54e4/github-token.png 747w&quot;
+        sizes=&quot;(max-width: 747px) 100vw, 747px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;젠킨스 아이템 설정&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;메인 화면 좌측 메뉴에서 새로운 Item 선택&lt;/li&gt;
+&lt;li&gt;item 이름을 입력하고 Pipeline 을 선택 후에  OK
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/64dab3fd82ab5e705f57767f9e9d91c3/561da/jenkins-item-choose.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 83.50000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsTAAALEwEAmpwYAAACU0lEQVQ4y5WUy3LUMBBF9cX8A3/AF7Bkz5ZtVllQUCSQ50w8Hr9tSZaf86jiclu2hyQkqWJxquW21brdLbfKSo0wyRGmE9usQFk3qOqWdmJaN29jG5img7p/CPD1+w9c/LzyXF5dI85LpEV1IuFzbhwKbsoNsU+Z/A6Va6FiKrq5W/lNrhtgHD/Q9kRpLCSLTNfIuOkJerK5X9fMpIHSDJBVGpU2KIlrO/TjDt2wQ9uPZHhk36YbBqgivsPq1zlu7+5xeXGBMAyRZSmSJEZRFNCah5UlijxHnmUouZbnqqqQ0yfWGO39TUOFXd/TYfxLR7XitLZGXdcYeOLheMT+cMB+L+yx2+3eRGnmHbG7QRAwsPWBrLX+EEFOXhC1TdOicY6HO7Rt6+m6zgs58nA1sF41X6ZMZ7vdIooipGnqAzt+5C3fi5VNk9r9qyjDD6M4xgOvz3r9gHCzwYaIOq+UqhbFUq9yrp/UV/zPy6BWUYEft1tf9JFqe9ZUWNLxMCWxovBxms8ZxxEq0w1W2wLbcINwTjkmkv5Ugskn3V98gjzL96LYzuolqHKNQ8KaBcFm3hSdFDxXs6yl+6JGrKT5OG1leEXiNOO9S2bSU4e1Nr6zeq6jWFEkJVkCSOAFHzDjL3d9u+bF5gW/X7EhATv699pIoKkp2is8HF6/i3sJKCngOOL3YeD14dQwNX9B+yKVdbCcKJZ3cbIT9exzXQ91k2R49+kM7z+fY51Po+uliZLPk+afATGTclDIqFMhu/Phyzd8PLtEwrSMm+afdv+H7LFtjz/WHgT1YPfiqQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;jenkins-item-choose&quot;
+        title=&quot;&quot;
+        src=&quot;/static/64dab3fd82ab5e705f57767f9e9d91c3/5a190/jenkins-item-choose.png&quot;
+        srcset=&quot;/static/64dab3fd82ab5e705f57767f9e9d91c3/772e8/jenkins-item-choose.png 200w,
+/static/64dab3fd82ab5e705f57767f9e9d91c3/e17e5/jenkins-item-choose.png 400w,
+/static/64dab3fd82ab5e705f57767f9e9d91c3/5a190/jenkins-item-choose.png 800w,
+/static/64dab3fd82ab5e705f57767f9e9d91c3/561da/jenkins-item-choose.png 969w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;Build Triggers - GitHub hook trigger for GITScm polling 선택&lt;/li&gt;
+&lt;li&gt;파이프 라인을 아래와 같이 설정한다.&lt;/li&gt;
+&lt;li&gt;Repository URL 은 위에서 사용한 저장소 url 을 입력한다.&lt;/li&gt;
+&lt;li&gt;branch 는 실제 github 저장소에 push 되었을 때 배포가 이루어질 branch 를 선택한다.&lt;/li&gt;
+&lt;li&gt;Script Path 는 github 저장소의 Jenkinsfile 의 경로를 적어준다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/da59b405259aa6e632dca007a3969272/b2cef/pipeline-setting.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 88.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsTAAALEwEAmpwYAAACD0lEQVQ4y51Ua3PaMBD0//9Vnc60M03TvDpT0jYJJoAtLL8t25KA2e45wCSUEJIPOyfZ0ur2Vrog1jlmixQzpRHOFCKdYTJXwzhkVJzHsYIuaiSEfgNBXdcoygptb9E7R3h01qHjWKL1Hr21sDJ2r4D/HGNtWgR930NFEaJwgq4s4Y15iaaBE8Jhoz2KqS5JyAyys+94/PQZ8bczFFfXyC+vhrgdNzc/4Xmw41rJZB9elDFLXTYIOjIXv/8g+TVCFYYoH8Yo7h9QjUPUnEtsmb1nSV4jdBvpeW1I2HUoTQOVJPzQDLDLJfxqtYNbr45K3pJmQti2LXqSStpCPswp779Nzzbustp867g+L0oYsyXkB78nxx4gOPRfYprlCCdTlFVFySRs6KQQS4buBDf3IfssS9N0PQmZnU5TLJRCVhRDtrLgkOyDkHVUV41GmE5jXpvGQF9cYvrlK9SPCyQkz7LsqNx9LGliO58jXmTMkLobXhnz9w7u7h5LcZYnvgeisuG1kisYtKKfJ6zWaziS2VOlPkNND2K1eHJZ6pVqDU0Uef4hU55keyTDSyGhGJKydjXlD09JpGye1HukV9Ic5AVEiwSP8wgJzZAuI9Idy7DDieasmGVgKDWiIRV7nudttyTtiSGmjOxAp8m2UNIPzfUNZufnqMdj+CiGo/2O2Q7g3I5u4Xnp/RvuSw2lp/4DCDdrUGvNolEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;pipeline-setting&quot;
+        title=&quot;&quot;
+        src=&quot;/static/da59b405259aa6e632dca007a3969272/5a190/pipeline-setting.png&quot;
+        srcset=&quot;/static/da59b405259aa6e632dca007a3969272/772e8/pipeline-setting.png 200w,
+/static/da59b405259aa6e632dca007a3969272/e17e5/pipeline-setting.png 400w,
+/static/da59b405259aa6e632dca007a3969272/5a190/pipeline-setting.png 800w,
+/static/da59b405259aa6e632dca007a3969272/b2cef/pipeline-setting.png 847w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Credentials Add 를 눌러 새로운 Credentials 를 등록하고 선택한다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Username 은 자유롭게 입력&lt;/li&gt;
+&lt;li&gt;Password 에 위에서 생성한 github token 을 입력한다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/c2c06eb797fa06c7566a248eb9813bf2/a0730/github-jenkins.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 63.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAABR0lEQVQ4y52Sa2+CMBSG+///mDi3OYyY4KJSrgW5lJuFT+96qiwuWTbxw5OXlJ7be8o+7DVeVq+w7Y3WFRYLC2/va1jLJezNBpa1hOPsINIUcZJoxK8kGs/zwLbOVgc4JmEQBDifz8iILLt+3zTP878pChPPUl2ZDiiwbVsopXC5XIwqNen17D+iKAIryxJEXdc/fvZ9P4vvhHEcmw6rqjIdUmK6MHX2COMwQLYdDp5/HZk6pISkhfZiSvpwd5qqaXHi2kPaXNM0GHSVOX7dozRN14MHIRgPBVKRQIgUUkozNhUgfQS623ctRCHhHjmY67rm/RC0drJgDtRIlqXgYYT94QR2X+kZajNNg7yUOHK9FFoCJSRzu66b/VwohpYip6VQFTKWljKO42yGm/ZqQBjFYL727XA8gfs+wjA0Pj5DrB/1536PL0H11//83opIAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;github-jenkins&quot;
+        title=&quot;&quot;
+        src=&quot;/static/c2c06eb797fa06c7566a248eb9813bf2/5a190/github-jenkins.png&quot;
+        srcset=&quot;/static/c2c06eb797fa06c7566a248eb9813bf2/772e8/github-jenkins.png 200w,
+/static/c2c06eb797fa06c7566a248eb9813bf2/e17e5/github-jenkins.png 400w,
+/static/c2c06eb797fa06c7566a248eb9813bf2/5a190/github-jenkins.png 800w,
+/static/c2c06eb797fa06c7566a248eb9813bf2/a0730/github-jenkins.png 1131w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Credentials 정보를 선택해주고 저장한다.&lt;/li&gt;
+&lt;li&gt;등록한 아이템을 실행해 본다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/f0f9b5c234dd34ccc135180399bdc2d9/86a1e/jenkins-first-build.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 17.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAzElEQVQY05WLXU7CUBSEu3GeaAm0krYgqBj2AY+6A6IvGC30jwIGSoBae3vr56VsQE8ymZnzZbT0cKSSkqIQCCEoxdX/p1Ltc6LPHVpDN+nYQwzL5aY/Qrd6ddZNl27vnm7/AcO8dAf7doQzeKTZcTCdIe7dWG0HNW+1bZqGhTb3I2bvIYso4dWLefkIWaq8jNd4Qcx8cWW+6sFqQ5hsa7+wIE5U3+CvtnhPz7xNpmi5kPzl8rKqlRWSfSao1O/wJUizAvkD6fmb/SnnF4CiGn5U6zxBAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;first-build&quot;
+        title=&quot;&quot;
+        src=&quot;/static/f0f9b5c234dd34ccc135180399bdc2d9/5a190/jenkins-first-build.png&quot;
+        srcset=&quot;/static/f0f9b5c234dd34ccc135180399bdc2d9/772e8/jenkins-first-build.png 200w,
+/static/f0f9b5c234dd34ccc135180399bdc2d9/e17e5/jenkins-first-build.png 400w,
+/static/f0f9b5c234dd34ccc135180399bdc2d9/5a190/jenkins-first-build.png 800w,
+/static/f0f9b5c234dd34ccc135180399bdc2d9/c1b63/jenkins-first-build.png 1200w,
+/static/f0f9b5c234dd34ccc135180399bdc2d9/86a1e/jenkins-first-build.png 1296w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;메인 좌측메뉴의 빌드기록에서 콘솔 버튼 선택
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/0f59c17ef44b94cd72e0d88a8963abcd/8802b/build-record.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 42%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABMElEQVQoz22RzU6DQBSFef8XMEb7I0KLRtdGExdujMaodSEwDD8JZYYpPAFtk+PMpdOS2sWXc+Ye5k5ycMQyx7Iskec5iqKAEIJYr9fouo50u91gszmcT2EzRwiJpmmIuq6hlCIvpeyXa5X1CpX2ZmZy+6j53iB2Wdu2cLIsRZZlSNOUsN6ogfMUUZwg4YfZKcydqqr6hcNlxwsNuZ0fZcN7nPN+IWMJHZLEau9JufX/M36UMcZQ6n9BHSpVQ1Inva91H3uvO5JSEIp8n1mo15Ui37YNHC+4w8XEw+Q6wNS7weXUx+hqNsDH2J3BD+4xcecYUe7D9W/1fHceuTg7H+Pp+QXO+3eIUJceJyneFiE+fkIw7SPGEQ+IdDX7udbfMEKolX0u8OrP8fXwCLFq8Ac5kzeHX4A7zwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;build-record&quot;
+        title=&quot;&quot;
+        src=&quot;/static/0f59c17ef44b94cd72e0d88a8963abcd/5a190/build-record.png&quot;
+        srcset=&quot;/static/0f59c17ef44b94cd72e0d88a8963abcd/772e8/build-record.png 200w,
+/static/0f59c17ef44b94cd72e0d88a8963abcd/e17e5/build-record.png 400w,
+/static/0f59c17ef44b94cd72e0d88a8963abcd/5a190/build-record.png 800w,
+/static/0f59c17ef44b94cd72e0d88a8963abcd/8802b/build-record.png 1135w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;Jenkins 파일이 정상적으로 동작하는지 확인해 본다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/8a80fa4dbfe7acc935c4705cce9add02/d72ec/build-console.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 393px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 116.00000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAXCAYAAAALHW+jAAAACXBIWXMAAAsTAAALEwEAmpwYAAABsElEQVQ4y52ViY6DMAxE+f9fZMVV0FKSUO6rgDfjFpZWPQiRIkJRXsYeO7XiOCb754dEkpDvB+R5HjVNS0HgU54XhO++71MURSSlokCvy6oijHme6XlYIhGUaBg2hqcTOY5LSik6x7/kuJ4+wOVvtm2T67qUCLnCXgIrfRoAWZZRWZZ0vV5pHEeeWGNO07Su8fs7dXdgycA8zwnwoR8oTVMqioLejQX2USGAUIiJ967vH0Lbzt0KARuG4eumT4MVpul/yLnOZabXyNuzqt1ApSSbgnXXtay4aZqPbn4BKlaGkJu65ud0MGzO4eJqrWEojWdlRgoBOZ9j7gIpJYf6ytXdQOQuCAI2RWjgvKm1QwqFEJxDuLo4+6qIjUIG8HK5cB5Rh70u6q7r+ABjhUtncGGj9TQQsLZtjwG5sDe9DJcB7DetZ9wpSsr1tsFtgjTgTjwM3CpEyK0uHUCHTU2ad8qSQw3pdch1XT0U+V7wetvcQr5BcMg4TofKx6r5tkmp1CUDEN6hNt+8m7htod3CKKRTGLJS13H4D6mF03e3p8kgZGxA/8JhlAueMGSBmIb8B+zPDMXyiNzMAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;build-console&quot;
+        title=&quot;&quot;
+        src=&quot;/static/8a80fa4dbfe7acc935c4705cce9add02/d72ec/build-console.png&quot;
+        srcset=&quot;/static/8a80fa4dbfe7acc935c4705cce9add02/772e8/build-console.png 200w,
+/static/8a80fa4dbfe7acc935c4705cce9add02/d72ec/build-console.png 393w&quot;
+        sizes=&quot;(max-width: 393px) 100vw, 393px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br&gt;
+&lt;h3&gt;3. github webhook 설정&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;repository 에 푸쉬가 발생했을 경우 젠킨스에 알려주기 위한 webhook 을 설정한다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;젠킨스에서 등록한 아이템의 github 저장소에서 Settings - Webhooks - Add webhook 선택&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Payload URL 에 젠킨스 서버의 url 을 적어줘야 하는데, localhost 가 아닌 외부에서 접근할 수 있는 도메인이 필요하다.&lt;/li&gt;
+&lt;li&gt;여기서는 테스트를 위해 ngrok(&lt;a href=&quot;https://blog.outsider.ne.kr/1159&quot;&gt;ngrok으로 로컬 네트워크의 터널 열기 참조&lt;/a&gt;) 으로 외부 도메인을 바인딩한다.&lt;/li&gt;
+&lt;li&gt;공식사이트에서 실행 파일을 다운받고 콘솔에서 다음과 같이 사용할 포트를 입력해준다.&lt;/li&gt;
+&lt;li&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;./ngrok http &lt;span class=&quot;token number&quot;&gt;8091&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/cbfe77d2cf42c2ef571e400fd70f4d5e/38af3/ngrok.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 23.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAqElEQVQY051PQQ6DMAwrtGsLTdqCNDGxgcT/H+klZRekHaYdrMhO7MjG04h+KjCZYWqFcQ7GmP8xsofzVzHPhPtjRggBMQb0ff974L5vIOKTdF2by7LgOA5s+0uwYX2uyNKg1oKUEoI8YWbRsmgV01Tb85ah5Ha71lTTaWAQU4OG6a0ixogqU/flow/DcPp16Zy9BOo3ay28920SJTHExlnC1VxK/lr5DQ0xa/KofJq4AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;ngrok&quot;
+        title=&quot;&quot;
+        src=&quot;/static/cbfe77d2cf42c2ef571e400fd70f4d5e/5a190/ngrok.png&quot;
+        srcset=&quot;/static/cbfe77d2cf42c2ef571e400fd70f4d5e/772e8/ngrok.png 200w,
+/static/cbfe77d2cf42c2ef571e400fd70f4d5e/e17e5/ngrok.png 400w,
+/static/cbfe77d2cf42c2ef571e400fd70f4d5e/5a190/ngrok.png 800w,
+/static/cbfe77d2cf42c2ef571e400fd70f4d5e/38af3/ngrok.png 894w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;커맨드 실행 후 Forwarding 도메인을 등록한다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;도메인 뒤에 꼭 /github-webhook/ 붙어야 한다. 마지막에 / 도 꼭 필요하다.&lt;/strong&gt;
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/b7d2a4706547240a810a7cc5f03b27b5/7de01/webhook.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 794px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 86%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAB7klEQVQ4y6VTW66bMBTM2qtuoeoiuoEuoI+/VupPlarpFQlvCGDAxsaY6TnO4yY34aZSkSa2j5PJmTPDqmw1fiUDtlmLpyBEEMbopIYyFkqPdyFvaha9MhjMiNWgDdquRy8lRNt5dL304Hp7Ph/3VJNSHWp879FBDRqTc1jVosN6s8PvIEacpIgiXhNkWX5GQvU0zRBGEXZhhCRNEccJIUaUCwSpgOg1+FkZ69DrmeDwP888A4477EnKZvMHYRiiP0o94yiJ5Vg7ecz0yyU4wkrTDLO8RLmvUYsWVS2wrxt/LqsaRVl5Uj1aGMKhm2uiU80TDsOAINhiuwsxTdOFhHlB2nz3/EyoNXWz9y4bsp3nwLBEzutlF/e6uyFU1GFDcZjIE0sfI8O6570/T9CUS16XTTkSjuNI3Sm0l9nrTmvvc8n34wNTmMw5Imw6RTnLkOcFIUdZ7lGTKXlRoKoqFEVJbnevSr5yWZoZDYVbCOFnOVq7KGnJqCvJkx3RNI3vhN+Sgjpk50+GuAdEN4Scr14NkEqCDeL3VCp1ReJekXmW644zFAoo8xZOk4PEwUE3ZJQ2Bor+iPePZnc1wx/FGm+/vsebT+/w4edHzBQZzia7r3ldmOmi5KQr8Dn6hi/Rd6yrp8Pliy+7f+yO5/4XQjItmq0mEBQAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;webhook&quot;
+        title=&quot;&quot;
+        src=&quot;/static/b7d2a4706547240a810a7cc5f03b27b5/7de01/webhook.png&quot;
+        srcset=&quot;/static/b7d2a4706547240a810a7cc5f03b27b5/772e8/webhook.png 200w,
+/static/b7d2a4706547240a810a7cc5f03b27b5/e17e5/webhook.png 400w,
+/static/b7d2a4706547240a810a7cc5f03b27b5/7de01/webhook.png 794w&quot;
+        sizes=&quot;(max-width: 794px) 100vw, 794px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;item 으로 등록한 브랜치에 푸쉬 하고 정상적으로 item 이 실행되는지 확인한다.&lt;/li&gt;
+&lt;li&gt;Recent Deliveries 탭을 선택해서 실행된 webhook 들의 상태를 확인 할 수 있다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/1ca2bc92e64c1eb1825299257ee15b61/d7542/recent-deliveries.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 30%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAyUlEQVQY042Q3Q7CIAyF9/7P6MVwc9EY5w/bgK7seIouemEWm3wphXI4tGougt1J0PSK47lH7RwOXQfn9nBNixgTLJZl+YtK55mXImbmYRjhvUdKgjWsKWey5m9+CSYRPCg00cndD8SXdRQ+RGHNedPRrEozCmUughMF20dEew/ofCKCA+vmNqHuR4yim1+OKZWxmDFzXY3ccNcJ+5sRKPTC1jX3h6Sm9vn2N3QfOK4QYhmT1ZUdiGYIbZe8YjWx860wEWV/fo/mCb4r1eezPE7GAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;recent-deliveries&quot;
+        title=&quot;&quot;
+        src=&quot;/static/1ca2bc92e64c1eb1825299257ee15b61/5a190/recent-deliveries.png&quot;
+        srcset=&quot;/static/1ca2bc92e64c1eb1825299257ee15b61/772e8/recent-deliveries.png 200w,
+/static/1ca2bc92e64c1eb1825299257ee15b61/e17e5/recent-deliveries.png 400w,
+/static/1ca2bc92e64c1eb1825299257ee15b61/5a190/recent-deliveries.png 800w,
+/static/1ca2bc92e64c1eb1825299257ee15b61/d7542/recent-deliveries.png 810w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br&gt;
+&lt;h3&gt;4. slack 연동&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;설정할 slack 워크스페이스 url/apps 로 접속해서 jenkins 를 검색 후 설치할 채널을 선택하고 설치한다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/d065e62af3c1907875fac47f12969ad8/159fb/slack-jenkins-install.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 48.50000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABZElEQVQoz4VSu07DQBD03/ED1JR8Ar9ATUWDhKgiQUGDBHSIhi6IBAViyY6NCE7iR4zx+2wPt2s7MgaUlUa3d7s7O7d3iv8Vw/0MEcYJvCBCFMUIwxBJkkokW5Gm6Q9fMSfPMNQXTFUVs5mOIAiYkIJZlvHa97v7lqiFMn+fQ9dnME0TmqZD03UYhgHrw8JyucRqtWIsFgtebduWcDhmO85vhb7vw5EBz/M4ybIsLqazKIq2oktIUPI8hyM7EgEdkFVVxWit3f+FsiwZ5BdFQYQZVDm/8WjMVyLFruvyjKjBer1mFZQshICQKxHQvmj8qiFtCHMQqLibuFGXC/StVVSrEgiiBEGc1YTU9T87uBlgd3CEvYtj7F+eYOf0EGfDe44VVbkZRy6k+rK+Pits59AFJd5pE1y9DHH9+ojb6RPORw8YW281YXPdOrfOJ3FK/x+14AeSXUFvQygb2VJNv6b7bb4Bkm3+6Qm4NFgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;slack-jenkins-install&quot;
+        title=&quot;&quot;
+        src=&quot;/static/d065e62af3c1907875fac47f12969ad8/5a190/slack-jenkins-install.png&quot;
+        srcset=&quot;/static/d065e62af3c1907875fac47f12969ad8/772e8/slack-jenkins-install.png 200w,
+/static/d065e62af3c1907875fac47f12969ad8/e17e5/slack-jenkins-install.png 400w,
+/static/d065e62af3c1907875fac47f12969ad8/5a190/slack-jenkins-install.png 800w,
+/static/d065e62af3c1907875fac47f12969ad8/159fb/slack-jenkins-install.png 1019w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;Jenkins CI 통합 앱 추가 버튼 선택 시 나오는 설정 지침의 &lt;strong&gt;3 단계에서 팀 하위 도메인(Team Domain), 통합 토큰 자격 증명 ID(Integration Token) 를 별도로 복사해둔다.&lt;/strong&gt;(젠킨스 설정에 사용)&lt;/li&gt;
+&lt;li&gt;젠킨스에서 젠킨스 관리 - 플러그인 관리 - 설치 가능 페이지에서 slack 을 검색해서 설치한다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/b8a003926a03fae3af213e10a13a130f/29229/slack-notification.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 20.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAwElEQVQY063QTQuCQBAG4P3VnTp17B4dgtDMNO2D6BYUBVH0nZWaBF3L6pjouuXbqjfPDTy87M4chiGMMTAW4l9FbncXo8kUm52BVrePXL6AwXCM6XyJ2WKN1XYP42hxZkb6dzLPnA3LdnA4WSDO5QqhrqEsqCiWqihXRP5WuSZEWUONkxQdUkNPssZTlNNePNPQOlD0LrR2D4KkgtBPuqr7eMB9vuB5b4QhRRD4CUoD0CDmJ7LniaJvkvHch5/vB7qVHJRekOIGAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;slack-notification&quot;
+        title=&quot;&quot;
+        src=&quot;/static/b8a003926a03fae3af213e10a13a130f/5a190/slack-notification.png&quot;
+        srcset=&quot;/static/b8a003926a03fae3af213e10a13a130f/772e8/slack-notification.png 200w,
+/static/b8a003926a03fae3af213e10a13a130f/e17e5/slack-notification.png 400w,
+/static/b8a003926a03fae3af213e10a13a130f/5a190/slack-notification.png 800w,
+/static/b8a003926a03fae3af213e10a13a130f/29229/slack-notification.png 1167w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;메인 페이지의 젠킨스 관리 - 시스템 설정으로 이동&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Slack 메뉴에서 slack 에서 복사한 팀 하위 도메인, 통합 토큰을 입력한다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Workspace 에는 팀 하위 도메인 입력&lt;/li&gt;
+&lt;li&gt;Default channel / member id 는 slack 웹사이트 상에서 선택한 jenkins 알람을 받을 채널명
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/021192ec8adfe9ca5dc6e18a9f5b4b3a/4dba2/jenkins-slack-conf.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 37%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAiUlEQVQoz6WRwQ4DIQhE/f9PtZUG7bpUhSmaPfW2dpIJtwczhBgjRARmBlXdtgPwloaQUgIzY0rH2IKNoc5TcBWECTtqRfUr16YN2TWPT0fIDmTOIHqhtbai37WaLeyKTESYPv3KCdyKfHVYTgf23lFKQc55PecfUakI8tPd3bhTw5/59MoeifAFxPYos4xnfYsAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;jenkins-slack-conf&quot;
+        title=&quot;&quot;
+        src=&quot;/static/021192ec8adfe9ca5dc6e18a9f5b4b3a/5a190/jenkins-slack-conf.png&quot;
+        srcset=&quot;/static/021192ec8adfe9ca5dc6e18a9f5b4b3a/772e8/jenkins-slack-conf.png 200w,
+/static/021192ec8adfe9ca5dc6e18a9f5b4b3a/e17e5/jenkins-slack-conf.png 400w,
+/static/021192ec8adfe9ca5dc6e18a9f5b4b3a/5a190/jenkins-slack-conf.png 800w,
+/static/021192ec8adfe9ca5dc6e18a9f5b4b3a/4dba2/jenkins-slack-conf.png 1151w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;Credential&lt;/li&gt;
+&lt;li&gt;kind: Secret text&lt;/li&gt;
+&lt;li&gt;Secret: 통합 토큰 자격 증명&lt;/li&gt;
+&lt;li&gt;ID: 식별자이기 때문에 원하는 이름을 적는다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/8aa8d31e2c881c2cc29905e4a05b9e3a/0d6fe/slack-credential.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 52%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA30lEQVQoz52Rza6CMBBG+/4PpnARlcRQ40YXagWhpbb87D471RI2N0EWJ6XQfnOYYTk/IE1TJJsNdvsMURwjimKk2y3+kgT7LMNqtcb5fIEQD9zud4f4F3Y8ncA59+Q5x7OqUNfSUS+CCSFQFMVI13WL6Pse1lqwyhkZY/yL8CE8t207GzpPOaMhbbTWaJrGr3QohM9hGAZcS/kxJJRSHimlX6nAL4aEJcMQSFbTikv6qF/fwPCL1NTAr3aEqBRYWZbO8OmtloRMh/KoGzDlhmCMdcPQo9nUdC507+V6+AbMQvnHPi9uUwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;slack-credential&quot;
+        title=&quot;&quot;
+        src=&quot;/static/8aa8d31e2c881c2cc29905e4a05b9e3a/5a190/slack-credential.png&quot;
+        srcset=&quot;/static/8aa8d31e2c881c2cc29905e4a05b9e3a/772e8/slack-credential.png 200w,
+/static/8aa8d31e2c881c2cc29905e4a05b9e3a/e17e5/slack-credential.png 400w,
+/static/8aa8d31e2c881c2cc29905e4a05b9e3a/5a190/slack-credential.png 800w,
+/static/8aa8d31e2c881c2cc29905e4a05b9e3a/0d6fe/slack-credential.png 1115w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Test Connection 을 선택해서 성공하면 slack 채널에 다음과 같은 메시지가 나타난다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/23279b9bf2683fc7eab8cfa227f33f2c/bb9c5/slack-jenkins-test.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 521px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 15%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAjElEQVQI15WOQQ6CMBBFuf8hTNx7HzCYGCyipRQSkJZC4VlqYuLSn7x5M5ufSczQI/KUWkqKoqDrOqy1TNPEv9m2jUSVJafjgay8ck4z8vyCEOLDTaC1RimFlDVN8FP33NuRR/uiCohmCB5j2Z5kH3PArgur9zjnIvuHxpifO9otGOex84KNe/Dsv4Vv50jmlxAY5nIAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;slack-jenkins-test&quot;
+        title=&quot;&quot;
+        src=&quot;/static/23279b9bf2683fc7eab8cfa227f33f2c/bb9c5/slack-jenkins-test.png&quot;
+        srcset=&quot;/static/23279b9bf2683fc7eab8cfa227f33f2c/772e8/slack-jenkins-test.png 200w,
+/static/23279b9bf2683fc7eab8cfa227f33f2c/e17e5/slack-jenkins-test.png 400w,
+/static/23279b9bf2683fc7eab8cfa227f33f2c/bb9c5/slack-jenkins-test.png 521w&quot;
+        sizes=&quot;(max-width: 521px) 100vw, 521px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;젠킨스에서 일반적인 아이템으로 만들었을 경우에는 빌드 후 조치 메뉴에서 slack 알림 설정이 손쉽게 가능하지만 pipeline 을 선택할 경우에는 Jenkinsfile 에 별도로 작성해야 한다.&lt;/li&gt;
+&lt;li&gt;그런 불편함에도 pipeline 으로 아이템을 생성하는 이유는 Jenkinsfile 로 빌드 - 테스트 - 도커라이징 - 배포로 이어지는 과정을 Jenkinsfile 을 통해 코드로 관리 할 수 있기 때문이라고 생각한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br&gt;
+&lt;h3&gt;5. Dockerfile 작성하기&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;springBoot 2.3 부터 gradle 에서 bootBuildImage 라는 task 로 Dockerfile 없이 docker image 생성이 가능하다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;하지만 docker image 의 이름을 변경하는 것 정도의 설정 말고는 별도의 custom 이 불가능하다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;별도의 Dockerfile 들을 작성하는 이유&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;docker-compose 로 db, springBoot app 모든 것들을 한번에 띄우려고 했지만 db container 가 뜨기 전에 springBoot app 이 실행 되면서 db connection 이 되지 않는 문제 발생.&lt;/li&gt;
+&lt;li&gt;위의 문제를 해결하기 위해 dockerize 로 db container 가 실행 된 후 실행하려 했지만 bootBuildImage 로 만든 이미지는 커스텀 설정이 불가능한 것 같다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Dockerfile 에 넣기 위해 build.gradle 설정하기&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;build 할 때 lib 부분과 application 부분을 분리해서 빌드한다.&lt;/li&gt;
+&lt;li&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;properties&quot;&gt;&lt;pre class=&quot;language-properties&quot;&gt;&lt;code class=&quot;language-properties&quot;&gt;&lt;span class=&quot;token attr-name&quot;&gt;//라이브러리&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;디렉토리 분리&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;task&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;moveLib {&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;  doLast&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;      def&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;unpackDir = &quot;$buildDir/unpack&quot;&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;      copy&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;          from&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;file(&quot;${unpackDir}/app/BOOT-INF/lib&quot;)&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;          into&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;file(&quot;${unpackDir}/lib&quot;)&lt;/span&gt;
+      }
+  }
+}
+&lt;span class=&quot;token attr-name&quot;&gt;//jar&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;파일을 복사해서 unpack/app 디렉토리로 이동&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;task&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;unpackJar(type: Copy) {&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;  def&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;unpackDir = &quot;$buildDir/unpack&quot;&lt;/span&gt;
+
+&lt;span class=&quot;token attr-name&quot;&gt;      delete&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;unpackDir&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;      from&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;zipTree(bootJar.getArchiveFile())&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;      into&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;&quot;$unpackDir/app&quot;&lt;/span&gt;
+
+&lt;span class=&quot;token attr-name&quot;&gt;      finalizedBy&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;moveLib&lt;/span&gt;
+ }
+
+&lt;span class=&quot;token attr-name&quot;&gt;build&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;    finalizedBy&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;unpackJar&lt;/span&gt;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;docker image 만들기&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;하나의 Dockerfile 로 태그명과 copy 하는 데이터만 다르게 해서 springBoot app 들의 이미지를 만들 수도 있을거 같은데.. 각 서비스에서 별도의 설정이 필요할까봐 일단 각각의 서비스별로 Dockerfile 작성&lt;/li&gt;
+&lt;li&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;dockerfile&quot;&gt;&lt;pre class=&quot;language-dockerfile&quot;&gt;&lt;code class=&quot;language-dockerfile&quot;&gt;&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;FROM&lt;/span&gt; openjdk:11-jre-slim&lt;/span&gt;
+
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;ENV&lt;/span&gt; DOCKERIZE_VERSION v0.6.1&lt;/span&gt;
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;ENV&lt;/span&gt; DB_CONTAINER_NAME db&lt;/span&gt;
+
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;RUN&lt;/span&gt; apt-get update -y &amp;amp;&amp;amp; apt-get install -y wget &amp;amp;&amp;amp; &lt;span class=&quot;token operator&quot;&gt;\&lt;/span&gt;
+wget https://github.com/jwilder/dockerize/releases/download/&lt;span class=&quot;token variable&quot;&gt;$DOCKERIZE_VERSION&lt;/span&gt;/dockerize-alpine-linux-amd64-&lt;span class=&quot;token variable&quot;&gt;$DOCKERIZE_VERSION&lt;/span&gt;.tar.gz &lt;span class=&quot;token operator&quot;&gt;\&lt;/span&gt;
+&amp;amp;&amp;amp; tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-&lt;span class=&quot;token variable&quot;&gt;$DOCKERIZE_VERSION&lt;/span&gt;.tar.gz &lt;span class=&quot;token operator&quot;&gt;\&lt;/span&gt;
+&amp;amp;&amp;amp; rm dockerize-alpine-linux-amd64-&lt;span class=&quot;token variable&quot;&gt;$DOCKERIZE_VERSION&lt;/span&gt;.tar.gz&lt;/span&gt;
+
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;WORKDIR&lt;/span&gt; /root&lt;/span&gt;
+
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;ARG&lt;/span&gt; buildDir=build/unpack&lt;/span&gt;
+
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;COPY&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;${buildDir}&lt;/span&gt;/lib BOOT-INF/lib&lt;/span&gt;
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;COPY&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;${buildDir}&lt;/span&gt;/app .&lt;/span&gt;
+
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;CMD&lt;/span&gt; dockerize -wait tcp://&lt;span class=&quot;token variable&quot;&gt;$DB_CONTAINER_NAME&lt;/span&gt;:3306 -timeout 10s java -Dspring.profiles.active=&lt;span class=&quot;token variable&quot;&gt;${USER_PROFILE}&lt;/span&gt; org.springframework.boot.loader.JarLauncher&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;DB_CONTAINER_NAME: springBoot app 이 db container 보다 먼저 실행되는것을 막기 위해 CMD 에서 dockerize 명령으로 wait 할 db 컨테이너명을 적어준다.&lt;/li&gt;
+&lt;li&gt;USER_PROFILE: docker-compose 파일을 통해 환경변수로 받는 active profile 명이다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;COPY 를 2개로 분리하는 이유&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dockerfile 을 만드는 과정에서 레이어를  생성하는데 COPY 하나당 하나의 레이어가 생성된다.&lt;/li&gt;
+&lt;li&gt;레이어는 도커 이미지를 만들 때 재사용이 가능한데 이렇게 app 영역과 lib 영역을 나누면 도커 이미지를 만드는 과정에서 캐시된 레이어를 재사용 할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Dockerfile 작성 순서&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dockerfile 을 위와 같은 순서로 작성한 이유는 일단 한 번 캐싱을 사용할 수 없는 구간이 발생하면, in order 로 진행되는 Docker 의 빌드 특성상 그 아래 모든 레이어는 캐싱을 사용할 수 없기 때문이다.&lt;/li&gt;
+&lt;li&gt;만약 dockerize 를 다운받는 RUN 구문이 COPY 다음에 있고, 소스 코드의 변경이 발생한다면 COPY ${buildDir}/app . 부분에서 변경이 발생해서 캐시된 레이어를 사용하지 않고, 그 다음 RUN 구문에서도 캐시를
+사용하지 않게 된다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br&gt;
+&lt;h3&gt;6. docker-compose file 작성하기&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;docker-compose file 은 로컬 개발환경용과 배포할 개발서버용을 따로 만들어서 사용했다. 로컬에서는 db, flyway 등 개발에 필요한 환경 구성용이고,
+개발환경용은 개발에 필요한 환경과 springBoot app 을 컨테이너로 실행하는 환경까지 포함하고 있다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;.env&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;docker-compose 파일에서 사용할 환경변수 목록&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token assign-left variable&quot;&gt;USER_PROFILE_DEVELOP&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;dev
+&lt;span class=&quot;token assign-left variable&quot;&gt;USER_PROFILE_PRODUCT&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;prod&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;docker-compose-dev.yml&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;3&apos;&lt;/span&gt;
+
+&lt;span class=&quot;token key atrule&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; maria&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;db
+  &lt;span class=&quot;token key atrule&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; mariadb&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;10.6.4
+  &lt;span class=&quot;token key atrule&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; MARIADB_DATABASE=spring
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; TZ=Asia/Seoul
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; LANG=C.UTF&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;8&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;character&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;set&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;server=utf8mb4 &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;collation&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;server=utf8mb4_unicode_ci
+  &lt;span class=&quot;token key atrule&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;3306:3306&quot;&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;migration&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; flyway/flyway&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;8.0.4
+  &lt;span class=&quot;token key atrule&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;configFiles=/flyway/conf/flyway.config &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;connectRetries=60 migrate
+  &lt;span class=&quot;token key atrule&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; ./flyway/migration/main&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;/flyway/main
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; ./flyway/conf/develop.conf&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;/flyway/conf/flyway.config
+  &lt;span class=&quot;token key atrule&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; db
+&lt;span class=&quot;token key atrule&quot;&gt;admin&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; app&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;admin
+  &lt;span class=&quot;token key atrule&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; ./admin
+  &lt;span class=&quot;token key atrule&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; app&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;admin
+  &lt;span class=&quot;token key atrule&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; USER_PROFILE=$&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;USER_PROFILE_DEVELOP&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; db
+  &lt;span class=&quot;token key atrule&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;9090:8080&quot;&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; app&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;user
+  &lt;span class=&quot;token key atrule&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; ./user
+  &lt;span class=&quot;token key atrule&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; app&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;user
+  &lt;span class=&quot;token key atrule&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; USER_PROFILE=$&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;USER_PROFILE_DEVELOP&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; db
+  &lt;span class=&quot;token key atrule&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;8081:8080&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;flyway 설정&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;로컬 개발환경에서는 버전관리하는 스크립트와 반복적으로 실행될 seed 를 모두 migration 해주고, 개발 환경에서는 버전관리용 스크립트만 실행하도록 했다.&lt;/li&gt;
+&lt;li&gt;위의 docker-compose-dev 파일에서는 별도로 분리한 conf 파일중 develop.conf 파일을 사용하도록 했다.&lt;/li&gt;
+&lt;li&gt;로컬(local.conf)&lt;/li&gt;
+&lt;li&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;flyway.url&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;jdbc:mariadb://db:3306/spring
+flyway.user&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;root
+flyway.password&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;
+flyway.locations&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;filesystem:/flyway/main,filesystem:/flyway/seed&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;개발환경(develop.conf)&lt;/li&gt;
+&lt;li&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;flyway.url&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;jdbc:mariadb://db:3306/spring
+flyway.user&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;root
+flyway.password&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;
+flyway.locations&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;filesystem:/flyway/main&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;springBoot profile 설정&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;개발환경에서는 db 와 springBoot app 이 docker compose 로 같이 실행되면서 같은 네트워크를 사용하게 된다. 이때 &lt;strong&gt;springBoot app 에서는 db connection 을 localhost 가 아닌
+db 의 서비스명을 적어줘야 한다.&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;그래서 다음과 같이 local 과 dev 환경의 profile 을 분리했다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;local&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;spring&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;profiles&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+ &lt;span class=&quot;token key atrule&quot;&gt;group&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+   &lt;span class=&quot;token key atrule&quot;&gt;&quot;dev&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;dev&quot;&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;datasource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+ &lt;span class=&quot;token key atrule&quot;&gt;driver-class-name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; org.mariadb.jdbc.Driver
+ &lt;span class=&quot;token key atrule&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; jdbc&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;mariadb&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;//localhost&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;3306/spring
+ &lt;span class=&quot;token key atrule&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; root
+ &lt;span class=&quot;token key atrule&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+ &lt;span class=&quot;token key atrule&quot;&gt;hikari&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+   &lt;span class=&quot;token key atrule&quot;&gt;maximum-pool-size&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;5&lt;/span&gt;
+   &lt;span class=&quot;token key atrule&quot;&gt;minimum-idle&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;3&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;dev&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;spring&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;datasource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+ &lt;span class=&quot;token key atrule&quot;&gt;driver-class-name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; org.mariadb.jdbc.Driver
+ &lt;span class=&quot;token key atrule&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; jdbc&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;mariadb&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;//db&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;3306/spring
+ &lt;span class=&quot;token key atrule&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; root
+ &lt;span class=&quot;token key atrule&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+ &lt;span class=&quot;token key atrule&quot;&gt;hikari&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+   &lt;span class=&quot;token key atrule&quot;&gt;maximum-pool-size&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;5&lt;/span&gt;
+   &lt;span class=&quot;token key atrule&quot;&gt;minimum-idle&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;3&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;로컬에서 build &amp;#x26; docker-compose 실행&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Jenkinsfile 을 작성하기전에 로컬에서 docker-compose file 이 잘 실행되는지 테스트 한다.(프로젝트 root 경로에서 실행)&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;window 환경이라면 ./gradlew 가 아니라 gradlew.bat 파일로 실행해야 한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;docker-compose -f docker-compose-dev.yml up -d db migration
+./gradlew clean build
+docker-compose -f docker-compose-dev.yml build
+docker-compose -f docker-compose-dev.yml up -d&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br&gt;
+&lt;h3&gt;7. Jenkinsfile 작성하기&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;젠킨스의 빌드 기록의 빌드 목록중에서 화살표를 눌러 Replay 를 선택해서 아래의 스크립트를 넣어서 실행시켜 본다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/8b037d78f519e47c2e33c3fbd2d57995/5f6dd/jenkins-replay.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 57.00000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAABvUlEQVQoz4VTiW7bMAz1/3/PhjaZ1xQ7gOVw2mLDkKSd49tOU8vxHVuy3yi5KTJgRQg8kOKjKIqUtPTAUFU1hODo+x7HusQhiZEkCeI4BmMMbTtwXdddhOYHHqq6QcsFGkKapnDsLbbbLVzXhed5KnmWZQpFUagYCbk+13meQ3OCEOHuGUVZq4RxzGDbNhzHUZC2TH6CZVkwTVNBrs+17/vQ8ixHVZboqVwpjK65Wq2w2Wzex+PjvzZhvV6rG2lRFKlSZY+kJIeUTvIQBD4COjEMgsEOBvuNe+VPtvTv98/QdntGCQvqIVcJLdvFx6sxxvpE4frTDa7Hn9+g39xiRL6rka74kT7wH2jPYnlPQwkjsDRDSYM5ti1Mx8fk2xSLuweMv87w5fsPzBZLzI17zIw7GMsHGMRJPZ0vsSD/dG5An9ziybSg2a6Hl+SA6tigqI6kWwgMIruapgxN0+CSHPmwS8toKIIGIkQHLqQW4ETKN9X3HbKdj4TFELxVPi7k8+KoG66eWt20Sle0lvs1meA96WhQvzc21laEtLhcpaqwpb6dfsH5b5C2rObXnwA/n0K8pBWFv/Iqrv+v/gsmuDnqmjyjjAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;jenkins-replay&quot;
+        title=&quot;&quot;
+        src=&quot;/static/8b037d78f519e47c2e33c3fbd2d57995/5a190/jenkins-replay.png&quot;
+        srcset=&quot;/static/8b037d78f519e47c2e33c3fbd2d57995/772e8/jenkins-replay.png 200w,
+/static/8b037d78f519e47c2e33c3fbd2d57995/e17e5/jenkins-replay.png 400w,
+/static/8b037d78f519e47c2e33c3fbd2d57995/5a190/jenkins-replay.png 800w,
+/static/8b037d78f519e47c2e33c3fbd2d57995/5f6dd/jenkins-replay.png 1139w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;pipeline &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+agent any
+stages &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    stage&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;Gradle test&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        steps &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            script &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                try &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;chmod 755 ./gradlew&apos;&lt;/span&gt;
+                    &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;docker-compose -f docker-compose-dev.yml down&apos;&lt;/span&gt;
+                    &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;docker-compose -f docker-compose-dev.yml up -d db migration&apos;&lt;/span&gt;
+                    &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;./gradlew clean build&apos;&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; catch &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;e&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;echo Gradle test Fail!!!&apos;&lt;/span&gt;
+                    slackSend &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;channel: &lt;span class=&quot;token string&quot;&gt;&apos;#jenkins-test&apos;&lt;/span&gt;, color: &lt;span class=&quot;token string&quot;&gt;&apos;#FF0000&apos;&lt;/span&gt;, message: &lt;span class=&quot;token string&quot;&gt;&quot;FAILED: Job &apos;&lt;span class=&quot;token variable&quot;&gt;${env.JOB_NAME}&lt;/span&gt; [&lt;span class=&quot;token variable&quot;&gt;${env.BUILD_NUMBER}&lt;/span&gt;]&apos; (&lt;span class=&quot;token variable&quot;&gt;${env.BUILD_URL}&lt;/span&gt;)&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    stage&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;Dockerfile build&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        steps &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            script &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                try &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;docker-compose -f docker-compose-dev.yml build&apos;&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; catch &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;e&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;echo Dockerfile build Fail!!!&apos;&lt;/span&gt;
+                    slackSend &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;channel: &lt;span class=&quot;token string&quot;&gt;&apos;#jenkins-test&apos;&lt;/span&gt;, color: &lt;span class=&quot;token string&quot;&gt;&apos;#FF0000&apos;&lt;/span&gt;, message: &lt;span class=&quot;token string&quot;&gt;&quot;FAILED: Job &apos;&lt;span class=&quot;token variable&quot;&gt;${env.JOB_NAME}&lt;/span&gt; [&lt;span class=&quot;token variable&quot;&gt;${env.BUILD_NUMBER}&lt;/span&gt;]&apos; (&lt;span class=&quot;token variable&quot;&gt;${env.BUILD_URL}&lt;/span&gt;)&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    stage&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;Docker-compose&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        steps &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            script &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                try &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;docker-compose -f docker-compose-dev.yml up -d&apos;&lt;/span&gt;
+                    slackSend &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;channel: &lt;span class=&quot;token string&quot;&gt;&apos;#jenkins-test&apos;&lt;/span&gt;, color: &lt;span class=&quot;token string&quot;&gt;&apos;#00FF00&apos;&lt;/span&gt;, message: &lt;span class=&quot;token string&quot;&gt;&quot;SUCCESSFUL: Job &apos;&lt;span class=&quot;token variable&quot;&gt;${env.JOB_NAME}&lt;/span&gt; [&lt;span class=&quot;token variable&quot;&gt;${env.BUILD_NUMBER}&lt;/span&gt;]&apos; (&lt;span class=&quot;token variable&quot;&gt;${env.BUILD_URL}&lt;/span&gt;)&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; catch &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;e&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;echo Docker-compose Fail!!!&apos;&lt;/span&gt;
+                    slackSend &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;channel: &lt;span class=&quot;token string&quot;&gt;&apos;#jenkins-test&apos;&lt;/span&gt;, color: &lt;span class=&quot;token string&quot;&gt;&apos;#FF0000&apos;&lt;/span&gt;, message: &lt;span class=&quot;token string&quot;&gt;&quot;FAILED: Job &apos;&lt;span class=&quot;token variable&quot;&gt;${env.JOB_NAME}&lt;/span&gt; [&lt;span class=&quot;token variable&quot;&gt;${env.BUILD_NUMBER}&lt;/span&gt;]&apos; (&lt;span class=&quot;token variable&quot;&gt;${env.BUILD_URL}&lt;/span&gt;)&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;성공했다면 다음과 같은 메시지를 slack 에서 확인 할 수 있다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/aa081ef38ddd3994d6fe98d59cc1775e/442cb/jenkins-success.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 752px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 9.499999999999998%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAZElEQVQI13WMywqAIBRE/f+/C1oGBZZCXstCKnxNVyJo08DhzGxGDH0HKUc45+C9RwgBMSXEGB+n/EvKGaUU1LwW7dRAaQ2tNMhaLEy1JWKvMPsJy5jtwMxUE+/anb+Q+fR7eAPhMZp+g962twAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;jenkins-success&quot;
+        title=&quot;&quot;
+        src=&quot;/static/aa081ef38ddd3994d6fe98d59cc1775e/442cb/jenkins-success.png&quot;
+        srcset=&quot;/static/aa081ef38ddd3994d6fe98d59cc1775e/772e8/jenkins-success.png 200w,
+/static/aa081ef38ddd3994d6fe98d59cc1775e/e17e5/jenkins-success.png 400w,
+/static/aa081ef38ddd3994d6fe98d59cc1775e/442cb/jenkins-success.png 752w&quot;
+        sizes=&quot;(max-width: 752px) 100vw, 752px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;br&gt;
+&lt;h3&gt;8. 테스트&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;위에서 테스트에 성공한 스크립트를 github 저장소의 Jenkinsfile 에 추가해서 커밋 &amp;#x26; 푸쉬한다.&lt;/li&gt;
+&lt;li&gt;repository webhook 확인
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/8566673d58873504de49fe213131116f/64d87/test-webhook.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 33.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA1UlEQVQoz42Q606EMBBGef839I/EBSwb2JXep4XyOVOJISaKk5z0fjL9mheV8DavGJ8et65jegzvCq9ti2l+QGrf93/TeMqIaUOICc57GOtAKSGljLyul4Jy8C201mLjh8YYaK3hnMO5roTne1LN3RIGHaEMYXQJStZLQPfhIWd/ybatIEaqyI9qh8PC2T1dpT9EQjsZKB0uhBxViPAhIFI6hCai04SeGUyqo3BbIsajw585lXOHRCCW5fyVdzM5/ipL7wILKjyXvZnPfstRqpRSZWfhJ/0OIqqd1QP3AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;test-webhook&quot;
+        title=&quot;&quot;
+        src=&quot;/static/8566673d58873504de49fe213131116f/5a190/test-webhook.png&quot;
+        srcset=&quot;/static/8566673d58873504de49fe213131116f/772e8/test-webhook.png 200w,
+/static/8566673d58873504de49fe213131116f/e17e5/test-webhook.png 400w,
+/static/8566673d58873504de49fe213131116f/5a190/test-webhook.png 800w,
+/static/8566673d58873504de49fe213131116f/64d87/test-webhook.png 818w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;jenkins 빌드기록 확인
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/d902bb3aaab1d51816203053f2ccdeb5/fe9e8/test-jenkins-build.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 64.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACOklEQVQ4y32TiXKbQBBE+f9/c1JObEuAuATi0nLfl14GXKnYScVbNbXLwDTdM72a4TtkecY9y5nmmXlZ2bYH1+uVt7cTrudh2zaGYRBGEft6PB78b2nPhoMSsLofqbvhiFbOO/g0jqzLwjSNDMPALLnfgP8LzXJtcmH491+HrqKsCurpwbL9efcV2Dugc2Xo+0/JfaVpgu8HqLxk+0LiP5Jvrk+Z54wi72N/iqJAKUXbNsfzNE3ESUwv0rdtZV1XBqnphMzeirquJb+h+WFIKcUfAT/K3z/ewaqyQj/pqLsiywqKvCKNU66eT1M3pEnKOIxouu1JD4u/GD5kOKPIvsu0PSkuSPIUO7LxVYCd3nBVSJD5uIlHVEbEdUzRlWie59A0DXXTfOpFP85cLha6rr/3dLxzbs84o8N18Y6wBhuzN/HmK97moVYlDC0HLwhJVE4lltn3TOQ1Yp1S9rZtD0A1KYzGwB1crNbGljjOvYU/B/iPgGzN0AzTEmPn4sWMfB+EeLIoSqqm5y79youcZV4Im4jX4hWzNgXQOkKvDE7FCbuzufQXkjFFu4gPd9ukaSrNzo7p7ZGXDUmSEMrQ2rrFUS5P0RMv9xcB0jmXOs/JD75F3znlJ36qnwTNTRjaF/quO4p3myxyM/YoheHOvKqrfUYkfcJr9YbVWUcf3cnFbE3O1Rl3FOmTTTrf0UxheAAKw3fA9QDcWXaS36/c4cuxxGs8bl1IPCXEY0zQ3fBbn3iICceIYi75BaIV4Ad5ZdYFAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;test-jenkins-build&quot;
+        title=&quot;&quot;
+        src=&quot;/static/d902bb3aaab1d51816203053f2ccdeb5/5a190/test-jenkins-build.png&quot;
+        srcset=&quot;/static/d902bb3aaab1d51816203053f2ccdeb5/772e8/test-jenkins-build.png 200w,
+/static/d902bb3aaab1d51816203053f2ccdeb5/e17e5/test-jenkins-build.png 400w,
+/static/d902bb3aaab1d51816203053f2ccdeb5/5a190/test-jenkins-build.png 800w,
+/static/d902bb3aaab1d51816203053f2ccdeb5/fe9e8/test-jenkins-build.png 1146w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;slack 채널 메시지 확인&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;docker-compose 파일에 설정한 springBoot app 이 정상적으로 실행되었는지 확인&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://localhost:9090/admin&quot;&gt;http://localhost:9090/admin&lt;/a&gt; , &lt;a href=&quot;http://localhost:8081/user&quot;&gt;http://localhost:8081/user&lt;/a&gt; 2개의 요청이 정상적인 값을 리턴하는지 확인&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;TODO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;jenkins, slack, docker 를 이용해서 기본적인 빌드 &amp;#x26; 배포 과정을 테스트 해보았지만 아래와 같은 것들을 더 공부해봐야 할 것 같다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;gradle build test 를 위한 별도의 db 컨테이너 사용하기&lt;/li&gt;
+&lt;li&gt;서비스를 중단하지 않고, 무중단 배포하기&lt;/li&gt;
+&lt;li&gt;springBoot app 이 정상적으로 실행되었는지 Jenkinsfile 에서 확인후 slack 으로 알림&lt;/li&gt;
+&lt;li&gt;배포가 실패할 경우 브랜치에 푸쉬한 사람을 특정해서 slack 또는 메일 알림 보내주기&lt;/li&gt;
+&lt;li&gt;docker build 후에 사용하지 않는 도커 레이어들을 정리하기&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[토비의 스프링 3.1(vol1) - 2장 테스트]]></title><description><![CDATA[토비의 스프링 2장을 보고 최신 스프링버전에서 테스트 해보고 정리한 내용. 애플리케이션이 계속 변하고 복잡해져 가는데 그에 대응하는 첫번째 전략이 확장과 변화를 고려한 객체지향적 설계와 그것을 효과적으로 담아낼 수 있는 IoC/DI…]]></description><link>https://bingbingpa.github.io/toby-spring-vol1-ch2/</link><guid isPermaLink="false">https://bingbingpa.github.io/toby-spring-vol1-ch2/</guid><pubDate>Sun, 25 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;ul&gt;
 &lt;li&gt;토비의 스프링 2장을 보고 최신 스프링버전에서 테스트 해보고 정리한 내용.&lt;/li&gt;
 &lt;li&gt;애플리케이션이 계속 변하고 복잡해져 가는데 그에 대응하는 &lt;strong&gt;첫번째 전략&lt;/strong&gt;이 확장과 변화를 고려한 객체지향적 설계와 그것을 효과적으로 담아낼 수 있는 &lt;strong&gt;IoC/DI&lt;/strong&gt; 같은 기술 이라면,
 &lt;strong&gt;두 번째 전략&lt;/strong&gt;은 만들어진 코드를 확신할 수 있게 해주고, 변화에 유연하게 대처할 수 있는 자신감을 주는 &lt;strong&gt;테스트 기술&lt;/strong&gt;이다.&lt;/li&gt;
@@ -10955,6 +12175,30 @@ $ &lt;span class=&quot;token function&quot;&gt;time&lt;/span&gt; &lt;span class=
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;:wq&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;저장&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;위에 설정한 내용은 다음과 같다. 매일 00시에 해당 커맨드를 실행하여 master와 slave의 디렉토리를 동기화하고 로그파일은 지정한 위치에 생성되고 bwlimit옵션에 설정한 네트워크 대역폭으로 해당 파일들을 전송하며, —delete옵션에 의해 mater에서 삭제된 파일은 slave에서 삭제되게 된다.&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[방화벽 정책 설정]]></title><description><![CDATA[1. firewall 명령어로 포트 열기 firewall 명령어를 통해 포트를 열 수 있다. zone은 서버의 용도에 맞게 사전에 정의된 네트워크의 신뢰 레벨을 의미한다는데… 난 아직까지는 zone을 따로 추가하지 않고 그냥 public…]]></description><link>https://bingbingpa.github.io/linux-firewall/</link><guid isPermaLink="false">https://bingbingpa.github.io/linux-firewall/</guid><pubDate>Sun, 28 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. firewall 명령어로 포트 열기&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;firewall 명령어를 통해 포트를 열 수 있다. &lt;strong&gt;zone은 서버의 용도에 맞게 사전에 정의된 네트워크의 신뢰 레벨&lt;/strong&gt;을 의미한다는데… 난 아직까지는 zone을 따로 추가하지 않고 그냥 public으로 쓰고 있다.&lt;/li&gt;
+&lt;li&gt;포트를 추가하고 나면 반드시 firewall을 reload해야지 적용된다.&lt;/li&gt;
+&lt;li&gt;적용된 포트는 &lt;strong&gt;sudo firewall-cmd —zone=public —list-all&lt;/strong&gt; 명령어로 확인 할 수 있다.&lt;/li&gt;
+&lt;li&gt;특정 IP의 포트만 허용하는것도 firewall 명령어로 할 수 있다는데 이건 그냥 xml수정하는게 편해서 xml을 수정해서 적용했다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;아래와 같이 하면 모든IP에 대해서 해당 포트가 열리기 때문에 주의해야 한다.&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; firewall-cmd --permanent --zone&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;public --add-port&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;허용포트&apos;&lt;/span&gt;/tcp
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; firewall-cmd --reload
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; firewall-cmd --zone&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;public --list-all&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;2. firewall xml 수정해서 포트 설정하기&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;일반 사용자 계정으로는 해당 결로에 접근이 안되므로 root계정으로 변경하고  &lt;strong&gt;/etc/firewall/zones/public.xml&lt;/strong&gt; 파일의 zone태그안에 아래 내용을 추가하면 된다. 따로 추가한 zone이 있다면 해당 zone의 xml을 수정하면 된다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ip/뒤에 붙는 숫자는 허용할 IP대역대를 의미한다. IP는 8bit.8bit.8bit.8bit 으로 이루어져 있는데 뒤에 숫자의 비트수만큼 일치하는 IP에 대해 허용한다는 뜻이다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;xml&quot;&gt;&lt;pre class=&quot;language-xml&quot;&gt;&lt;code class=&quot;language-xml&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;rule&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;family&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;ipv4&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;source&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;192.168.0.1/24&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;port&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;tcp&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;22&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;accept&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;rule&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[대충 알고 넘어갔던 기본 개념 정리]]></title><description><![CDATA[1. 이진수로 음수 표현 음수는 2의 보수로 표현하고 둘을 더하면 0이 된다. 보수의 사전적 의미를 구글링 해보면 다음과 같다. 두 수의 합이 진법의 밑수(N)가 되게 하는 수. 예를 들어 10진수 4의 10의 보수는 6이고, 10진수 2의 1…]]></description><link>https://bingbingpa.github.io/java-basic/</link><guid isPermaLink="false">https://bingbingpa.github.io/java-basic/</guid><pubDate>Sun, 28 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. 이진수로 음수 표현&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;음수는 2의 보수로 표현하고 둘을 더하면 0이 된다.&lt;/li&gt;
@@ -10991,30 +12235,6 @@ $ &lt;span class=&quot;token function&quot;&gt;time&lt;/span&gt; &lt;span class=
     &lt;span class=&quot;token keyword&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[방화벽 정책 설정]]></title><description><![CDATA[1. firewall 명령어로 포트 열기 firewall 명령어를 통해 포트를 열 수 있다. zone은 서버의 용도에 맞게 사전에 정의된 네트워크의 신뢰 레벨을 의미한다는데… 난 아직까지는 zone을 따로 추가하지 않고 그냥 public…]]></description><link>https://bingbingpa.github.io/linux-firewall/</link><guid isPermaLink="false">https://bingbingpa.github.io/linux-firewall/</guid><pubDate>Sun, 28 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. firewall 명령어로 포트 열기&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;firewall 명령어를 통해 포트를 열 수 있다. &lt;strong&gt;zone은 서버의 용도에 맞게 사전에 정의된 네트워크의 신뢰 레벨&lt;/strong&gt;을 의미한다는데… 난 아직까지는 zone을 따로 추가하지 않고 그냥 public으로 쓰고 있다.&lt;/li&gt;
-&lt;li&gt;포트를 추가하고 나면 반드시 firewall을 reload해야지 적용된다.&lt;/li&gt;
-&lt;li&gt;적용된 포트는 &lt;strong&gt;sudo firewall-cmd —zone=public —list-all&lt;/strong&gt; 명령어로 확인 할 수 있다.&lt;/li&gt;
-&lt;li&gt;특정 IP의 포트만 허용하는것도 firewall 명령어로 할 수 있다는데 이건 그냥 xml수정하는게 편해서 xml을 수정해서 적용했다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;아래와 같이 하면 모든IP에 대해서 해당 포트가 열리기 때문에 주의해야 한다.&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; firewall-cmd --permanent --zone&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;public --add-port&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;허용포트&apos;&lt;/span&gt;/tcp
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; firewall-cmd --reload
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; firewall-cmd --zone&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;public --list-all&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;2. firewall xml 수정해서 포트 설정하기&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;일반 사용자 계정으로는 해당 결로에 접근이 안되므로 root계정으로 변경하고  &lt;strong&gt;/etc/firewall/zones/public.xml&lt;/strong&gt; 파일의 zone태그안에 아래 내용을 추가하면 된다. 따로 추가한 zone이 있다면 해당 zone의 xml을 수정하면 된다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;ip/뒤에 붙는 숫자는 허용할 IP대역대를 의미한다. IP는 8bit.8bit.8bit.8bit 으로 이루어져 있는데 뒤에 숫자의 비트수만큼 일치하는 IP에 대해 허용한다는 뜻이다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;xml&quot;&gt;&lt;pre class=&quot;language-xml&quot;&gt;&lt;code class=&quot;language-xml&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;rule&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;family&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;ipv4&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-    &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;source&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;192.168.0.1/24&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
-    &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;port&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;tcp&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;22&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;accept&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;rule&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[fdisk 를 통한 파티션 분할]]></title><description><![CDATA[서버 세팅할 때 문서를 제대로 안만들어서 이건 그냥 안까먹게 정리용으로… fdisk -l 명령어로 물리적인 하드웨어 구성 확인 fdisk 파티션나눌 disk경로 나는 start는 default로 하고 end는 할당할 사이즈 만큼 했다. 예) +500G…]]></description><link>https://bingbingpa.github.io/linux-mount/</link><guid isPermaLink="false">https://bingbingpa.github.io/linux-mount/</guid><pubDate>Sun, 28 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;서버 세팅할 때 문서를 제대로 안만들어서 이건 그냥 안까먹게 정리용으로…&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;fdisk -l&lt;/strong&gt; 명령어로 물리적인 하드웨어 구성 확인&lt;/li&gt;
@@ -11037,55 +12257,6 @@ p or e -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 기본 �
 &lt;li&gt;mount 명령어로 정상적으로 마운트 되었는지 확인&lt;/li&gt;
 &lt;li&gt;혹시 모르니 재부팅 한번 해보고 마운트가 유지되는지 확인.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;이건 자꾸 까먹어서 정리. init 0 -&gt;시스템 종료, init 6 -&gt; 시스템 재부팅&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[rpm download 하기]]></title><description><![CDATA[rpm 패키지 다운받기 인터넷이 되지 않은 로컬 환경에서 설치하기 위해서는 rpm파일들을 미리 준비해야 하는데 그 방법은 다음과 같다. centos 7을 기준으로 했을때 yum에 —downloadonly 라는 옵션이 있다. 만약 yum —help…]]></description><link>https://bingbingpa.github.io/centos-rpm-download/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-rpm-download/</guid><pubDate>Sat, 27 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;rpm 패키지 다운받기&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;인터넷이 되지 않은 로컬 환경에서 설치하기 위해서는 rpm파일들을 미리 준비해야 하는데 그 방법은 다음과 같다.&lt;/li&gt;
-&lt;li&gt;centos 7을 기준으로 했을때 yum에 —downloadonly 라는 옵션이 있다. 만약 yum —help 목록에서 이 옵션이 없다면 &lt;strong&gt;sudo yum install yum-downloadonly&lt;/strong&gt; 명령어를 통해 해당 플러그인을 설치한다.&lt;/li&gt;
-&lt;li&gt;rpm을 다운받을 때는 아무것도 설치 되어 있지 않은 클린한 OS에서 하는 것을 추천하는데 이유는 기존에 사용중인 OS일경우 다운로드 받고자 하는 패키지와 의존성이 있는 것들이 설치 되어 있을 수도 있기 때문이다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;OS update 패키지를 받을 때&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; yum update --downloadonly --downloaddir&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;’다운받을 디렉토리’&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;OS 업데이트 패키지&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;필요한 설치 패키지를 받을 때&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; yum &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; --downloadonly --downloaddir&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;’다운받을 디렉토리’  ‘설치할 패키지’&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[리눅스에서 톰캣 서비스 등록하기]]></title><description><![CDATA[1. Centos7 환경에서 톰캣 서비스 등록 /usr/lib/systemd/system/ 경로에 등록하고자 하는 서비스명.service 파일을 생성한다. 대략 다음과 같이 서비스 파일을 만들면 된다. user와 ExecStart/ExecStop…]]></description><link>https://bingbingpa.github.io/centos-service/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-service/</guid><pubDate>Sat, 27 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. Centos7 환경에서 톰캣 서비스 등록&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;/usr/lib/systemd/system/&lt;/strong&gt; 경로에 등록하고자 하는 서비스명.service 파일을 생성한다.&lt;/li&gt;
-&lt;li&gt;대략 다음과 같이 서비스 파일을 만들면 된다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;user와 ExecStart/ExecStop경로만 잘 적어주면 별 오류 없이 서비스가 잘 등록 된다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;Unit&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;token assign-left variable&quot;&gt;Description&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;해당 서비스에 대한 설명
-&lt;span class=&quot;token assign-left variable&quot;&gt;After&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;syslog.target
-
-&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;Service&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;token assign-left variable&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;forking
-&lt;span class=&quot;token assign-left variable&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;사용자명
-&lt;span class=&quot;token assign-left variable&quot;&gt;Group&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;사용자그룹
-&lt;span class=&quot;token assign-left variable&quot;&gt;ExecStart&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/톰캣경로/bin/startup.sh
-&lt;span class=&quot;token assign-left variable&quot;&gt;ExecStop&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/톰캣경로/shutdown.sh
-&lt;span class=&quot;token assign-left variable&quot;&gt;SuccessExitStatus&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;143&lt;/span&gt;
-
-&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;Install&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;token assign-left variable&quot;&gt;WantedBy&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;multi-user.target&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;서비스를 시작하는 방법은 &lt;strong&gt;service&lt;/strong&gt;와 &lt;strong&gt;systemctl&lt;/strong&gt;이 있는데 service는 centos6이전 버전구문이고 systemctl은 centos7이후 버전의 구문이다. 근데 난 service가 익숙해서 아직도 service로 사용중…&lt;/li&gt;
-&lt;li&gt;서비스를 시작하는 방법은 service “/usr/lib/systemd/system/경로에 생성한 서비스 파일명” start 를 하면 된다.&lt;/li&gt;
-&lt;li&gt;종료할 때는 &lt;strong&gt;stop&lt;/strong&gt;을 사용하고 재시작은 &lt;strong&gt;restart&lt;/strong&gt; 현재 서비스의 상태는 &lt;strong&gt;status&lt;/strong&gt;로 볼 수 있다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;2. 서비스 자동 시작 설정&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;서비스를 자동 시작하는게 그리 좋은것은 아니라고 하는데… 이번에 진행한 프로젝트에서는 장거리에서 유지 보수의 어려움 때문에 서비스를 자동 시작하도록 설정했다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;설정 방법은 다음과 같다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl &lt;span class=&quot;token builtin class-name&quot;&gt;enable&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;서비스명&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;다음 명령어로 서비스가 정상적으로 자동 시작으로 등록되었는지 확인 해 볼 수 있다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl list-unit-files --type &lt;span class=&quot;token function&quot;&gt;service&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;grep&lt;/span&gt; enabled&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[ulimit 설정하기]]></title><description><![CDATA[1. ulimit? 서버 세팅을 하게 되면 os update 하고 나면 그 다음 하게 되는 ulimit 설정. 근데 이게 정확히 뭔지 몰라서 찾아봤다. ulimit…]]></description><link>https://bingbingpa.github.io/centos-ulimit/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-ulimit/</guid><pubDate>Sat, 27 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. ulimit?&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;서버 세팅을 하게 되면 os update 하고 나면 그 다음 하게 되는 ulimit 설정. 근데 이게 정확히 뭔지 몰라서 찾아봤다.&lt;/li&gt;
@@ -11172,6 +12343,55 @@ p or e -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 기본 �
   
   &lt;/a&gt;
     &lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[rpm download 하기]]></title><description><![CDATA[rpm 패키지 다운받기 인터넷이 되지 않은 로컬 환경에서 설치하기 위해서는 rpm파일들을 미리 준비해야 하는데 그 방법은 다음과 같다. centos 7을 기준으로 했을때 yum에 —downloadonly 라는 옵션이 있다. 만약 yum —help…]]></description><link>https://bingbingpa.github.io/centos-rpm-download/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-rpm-download/</guid><pubDate>Sat, 27 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;rpm 패키지 다운받기&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;인터넷이 되지 않은 로컬 환경에서 설치하기 위해서는 rpm파일들을 미리 준비해야 하는데 그 방법은 다음과 같다.&lt;/li&gt;
+&lt;li&gt;centos 7을 기준으로 했을때 yum에 —downloadonly 라는 옵션이 있다. 만약 yum —help 목록에서 이 옵션이 없다면 &lt;strong&gt;sudo yum install yum-downloadonly&lt;/strong&gt; 명령어를 통해 해당 플러그인을 설치한다.&lt;/li&gt;
+&lt;li&gt;rpm을 다운받을 때는 아무것도 설치 되어 있지 않은 클린한 OS에서 하는 것을 추천하는데 이유는 기존에 사용중인 OS일경우 다운로드 받고자 하는 패키지와 의존성이 있는 것들이 설치 되어 있을 수도 있기 때문이다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;OS update 패키지를 받을 때&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; yum update --downloadonly --downloaddir&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;’다운받을 디렉토리’&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;OS 업데이트 패키지&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;필요한 설치 패키지를 받을 때&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; yum &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; --downloadonly --downloaddir&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;’다운받을 디렉토리’  ‘설치할 패키지’&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[리눅스에서 톰캣 서비스 등록하기]]></title><description><![CDATA[1. Centos7 환경에서 톰캣 서비스 등록 /usr/lib/systemd/system/ 경로에 등록하고자 하는 서비스명.service 파일을 생성한다. 대략 다음과 같이 서비스 파일을 만들면 된다. user와 ExecStart/ExecStop…]]></description><link>https://bingbingpa.github.io/centos-service/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-service/</guid><pubDate>Sat, 27 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. Centos7 환경에서 톰캣 서비스 등록&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;/usr/lib/systemd/system/&lt;/strong&gt; 경로에 등록하고자 하는 서비스명.service 파일을 생성한다.&lt;/li&gt;
+&lt;li&gt;대략 다음과 같이 서비스 파일을 만들면 된다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;user와 ExecStart/ExecStop경로만 잘 적어주면 별 오류 없이 서비스가 잘 등록 된다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;Unit&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;token assign-left variable&quot;&gt;Description&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;해당 서비스에 대한 설명
+&lt;span class=&quot;token assign-left variable&quot;&gt;After&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;syslog.target
+
+&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;Service&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;token assign-left variable&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;forking
+&lt;span class=&quot;token assign-left variable&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;사용자명
+&lt;span class=&quot;token assign-left variable&quot;&gt;Group&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;사용자그룹
+&lt;span class=&quot;token assign-left variable&quot;&gt;ExecStart&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/톰캣경로/bin/startup.sh
+&lt;span class=&quot;token assign-left variable&quot;&gt;ExecStop&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/톰캣경로/shutdown.sh
+&lt;span class=&quot;token assign-left variable&quot;&gt;SuccessExitStatus&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;143&lt;/span&gt;
+
+&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;Install&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;token assign-left variable&quot;&gt;WantedBy&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;multi-user.target&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;서비스를 시작하는 방법은 &lt;strong&gt;service&lt;/strong&gt;와 &lt;strong&gt;systemctl&lt;/strong&gt;이 있는데 service는 centos6이전 버전구문이고 systemctl은 centos7이후 버전의 구문이다. 근데 난 service가 익숙해서 아직도 service로 사용중…&lt;/li&gt;
+&lt;li&gt;서비스를 시작하는 방법은 service “/usr/lib/systemd/system/경로에 생성한 서비스 파일명” start 를 하면 된다.&lt;/li&gt;
+&lt;li&gt;종료할 때는 &lt;strong&gt;stop&lt;/strong&gt;을 사용하고 재시작은 &lt;strong&gt;restart&lt;/strong&gt; 현재 서비스의 상태는 &lt;strong&gt;status&lt;/strong&gt;로 볼 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;2. 서비스 자동 시작 설정&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;서비스를 자동 시작하는게 그리 좋은것은 아니라고 하는데… 이번에 진행한 프로젝트에서는 장거리에서 유지 보수의 어려움 때문에 서비스를 자동 시작하도록 설정했다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;설정 방법은 다음과 같다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl &lt;span class=&quot;token builtin class-name&quot;&gt;enable&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;서비스명&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;다음 명령어로 서비스가 정상적으로 자동 시작으로 등록되었는지 확인 해 볼 수 있다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl list-unit-files --type &lt;span class=&quot;token function&quot;&gt;service&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;grep&lt;/span&gt; enabled&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[user 계정 sudo 권한]]></title><description><![CDATA[일반 사용자 계정에  root 권한 주기 리눅스에서 일반 사용자 계정을 사용하다 보면 root의 권한이 필요할 경우가 있다. 그럴때마다 root로 계정을 변경해서 사용 할 수 도 있지만 해당 user계정에 root…]]></description><link>https://bingbingpa.github.io/centos-visudo/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-visudo/</guid><pubDate>Sun, 21 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;일반 사용자 계정에  root 권한 주기&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;리눅스에서 일반 사용자 계정을 사용하다 보면 root의 권한이 필요할 경우가 있다. 그럴때마다 root로 계정을 변경해서 사용 할 수 도 있지만 해당 user계정에 root 권한을 부여하여 사용 할 수 있다.&lt;/li&gt;
