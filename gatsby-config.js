@@ -67,6 +67,7 @@ module.exports = {
     {
       resolve: "gatsby-plugin-robots-txt",
       options: {
+        sitemap: config.siteUrl + "/sitemap/sitemap-0.xml",
         policy: [{ userAgent: "*", allow: "/" }]
       }
     },
