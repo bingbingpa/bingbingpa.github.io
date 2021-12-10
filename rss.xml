@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 15 Nov 2021 00:40:15 GMT</lastBuildDate><item><title><![CDATA[jenkins 를 이용한 빌드 & 배포]]></title><description><![CDATA[목표 git repository 의 특정 브랜치에 소스가 push 되면, git repository 의 webhook 설정에 의해 jenkins 의 아이템을 실행한다. item 은 pipeLine 으로 구성하고, Jenkinsfile…]]></description><link>https://bingbingpa.github.io/jenkins-build-deploy/</link><guid isPermaLink="false">https://bingbingpa.github.io/jenkins-build-deploy/</guid><pubDate>Mon, 15 Nov 2021 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;목표&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 10 Dec 2021 15:03:38 GMT</lastBuildDate><item><title><![CDATA[jenkins 를 이용한 빌드 & 배포]]></title><description><![CDATA[목표 git repository 의 특정 브랜치에 소스가 push 되면, git repository 의 webhook 설정에 의해 jenkins 의 아이템을 실행한다. item 은 pipeLine 으로 구성하고, Jenkinsfile…]]></description><link>https://bingbingpa.github.io/jenkins-build-deploy/</link><guid isPermaLink="false">https://bingbingpa.github.io/jenkins-build-deploy/</guid><pubDate>Mon, 15 Nov 2021 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;목표&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;git repository 의 특정 브랜치에 소스가 push 되면, git repository 의 webhook 설정에 의해 jenkins 의 아이템을 실행한다.&lt;/li&gt;
 &lt;li&gt;item 은 pipeLine 으로 구성하고, Jenkinsfile 을 작성하여 빌드 및 배포 구성을 코드로 관리한다.&lt;/li&gt;
@@ -12175,30 +12175,6 @@ $ &lt;span class=&quot;token function&quot;&gt;time&lt;/span&gt; &lt;span class=
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;:wq&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;저장&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;위에 설정한 내용은 다음과 같다. 매일 00시에 해당 커맨드를 실행하여 master와 slave의 디렉토리를 동기화하고 로그파일은 지정한 위치에 생성되고 bwlimit옵션에 설정한 네트워크 대역폭으로 해당 파일들을 전송하며, —delete옵션에 의해 mater에서 삭제된 파일은 slave에서 삭제되게 된다.&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[방화벽 정책 설정]]></title><description><![CDATA[1. firewall 명령어로 포트 열기 firewall 명령어를 통해 포트를 열 수 있다. zone은 서버의 용도에 맞게 사전에 정의된 네트워크의 신뢰 레벨을 의미한다는데… 난 아직까지는 zone을 따로 추가하지 않고 그냥 public…]]></description><link>https://bingbingpa.github.io/linux-firewall/</link><guid isPermaLink="false">https://bingbingpa.github.io/linux-firewall/</guid><pubDate>Sun, 28 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. firewall 명령어로 포트 열기&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;firewall 명령어를 통해 포트를 열 수 있다. &lt;strong&gt;zone은 서버의 용도에 맞게 사전에 정의된 네트워크의 신뢰 레벨&lt;/strong&gt;을 의미한다는데… 난 아직까지는 zone을 따로 추가하지 않고 그냥 public으로 쓰고 있다.&lt;/li&gt;
-&lt;li&gt;포트를 추가하고 나면 반드시 firewall을 reload해야지 적용된다.&lt;/li&gt;
-&lt;li&gt;적용된 포트는 &lt;strong&gt;sudo firewall-cmd —zone=public —list-all&lt;/strong&gt; 명령어로 확인 할 수 있다.&lt;/li&gt;
-&lt;li&gt;특정 IP의 포트만 허용하는것도 firewall 명령어로 할 수 있다는데 이건 그냥 xml수정하는게 편해서 xml을 수정해서 적용했다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;아래와 같이 하면 모든IP에 대해서 해당 포트가 열리기 때문에 주의해야 한다.&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; firewall-cmd --permanent --zone&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;public --add-port&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;허용포트&apos;&lt;/span&gt;/tcp
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; firewall-cmd --reload
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; firewall-cmd --zone&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;public --list-all&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;2. firewall xml 수정해서 포트 설정하기&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;일반 사용자 계정으로는 해당 결로에 접근이 안되므로 root계정으로 변경하고  &lt;strong&gt;/etc/firewall/zones/public.xml&lt;/strong&gt; 파일의 zone태그안에 아래 내용을 추가하면 된다. 따로 추가한 zone이 있다면 해당 zone의 xml을 수정하면 된다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;ip/뒤에 붙는 숫자는 허용할 IP대역대를 의미한다. IP는 8bit.8bit.8bit.8bit 으로 이루어져 있는데 뒤에 숫자의 비트수만큼 일치하는 IP에 대해 허용한다는 뜻이다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;xml&quot;&gt;&lt;pre class=&quot;language-xml&quot;&gt;&lt;code class=&quot;language-xml&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;rule&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;family&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;ipv4&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
-    &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;source&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;192.168.0.1/24&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
-    &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;port&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;tcp&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;22&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;accept&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;rule&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[대충 알고 넘어갔던 기본 개념 정리]]></title><description><![CDATA[1. 이진수로 음수 표현 음수는 2의 보수로 표현하고 둘을 더하면 0이 된다. 보수의 사전적 의미를 구글링 해보면 다음과 같다. 두 수의 합이 진법의 밑수(N)가 되게 하는 수. 예를 들어 10진수 4의 10의 보수는 6이고, 10진수 2의 1…]]></description><link>https://bingbingpa.github.io/java-basic/</link><guid isPermaLink="false">https://bingbingpa.github.io/java-basic/</guid><pubDate>Sun, 28 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. 이진수로 음수 표현&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;음수는 2의 보수로 표현하고 둘을 더하면 0이 된다.&lt;/li&gt;
@@ -12235,6 +12211,30 @@ $ &lt;span class=&quot;token function&quot;&gt;time&lt;/span&gt; &lt;span class=
     &lt;span class=&quot;token keyword&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[방화벽 정책 설정]]></title><description><![CDATA[1. firewall 명령어로 포트 열기 firewall 명령어를 통해 포트를 열 수 있다. zone은 서버의 용도에 맞게 사전에 정의된 네트워크의 신뢰 레벨을 의미한다는데… 난 아직까지는 zone을 따로 추가하지 않고 그냥 public…]]></description><link>https://bingbingpa.github.io/linux-firewall/</link><guid isPermaLink="false">https://bingbingpa.github.io/linux-firewall/</guid><pubDate>Sun, 28 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. firewall 명령어로 포트 열기&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;firewall 명령어를 통해 포트를 열 수 있다. &lt;strong&gt;zone은 서버의 용도에 맞게 사전에 정의된 네트워크의 신뢰 레벨&lt;/strong&gt;을 의미한다는데… 난 아직까지는 zone을 따로 추가하지 않고 그냥 public으로 쓰고 있다.&lt;/li&gt;
+&lt;li&gt;포트를 추가하고 나면 반드시 firewall을 reload해야지 적용된다.&lt;/li&gt;
+&lt;li&gt;적용된 포트는 &lt;strong&gt;sudo firewall-cmd —zone=public —list-all&lt;/strong&gt; 명령어로 확인 할 수 있다.&lt;/li&gt;
+&lt;li&gt;특정 IP의 포트만 허용하는것도 firewall 명령어로 할 수 있다는데 이건 그냥 xml수정하는게 편해서 xml을 수정해서 적용했다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;아래와 같이 하면 모든IP에 대해서 해당 포트가 열리기 때문에 주의해야 한다.&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; firewall-cmd --permanent --zone&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;public --add-port&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;허용포트&apos;&lt;/span&gt;/tcp
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; firewall-cmd --reload
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; firewall-cmd --zone&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;public --list-all&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;2. firewall xml 수정해서 포트 설정하기&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;일반 사용자 계정으로는 해당 결로에 접근이 안되므로 root계정으로 변경하고  &lt;strong&gt;/etc/firewall/zones/public.xml&lt;/strong&gt; 파일의 zone태그안에 아래 내용을 추가하면 된다. 따로 추가한 zone이 있다면 해당 zone의 xml을 수정하면 된다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ip/뒤에 붙는 숫자는 허용할 IP대역대를 의미한다. IP는 8bit.8bit.8bit.8bit 으로 이루어져 있는데 뒤에 숫자의 비트수만큼 일치하는 IP에 대해 허용한다는 뜻이다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;xml&quot;&gt;&lt;pre class=&quot;language-xml&quot;&gt;&lt;code class=&quot;language-xml&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;rule&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;family&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;ipv4&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;source&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;192.168.0.1/24&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;port&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;tcp&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;22&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;accept&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;rule&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[fdisk 를 통한 파티션 분할]]></title><description><![CDATA[서버 세팅할 때 문서를 제대로 안만들어서 이건 그냥 안까먹게 정리용으로… fdisk -l 명령어로 물리적인 하드웨어 구성 확인 fdisk 파티션나눌 disk경로 나는 start는 default로 하고 end는 할당할 사이즈 만큼 했다. 예) +500G…]]></description><link>https://bingbingpa.github.io/linux-mount/</link><guid isPermaLink="false">https://bingbingpa.github.io/linux-mount/</guid><pubDate>Sun, 28 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;서버 세팅할 때 문서를 제대로 안만들어서 이건 그냥 안까먹게 정리용으로…&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;fdisk -l&lt;/strong&gt; 명령어로 물리적인 하드웨어 구성 확인&lt;/li&gt;
@@ -12257,6 +12257,55 @@ p or e -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 기본 �
 &lt;li&gt;mount 명령어로 정상적으로 마운트 되었는지 확인&lt;/li&gt;
 &lt;li&gt;혹시 모르니 재부팅 한번 해보고 마운트가 유지되는지 확인.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;이건 자꾸 까먹어서 정리. init 0 -&gt;시스템 종료, init 6 -&gt; 시스템 재부팅&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[rpm download 하기]]></title><description><![CDATA[rpm 패키지 다운받기 인터넷이 되지 않은 로컬 환경에서 설치하기 위해서는 rpm파일들을 미리 준비해야 하는데 그 방법은 다음과 같다. centos 7을 기준으로 했을때 yum에 —downloadonly 라는 옵션이 있다. 만약 yum —help…]]></description><link>https://bingbingpa.github.io/centos-rpm-download/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-rpm-download/</guid><pubDate>Sat, 27 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;rpm 패키지 다운받기&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;인터넷이 되지 않은 로컬 환경에서 설치하기 위해서는 rpm파일들을 미리 준비해야 하는데 그 방법은 다음과 같다.&lt;/li&gt;
+&lt;li&gt;centos 7을 기준으로 했을때 yum에 —downloadonly 라는 옵션이 있다. 만약 yum —help 목록에서 이 옵션이 없다면 &lt;strong&gt;sudo yum install yum-downloadonly&lt;/strong&gt; 명령어를 통해 해당 플러그인을 설치한다.&lt;/li&gt;
+&lt;li&gt;rpm을 다운받을 때는 아무것도 설치 되어 있지 않은 클린한 OS에서 하는 것을 추천하는데 이유는 기존에 사용중인 OS일경우 다운로드 받고자 하는 패키지와 의존성이 있는 것들이 설치 되어 있을 수도 있기 때문이다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;OS update 패키지를 받을 때&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; yum update --downloadonly --downloaddir&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;’다운받을 디렉토리’&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;OS 업데이트 패키지&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;필요한 설치 패키지를 받을 때&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; yum &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; --downloadonly --downloaddir&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;’다운받을 디렉토리’  ‘설치할 패키지’&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[리눅스에서 톰캣 서비스 등록하기]]></title><description><![CDATA[1. Centos7 환경에서 톰캣 서비스 등록 /usr/lib/systemd/system/ 경로에 등록하고자 하는 서비스명.service 파일을 생성한다. 대략 다음과 같이 서비스 파일을 만들면 된다. user와 ExecStart/ExecStop…]]></description><link>https://bingbingpa.github.io/centos-service/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-service/</guid><pubDate>Sat, 27 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. Centos7 환경에서 톰캣 서비스 등록&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;/usr/lib/systemd/system/&lt;/strong&gt; 경로에 등록하고자 하는 서비스명.service 파일을 생성한다.&lt;/li&gt;
+&lt;li&gt;대략 다음과 같이 서비스 파일을 만들면 된다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;user와 ExecStart/ExecStop경로만 잘 적어주면 별 오류 없이 서비스가 잘 등록 된다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;Unit&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;token assign-left variable&quot;&gt;Description&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;해당 서비스에 대한 설명
+&lt;span class=&quot;token assign-left variable&quot;&gt;After&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;syslog.target
+
+&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;Service&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;token assign-left variable&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;forking
+&lt;span class=&quot;token assign-left variable&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;사용자명
+&lt;span class=&quot;token assign-left variable&quot;&gt;Group&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;사용자그룹
+&lt;span class=&quot;token assign-left variable&quot;&gt;ExecStart&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/톰캣경로/bin/startup.sh
+&lt;span class=&quot;token assign-left variable&quot;&gt;ExecStop&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/톰캣경로/shutdown.sh
+&lt;span class=&quot;token assign-left variable&quot;&gt;SuccessExitStatus&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;143&lt;/span&gt;
+
+&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;Install&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;token assign-left variable&quot;&gt;WantedBy&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;multi-user.target&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;서비스를 시작하는 방법은 &lt;strong&gt;service&lt;/strong&gt;와 &lt;strong&gt;systemctl&lt;/strong&gt;이 있는데 service는 centos6이전 버전구문이고 systemctl은 centos7이후 버전의 구문이다. 근데 난 service가 익숙해서 아직도 service로 사용중…&lt;/li&gt;
+&lt;li&gt;서비스를 시작하는 방법은 service “/usr/lib/systemd/system/경로에 생성한 서비스 파일명” start 를 하면 된다.&lt;/li&gt;
+&lt;li&gt;종료할 때는 &lt;strong&gt;stop&lt;/strong&gt;을 사용하고 재시작은 &lt;strong&gt;restart&lt;/strong&gt; 현재 서비스의 상태는 &lt;strong&gt;status&lt;/strong&gt;로 볼 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;2. 서비스 자동 시작 설정&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;서비스를 자동 시작하는게 그리 좋은것은 아니라고 하는데… 이번에 진행한 프로젝트에서는 장거리에서 유지 보수의 어려움 때문에 서비스를 자동 시작하도록 설정했다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;설정 방법은 다음과 같다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl &lt;span class=&quot;token builtin class-name&quot;&gt;enable&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;서비스명&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;다음 명령어로 서비스가 정상적으로 자동 시작으로 등록되었는지 확인 해 볼 수 있다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl list-unit-files --type &lt;span class=&quot;token function&quot;&gt;service&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;grep&lt;/span&gt; enabled&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[ulimit 설정하기]]></title><description><![CDATA[1. ulimit? 서버 세팅을 하게 되면 os update 하고 나면 그 다음 하게 되는 ulimit 설정. 근데 이게 정확히 뭔지 몰라서 찾아봤다. ulimit…]]></description><link>https://bingbingpa.github.io/centos-ulimit/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-ulimit/</guid><pubDate>Sat, 27 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. ulimit?&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;서버 세팅을 하게 되면 os update 하고 나면 그 다음 하게 되는 ulimit 설정. 근데 이게 정확히 뭔지 몰라서 찾아봤다.&lt;/li&gt;
@@ -12343,55 +12392,6 @@ p or e -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 기본 �
   
   &lt;/a&gt;
     &lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[rpm download 하기]]></title><description><![CDATA[rpm 패키지 다운받기 인터넷이 되지 않은 로컬 환경에서 설치하기 위해서는 rpm파일들을 미리 준비해야 하는데 그 방법은 다음과 같다. centos 7을 기준으로 했을때 yum에 —downloadonly 라는 옵션이 있다. 만약 yum —help…]]></description><link>https://bingbingpa.github.io/centos-rpm-download/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-rpm-download/</guid><pubDate>Sat, 27 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;rpm 패키지 다운받기&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;인터넷이 되지 않은 로컬 환경에서 설치하기 위해서는 rpm파일들을 미리 준비해야 하는데 그 방법은 다음과 같다.&lt;/li&gt;
-&lt;li&gt;centos 7을 기준으로 했을때 yum에 —downloadonly 라는 옵션이 있다. 만약 yum —help 목록에서 이 옵션이 없다면 &lt;strong&gt;sudo yum install yum-downloadonly&lt;/strong&gt; 명령어를 통해 해당 플러그인을 설치한다.&lt;/li&gt;
-&lt;li&gt;rpm을 다운받을 때는 아무것도 설치 되어 있지 않은 클린한 OS에서 하는 것을 추천하는데 이유는 기존에 사용중인 OS일경우 다운로드 받고자 하는 패키지와 의존성이 있는 것들이 설치 되어 있을 수도 있기 때문이다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;OS update 패키지를 받을 때&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; yum update --downloadonly --downloaddir&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;’다운받을 디렉토리’&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;OS 업데이트 패키지&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;필요한 설치 패키지를 받을 때&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; yum &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; --downloadonly --downloaddir&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;’다운받을 디렉토리’  ‘설치할 패키지’&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[리눅스에서 톰캣 서비스 등록하기]]></title><description><![CDATA[1. Centos7 환경에서 톰캣 서비스 등록 /usr/lib/systemd/system/ 경로에 등록하고자 하는 서비스명.service 파일을 생성한다. 대략 다음과 같이 서비스 파일을 만들면 된다. user와 ExecStart/ExecStop…]]></description><link>https://bingbingpa.github.io/centos-service/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-service/</guid><pubDate>Sat, 27 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. Centos7 환경에서 톰캣 서비스 등록&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;/usr/lib/systemd/system/&lt;/strong&gt; 경로에 등록하고자 하는 서비스명.service 파일을 생성한다.&lt;/li&gt;
-&lt;li&gt;대략 다음과 같이 서비스 파일을 만들면 된다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;user와 ExecStart/ExecStop경로만 잘 적어주면 별 오류 없이 서비스가 잘 등록 된다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;Unit&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;token assign-left variable&quot;&gt;Description&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;해당 서비스에 대한 설명
-&lt;span class=&quot;token assign-left variable&quot;&gt;After&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;syslog.target
-
-&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;Service&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;token assign-left variable&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;forking
-&lt;span class=&quot;token assign-left variable&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;사용자명
-&lt;span class=&quot;token assign-left variable&quot;&gt;Group&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;사용자그룹
-&lt;span class=&quot;token assign-left variable&quot;&gt;ExecStart&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/톰캣경로/bin/startup.sh
-&lt;span class=&quot;token assign-left variable&quot;&gt;ExecStop&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/톰캣경로/shutdown.sh
-&lt;span class=&quot;token assign-left variable&quot;&gt;SuccessExitStatus&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;143&lt;/span&gt;
-
-&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;Install&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;token assign-left variable&quot;&gt;WantedBy&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;multi-user.target&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;서비스를 시작하는 방법은 &lt;strong&gt;service&lt;/strong&gt;와 &lt;strong&gt;systemctl&lt;/strong&gt;이 있는데 service는 centos6이전 버전구문이고 systemctl은 centos7이후 버전의 구문이다. 근데 난 service가 익숙해서 아직도 service로 사용중…&lt;/li&gt;
-&lt;li&gt;서비스를 시작하는 방법은 service “/usr/lib/systemd/system/경로에 생성한 서비스 파일명” start 를 하면 된다.&lt;/li&gt;
-&lt;li&gt;종료할 때는 &lt;strong&gt;stop&lt;/strong&gt;을 사용하고 재시작은 &lt;strong&gt;restart&lt;/strong&gt; 현재 서비스의 상태는 &lt;strong&gt;status&lt;/strong&gt;로 볼 수 있다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;2. 서비스 자동 시작 설정&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;서비스를 자동 시작하는게 그리 좋은것은 아니라고 하는데… 이번에 진행한 프로젝트에서는 장거리에서 유지 보수의 어려움 때문에 서비스를 자동 시작하도록 설정했다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;설정 방법은 다음과 같다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl &lt;span class=&quot;token builtin class-name&quot;&gt;enable&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;서비스명&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;다음 명령어로 서비스가 정상적으로 자동 시작으로 등록되었는지 확인 해 볼 수 있다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl list-unit-files --type &lt;span class=&quot;token function&quot;&gt;service&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;grep&lt;/span&gt; enabled&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[user 계정 sudo 권한]]></title><description><![CDATA[일반 사용자 계정에  root 권한 주기 리눅스에서 일반 사용자 계정을 사용하다 보면 root의 권한이 필요할 경우가 있다. 그럴때마다 root로 계정을 변경해서 사용 할 수 도 있지만 해당 user계정에 root…]]></description><link>https://bingbingpa.github.io/centos-visudo/</link><guid isPermaLink="false">https://bingbingpa.github.io/centos-visudo/</guid><pubDate>Sun, 21 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;일반 사용자 계정에  root 권한 주기&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;리눅스에서 일반 사용자 계정을 사용하다 보면 root의 권한이 필요할 경우가 있다. 그럴때마다 root로 계정을 변경해서 사용 할 수 도 있지만 해당 user계정에 root 권한을 부여하여 사용 할 수 있다.&lt;/li&gt;
