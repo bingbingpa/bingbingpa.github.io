@@ -45,12 +45,7 @@ module.exports = {
     // `gatsby-plugin-styled-jsx`, // the plugin's code is inserted directly to gatsby-node.js and gatsby-ssr.js files
     // `gatsby-plugin-styled-jsx-postcss`, // as above
     "gatsby-plugin-sass",
-    {
-      resolve: "gatsby-plugin-sitemap",
-      options: {
-        output: "/"
-      }
-    },
+    "gatsby-plugin-advanced-sitemap",
     {
       resolve: "gatsby-plugin-canonical-urls",
       options: {
@@ -266,61 +261,61 @@ module.exports = {
         ]
       }
     },
-    {
-      resolve: `gatsby-plugin-sitemap`,
-      options: {
-        query: `{
-         site {
-        siteMetadata {
-          siteUrl
-        }
-      }
-      allSitePage {
-        nodes {
-          path
-        }
-      }
-      allMarkdownRemark {
-        nodes {
-          fields {
-            slug,
-            prefix
-          }
-        }
-      }
-       }`,
-        resolvePages: ({
-          allSitePage: { nodes: allPages },
-          allMarkdownRemark: { nodes: allPosts }
-        }) => {
-          const pathToDateMap = {};
-
-          allPosts.map(post => {
-            pathToDateMap[post.fields.slug] = { date: post.fields.prefix };
-          });
-
-          const pages = allPages.map(page => {
-            return { ...page, ...pathToDateMap[page.path] };
-          });
-
-          return pages;
-        },
-        serialize: ({ path, date }) => {
-          let entry = {
-            url: path,
-            changefreq: "daily",
-            priority: 0.5
-          };
-
-          if (date) {
-            entry.priority = 0.7;
-            entry.lastmod = date;
-          }
-
-          return entry;
-        }
-      }
-    },
+    // {
+    //   resolve: `gatsby-plugin-sitemap`,
+    //   options: {
+    //     query: `{
+    //      site {
+    //     siteMetadata {
+    //       siteUrl
+    //     }
+    //   }
+    //   allSitePage {
+    //     nodes {
+    //       path
+    //     }
+    //   }
+    //   allMarkdownRemark {
+    //     nodes {
+    //       fields {
+    //         slug,
+    //         prefix
+    //       }
+    //     }
+    //   }
+    //    }`,
+    //     resolvePages: ({
+    //       allSitePage: { nodes: allPages },
+    //       allMarkdownRemark: { nodes: allPosts }
+    //     }) => {
+    //       const pathToDateMap = {};
+    //
+    //       allPosts.map(post => {
+    //         pathToDateMap[post.fields.slug] = { date: post.fields.prefix };
+    //       });
+    //
+    //       const pages = allPages.map(page => {
+    //         return { ...page, ...pathToDateMap[page.path] };
+    //       });
+    //
+    //       return pages;
+    //     },
+    //     serialize: ({ path, date }) => {
+    //       let entry = {
+    //         url: path,
+    //         changefreq: "daily",
+    //         priority: 0.5
+    //       };
+    //
+    //       if (date) {
+    //         entry.priority = 0.7;
+    //         entry.lastmod = date;
+    //       }
+    //
+    //       return entry;
+    //     }
+    //   }
+    // },
     {
       resolve: "gatsby-plugin-react-svg",
       options: {

@@ -8,6 +8,7 @@
     "fontfaceobserver": "^2.0.13",
     "gatsby": "^2.0.21",
     "gatsby-image": "^2.0.5",
+    "gatsby-plugin-advanced-sitemap": "^2.0.0",
     "gatsby-plugin-algolia": "^0.1.0",
     "gatsby-plugin-canonical-urls": "^3.13.0",
     "gatsby-plugin-catch-links": "^2.0.2",
