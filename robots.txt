@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://bingbingpa.github.io/sitemap.xml
+Sitemap: https://bingbingpa.github.io/sitemap-pages.xml
 Host: https://bingbingpa.github.io
