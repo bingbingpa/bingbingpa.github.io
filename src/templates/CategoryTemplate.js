@@ -27,7 +27,7 @@ const CategoryTemplate = props => {
                 {category}
               </Headline>
               <p className="meta">
-                There {totalCount > 1 ? "are" : "is"} <strong>{totalCount}</strong> post
+                There {totalCount > 1 ? "are" : "is"} <strong>&nbsp;{totalCount}&nbsp;</strong> post
                 {totalCount > 1 ? "s" : ""} in the category.
               </p>
               <List edges={edges} theme={theme} />

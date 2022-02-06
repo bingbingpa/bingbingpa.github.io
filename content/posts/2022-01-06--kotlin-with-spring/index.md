@@ -1,6 +1,6 @@
 ---
 title : 코프링 일주일 공부하고 정리하는 글
-category: "kotlin"
+category: "spring"
 author: bingbingpa
 ---
 
