@@ -96,14 +96,16 @@
 
     :global(.homepage):not(.fixed) & {
       border: 1px solid transparent;
-      background: color(white alpha(-10%));
+      //background: color(white alpha(-10%));
+      background: transparentize(white, 0.1);
       top: 50px;
 
       &:after {
         top: -11px;
         border-left: 1px solid transparent;
         border-right: 1px solid transparent;
-        background: color(white alpha(-10%));
+        //background: color(white alpha(-10%));
+        background: transparentize(white, 0.1);
       }
     }
 

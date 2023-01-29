@@ -69,15 +69,18 @@
 
     :global(.homepage) & {
       border: 1px solid transparent;
-      background-color: color(white alpha(-90%));
+      //background-color: color(white alpha(-90%));
+      background-color: transparentize(white, 0.9);
 
       &:hover {
-        background-color: color(white alpha(-60%));
+        //background-color: color(white alpha(-60%));
+        background-color: transparentize(white, 0.6);
       }
     }
 
     :global(.open) & {
-      background-color: color(white alpha(-10%));
+      //background-color: color(white alpha(-10%));
+      background-color: transparentize(white, 0.1);
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
 
