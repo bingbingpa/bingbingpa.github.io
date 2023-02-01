@@ -13,7 +13,7 @@ const Hero = props => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth - 15;
+    canvas.width = window.innerWidth;
     const texts = config.matrixTest.split("");
     const fontSize = 12;
     const columns = canvas.width / fontSize;
