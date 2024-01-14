@@ -1,4 +1,92 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 01 Feb 2023 07:06:16 GMT</lastBuildDate><item><title><![CDATA[스프링 Async multi config 설정하기]]></title><description><![CDATA[@Async 기본으로 사용하기 main 클래스에 @EnableAsync 추가해준다. 비동기로 처리하고자 하는 메소드에 @Async 를 붙여주면 끝! 문제점 @Async 의 기본설정인 SimpleAsyncTaskExecutor…]]></description><link>https://bingbingpa.github.io/spring-async-config/</link><guid isPermaLink="false">https://bingbingpa.github.io/spring-async-config/</guid><pubDate>Sun, 06 Feb 2022 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;@Async 기본으로 사용하기&lt;/h3&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 14 Jan 2024 11:31:50 GMT</lastBuildDate><item><title><![CDATA[Blocking I/O 와 Non-Blocking I/O]]></title><description><![CDATA[…]]></description><link>https://bingbingpa.github.io/blocking-io-and-non-blocking-io/</link><guid isPermaLink="false">https://bingbingpa.github.io/blocking-io-and-non-blocking-io/</guid><pubDate>Sat, 23 Dec 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;리액티브 시스템과 리액티브 프로그래밍&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;reactive&lt;/code&gt; 의 사전적 의미에는 ‘반응을 하는’이라는 뜻이 있다. 즉, 어떤 이벤트나 상황이 발생했을 때, 반응을 해서 그에 따라 적절하게 행동하는 것을 의미한다.&lt;/li&gt;
+&lt;li&gt;리액티브 시스템은 &lt;strong&gt;반응을 잘하는 시스템&lt;/strong&gt;이다. 다시 말해서 &lt;strong&gt;클라이언트의 요청에 즉각적으로 응답함으로써 지연 시간을 최소화한다.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;리액티브 스트림즈(Reactive Streams)란?&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;데이터 스트림을 Non-Blocking 이면서 비동기적인 방식으로 처리하기 위한 리액티브 라이브러리의 표준 사양&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;리액티브 스트림즈를 구현한 구현체로 RxJava, Reactor, Akka Streams, Java 9 Flow API 등이 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;RxJava: Rx 는 Reactive Extensions 라는 의미이다. RxJava 는 .NET 환경의 리액티브 확장 라이브러리를 넷플릭스에서 Java 언어로 포팅하여 만든 JVM 기반의 대표적인 리액티브 확장 라이브러리이다.&lt;/li&gt;
+&lt;li&gt;Reactor: 스프링팀에 의해 주도적으로 개발된 리액티브 스트림즈의 구현체&lt;/li&gt;
+&lt;li&gt;Akka Streams: JVM 상에서 동시성과 분산 애플리케이션을 단순화해 주는 오픈소스 툴킷&lt;/li&gt;
+&lt;li&gt;Java 9 Flow API&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;다른 라이브러리처럼 리액티브 스트림즈를 구현한 구현체가 아니라 리액티브 표준 사양의 SPI(Service Provider Interface)로써 Java API 에 정의되어 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;자바에서 사용되는 JDBC 를 예로들면 JDBC 는 사용자 입장에서는 API 가 되지만 JDBC 인터페이스를 구현해야 하는 벤더 입장에서 JDBC 는 SPI 가 된다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;리액티브 스트림즈 구성요소&lt;/h1&gt;
+&lt;br&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;컴포넌트&lt;/th&gt;
+&lt;th&gt;설명&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Publisher&lt;/td&gt;
+&lt;td&gt;데이터를 생성하고 통지(발행, 게시, 방출)하는 역할&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Subscriber&lt;/td&gt;
+&lt;td&gt;구독한 Publisher 로 부터 통지된 데이터를 전달받아서 처리하는 역할&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Subscription&lt;/td&gt;
+&lt;td&gt;Publisher 에 요청할 데이터의 개수를 지정하고, 데이터의 구독을 취소하는 역할을 한다.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Processor&lt;/td&gt;
+&lt;td&gt;Publisher 와 Subscriber 의 기능을 모두 가지고 있다. 즉, Subscriber 로서 다른 Publisher 를 구독할 수 있고, Publisher 로서 다른 Subscriber 가 구독할 수 있다.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/8cdb9f10dea7b0f9acb14a3c32a3cef8/48ca3/reactive-streams-component.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 74.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAABYlAAAWJQFJUiTwAAACJklEQVR42pVT2ZKbQBDb//+6ZJNK1ngB29zXcBsw4I7U2Gv7LUtV13CNWi1p3sZxlCLPpaqMzMssvK7X638Vr3m+SFmWUhS59H0nb23TyK/3H+I4tlwuF/nuNc+z2J97+f3+U9I0lrf7y2VZSE2u64plfWKy6rcZze7/TZiqNAbMjNRVKedzDzKTNlDAaZrE905yOroSYA1DT3wfa+BLgDUOAzEYyRQFpCkBVkgSR5LGsf7D6rr2AchRfd8T17XFPx0VhPeHgyPHg6sjHXHv4Rsb+95R4iiUKAoUOM8zaSDdF+D5fMYGGx9DydJEDBgMfa8ic5w8S9HEA/MAYJ6CRrgnYAzACqZ0XfcA7LGJDBJ0LdAtwSh0jUDsvqWglB6blmXWop5al1mYFJKi5go4kKHrgF2MbkaSJJaA2vio0Fc5AtwnUaT6GZOrIazKlCjzypAPzt5SXciobetvx2cYhgdDArrOpiFHbZr6EV4UR2NUpmmrcRw0Rsu8jb+uyysgfyA7o+MU21jUME91PZ0OcNpCrA7qvmPv1X0+h5Cjwv8k9QQ4woBMUmj3ae10w976EGv3V3YffxSMZtEYOlrXlTQohpvZpGntc2wY7HEYbyO+asN3OTbYtqWy3GvLpqvOrzhdLyNTs6LIJGNMUGmSaGD5jiaRVXGLD52lFMXNPB4KglL7L4Zt2+q4rOxWNIiHnUGnpjyzLRorGBpxZI5Z1/XtSFYK+A+8bnn1JAnepgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;reactive-streams-component&quot;
+        title=&quot;&quot;
+        src=&quot;/static/8cdb9f10dea7b0f9acb14a3c32a3cef8/5a190/reactive-streams-component.png&quot;
+        srcset=&quot;/static/8cdb9f10dea7b0f9acb14a3c32a3cef8/772e8/reactive-streams-component.png 200w,
+/static/8cdb9f10dea7b0f9acb14a3c32a3cef8/e17e5/reactive-streams-component.png 400w,
+/static/8cdb9f10dea7b0f9acb14a3c32a3cef8/5a190/reactive-streams-component.png 800w,
+/static/8cdb9f10dea7b0f9acb14a3c32a3cef8/48ca3/reactive-streams-component.png 1084w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/bingbingpa/blog-example/blob/main/spring-async-config/README.md&quot;&gt;사용한 샘플 코드&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[스프링 Async multi config 설정하기]]></title><description><![CDATA[@Async 기본으로 사용하기 main 클래스에 @EnableAsync 추가해준다. 비동기로 처리하고자 하는 메소드에 @Async 를 붙여주면 끝! 문제점 @Async 의 기본설정인 SimpleAsyncTaskExecutor…]]></description><link>https://bingbingpa.github.io/spring-async-config/</link><guid isPermaLink="false">https://bingbingpa.github.io/spring-async-config/</guid><pubDate>Sun, 06 Feb 2022 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;@Async 기본으로 사용하기&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;main 클래스에 @EnableAsync 추가해준다.&lt;/li&gt;
 &lt;li&gt;비동기로 처리하고자 하는 메소드에 @Async 를 붙여주면 끝!&lt;/li&gt;
