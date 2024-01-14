@@ -37,3 +37,5 @@
   - m1 에서 node-sass 모듈이 실행 불가능해서 sass 로 변경
   - 모듈 변경하고 나니 color(white alpha(-10%)) 이부분에서 에러 나서 transparentize(white, 0.1) 과 같은 형태로 변경
   - node 최신버전에서는 빌드 실패. node v16.19.0 버전에서 빌드 성공.
+- 2024-01-14
+  - 테이블 css 적용
