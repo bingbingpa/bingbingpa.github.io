@@ -19,11 +19,11 @@
     line-height: $font-lineHeight-m;
   }
 
-  :global(p) {
-    font-size: $font-size-s;
-    line-height: $font-lineHeight-xxl;
-    margin: 0 0 1.5em;
-  }
+  //:global(p) {
+  //  font-size: $font-size-s;
+  //  line-height: $font-lineHeight-xxl;
+  //  margin: 0 0 1.5em;
+  //}
   :global(ul) {
     list-style: circle;
     margin: 0 0 1.5em;
