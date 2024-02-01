@@ -1,164 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 01 Feb 2024 14:40:37 GMT</lastBuildDate><item><title><![CDATA[Reactor 개요와 마블다이어그램]]></title><description><![CDATA[Reactor 특징 리액티브 스트림즈의 구현체인  는 리액티브 프로그래밍을 위한 라이브러리이며,
-Reactor Core 라이브러리는 Spring WebFlux 프레임워크 라이브러리로 포함되어 있다. FluxN Reactor 의 Publisher…]]></description><link>https://bingbingpa.github.io/noname/</link><guid isPermaLink="false">https://bingbingpa.github.io/noname/</guid><pubDate>Sat, 10 Feb 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;Reactor 특징&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;리액티브 스트림즈의 구현체인 &lt;code class=&quot;language-text&quot;&gt;Reactor&lt;/code&gt; 는 리액티브 프로그래밍을 위한 라이브러리이며,
-Reactor Core 라이브러리는 Spring WebFlux 프레임워크 라이브러리로 포함되어 있다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Flux[N]&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Reactor 의 Publisher 타입은 크게 두 가지인데, 그중 한가지이다.&lt;/li&gt;
-&lt;li&gt;Flux[N] 이라는 의미는 N 개의 데이터를 emit 한다는 것인데, 다시 말해서 Flux 는 0 개부터 N개, 즉 무한대의 데이터를 emit 할 수 있는
-Reactor 의 Publisher 이다.&lt;/li&gt;
-&lt;li&gt;Publisher 가 Subscriber 에게 데이터를 전달하는 것을 일컬을 때 데이터를 ‘통지(발행, 게시, 방출)한다’라고 하는데 이런 용어들의 공통점은
-입력으로 들어오는 데이터를 제공한다라는 의미이다.&lt;/li&gt;
-&lt;li&gt;리액티브 관련 문서를 보면 Emit 이라는 용어를 많이 볼 수 있는데 우리말로 해석하면 ‘방출하다’, ‘데이터를 내보내다’ 정도로 이해하면 될 것 같다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Mono[0|1]&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Reactor 의 두번째 Publisher 타입이다. Mono 는 데이터를 한 건도 emit 하지 않거나 단 한건만 emit 하는 단발성
-데이터 emit 에 특화된 Publisher 이다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Backpressure-ready network: Reactor 는 Publisher 로부터 전달 받은 데이터를 처리하는 데 있어 과부하가 걸리지 않도록 제어하는
-Backpressure 를 지원한다.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;우리말로는 ‘배압’이라고 하는데 가스나 액체 등의 흐름을 제어하기 위해 역으로 가해지는 압력을 의미한다.&lt;/li&gt;
-&lt;li&gt;비슷한 맥락으로 Publisher 로부터 전달되는 대량의 데이터를 Subscriber 가 적절하게 처리하기 위한 제어 방법이 바로 Backpressure 이다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 와 Flux&amp;#x3C;T&gt; 의 차이점은?&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;Mono 와 Flux 에 대해 처음 접했을 때 Flux 는 N 개의 데이터를 받을 수 있고, Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 로 리스트로 여러건의
-데이터를 받을 수 있으니까 같은게 아닌가? 라는 생각이 들었다. 차이점을 정리해보면 다음과 같다.&lt;/li&gt;
-&lt;li&gt;Flux 는 각 데이터 항목을 개별적으로 처리하는 반면 Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 는 리스트 전체를 단일 데이터 항목으로 처리한다. 이는 Flux 에서는 각 항목에
-대한 처리가 병렬적이거나 비동기적으로 이루어질 수 있지만, Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 에서는 리스트 전체에 대한 처리가 한 번에 이루어진다는 것을 의미한다.&lt;/li&gt;
-&lt;li&gt;Flux 는 backpressure 를 관리하는데, 이는 subscriber 가 처리할 수 있는 속도에 맞춰 데이터를 제공하는 것을 의미한다. 하지만 Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt;
-는 리스트 전체에 대한 처리가 한 번에 이루어진다.&lt;/li&gt;
-&lt;li&gt;Flux 는 여러 데이터 항목에 대해 여러 개의 onNext 시그널을 발생시키고, 마지막에 onComplete 혹은 onError 시그널을 발생시킨다. 반면 Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt;
-는 단일 데이터 항목(List&amp;#x3C;T&gt;)에 대해서만 onNext 시그널을 발생시키고, 마지막에 onComplete 또는 onError 시그널을 발생시킨다.
-이 부분은 아래의 마블 다이어그램을 보면 조금 더 쉽게 이해 할 수 있다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;요약&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Flux 는 데이터 스트림을 통해 개별적이고 연속적인 데이터 처리를 제공하는 반면, Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 는 단일 단위로 전체 데이터 세트를 처리한다.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Flux 는 T 타입의 데이터가 각각 발행되고, Subscriber 가 이를 받을 수 있고, Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 는 List&amp;#x3C;T&gt; 가 모두 준비되어야지만
-이를 발행하고 Subscriber 가 받을 수 있다.&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;Hello Reactor 코드로 보는 Reactor 의 구성요소&lt;/h3&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-    Flux&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;just&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;Hello&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Reactor&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; it&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;lowercase&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;Locale&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getDefault&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;::&lt;/span&gt;println&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Flux 는 Reactor 에서 Publisher 의 역할을 한다. 예제에서 Flux 대신 Mono 를 사용할 수도 있고, 이때는 하나의 데이터만을 Mono.just() 로
-Publish 할 수도 있다.&lt;/li&gt;
-&lt;li&gt;subscribe 메서드의 파라미터로 전달된 메소드 참조인 ::println 이 Subscriber 역할을 한다.&lt;/li&gt;
-&lt;li&gt;just, map 은 Reactor 에서 지원하는 Operator 메서드인데, just() 는 데이터를 생성해서 제공하는 역할, map() 은 전달받은 데이터를
-가공하는 역할을 한다.&lt;/li&gt;
-&lt;li&gt;크게 보면 &lt;strong&gt;데이터를 생성해서 제공하고(1단계), 데이터를 가공한 후에(2단계) 전달받은 데이터를 처리한다(3단계)는 3단계를 거친다.&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;마블 다이어그램(Marble Diagram)&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;마블은 우리말로 구슬이라는 의미가 있고, 다이어그램은 여러 가지 도형들로 그려진 도표를 뜻한다. 즉, 여러 가지 구슬 모양의 도형으로 구성된 도표로,
-비동기적인 데이터 흐름을 시간의 흐름에 따라 시각적으로 표시한 다이어그램이다. 근데 처음 마블 다이어그램을 보면 이게 뭔가 싶다… 오히려 이것 때문에
-Reactor 에 접근하기가 더 어렵지 않나 개인적으로 생각한다. 그래도 다이어그램을 읽을 수 있으면 삽질을 조금이라도 덜 할 수 있으니 하나하나 살펴보도록 하자.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;마블 다이어그램은 크게 두 개의 타임라인과 Operator 로 구성되어 있다.&lt;/li&gt;
-&lt;li&gt;상단의 타임라인은 Publisher 가 데이터를 emit 하는 타임라인이고, 왼쪽에서 오른쪽으로 시간이 흐르는 것을 의미하기 때문에
-가장 왼쪽에 있는 구슬이 시간상으로 가장 먼저 emit 된 데이터이다.&lt;/li&gt;
-&lt;li&gt;가운데 박스는 Publisher 로부터 전달받은 데이터를 처리하는 Operator 함수이다. Operator 마다 다양한 마블 다이어그램을 가진다.&lt;/li&gt;
-&lt;li&gt;하단의 타임라인은 Operator 함수에서 가공 처리되어 출력으로 내보내진 타임라인이다.&lt;/li&gt;
-&lt;li&gt;| 는 처리되는 요소들의 정상적인 완료를 의미한다.&lt;/li&gt;
-&lt;li&gt;❌ 표시는 에러가 발생해 데이터 처리가 종료되었음을 의미하며, onError Signal 에 해당된다.
-
-  &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/85c57af7056e02809887a9e3edf1b321/ee9b6/marble-diagram.png&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-  
-  &lt;span
-    class=&quot;gatsby-resp-image-wrapper&quot;
-    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
-  &gt;
-    &lt;span
-      class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 43.99999999999999%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAABtUlEQVR42oWSXYvTQBSG++O99d4bRRQF92rBioh3LqKCrI27uq26bbdpN2nqZCYfk7TNJI9nWiKIgi+ciyHn83kz6LqOPrzatkVrQ2UrerXOYYwh1RqlFE5yvPqaXv494B8qsoTtrpZGe8lybBuHrUrKzQqbKZptRds0h9yqqjBZRlnaw3vgZLqfqtKUpqllHXg5ekiwPCf5+oRs+ZZHFwmfohB1/4qfwZrs9A7Tsxcsb0Pi6Jbp9Q9ms2upb44b+jN/n952xJtIpmq0WmNLg8ot1hpMtKZMN6johmi5oCq1FG/BWalzeAKDTNb1oYWPZ2XLnDzPpYE9nBOGIaNRwOdgxGL+nV1dHL4byS+K4m+GdV3TR9e10ihnX7c0O0e1A6Vz1uGcKJyR2kgMKSgErRU0dV3imr0Ylgnz3ZFhD9aKq217BH364QHBzTmri2eo8D0nlzGj1YLbx5esPy6Int9lenKPfBOzFYO+TcaycXps6Pn5k/O8kGmeB5xNhkyiK8z8NVkc8GqqGSdixnCM/rKifPcU82bIRkw5MpRfTK7r+g3/L0eaJCRFTKJimj+49YYeXvwCqUWtqD7NT+8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
-    &gt;
-      &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
-        alt=&quot;marble-diagram&quot;
-        title=&quot;&quot;
-        src=&quot;/static/85c57af7056e02809887a9e3edf1b321/5a190/marble-diagram.png&quot;
-        srcset=&quot;/static/85c57af7056e02809887a9e3edf1b321/772e8/marble-diagram.png 200w,
-/static/85c57af7056e02809887a9e3edf1b321/e17e5/marble-diagram.png 400w,
-/static/85c57af7056e02809887a9e3edf1b321/5a190/marble-diagram.png 800w,
-/static/85c57af7056e02809887a9e3edf1b321/ee9b6/marble-diagram.png 1041w&quot;
-        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
-      /&gt;
-    &lt;/span&gt;
-  &lt;/span&gt;
-  
-  &lt;/a&gt;
-    &lt;/li&gt;
-&lt;li&gt;아래의 다이어그램은 정상적으로 데이터 방출이 완료된 경우와 중간에 cancel 된 경우를 보여준다.&lt;/li&gt;
-&lt;li&gt;왼쪽은 세개의 데이터중 하나의 데이터만 Operator 를 통과 하고 complete signal 이 방출된다는 것을 의미한다.&lt;/li&gt;
-&lt;li&gt;오른쪽은 두 번째 데이터가 들어오고, cancel 신호를 전달하는 경우를 보여준다. 이때 두 번째 데이터만 방출하고, 그 뒤의 데이터는 요청하지 않고
-complete signal 이 방출된다는 것을 의미한다.
-
-  &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/b6feaafe896e8fc3bd743dc32108be5b/d7ba6/two-cases-of-sources.png&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-  
-  &lt;span
-    class=&quot;gatsby-resp-image-wrapper&quot;
-    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
-  &gt;
-    &lt;span
-      class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 42%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABbElEQVR42mVR226DMAzl/79ib/uCSXve5WWTpk1jXaEqawsUSqFQaMidMwepXdtZchI7to997OFKhuHaHi7UieACqzhGnudYr9dI0xRlWUJKCY8xhq7r0LYttFYUbqGNgNQc1lr8F4tD36Kpa3TtHrsqR0v5LtYBelEUwfc/sVwuoZUA6wVe5894er9B+P2Al+UWRb5GtavG7v14gvuPW9SrRxTVBjX5XYda6xHOa5oGRVFQlwcyNQrGwelTSkbagwk1jmKNAVMGJQE6vyKV5LN2gFLqRIeXZRnCMEQU/aDbN9hTEhcS7MAI1VCihBBiDDakjA5FdrU/gFPsOenjyO44zu+QHB+uwGw2Iyp8BNMpJpMJ5vM5giBASH53tzSRIDDHvTHmr+D1RjnnY0FHRUZbXMUJFosFqqoaN3m8izzBdruleEF59rLDc3XF+r7HYDTSusPbaoMsSUafE8enUhJpcIcw+KK3PhVz8guOsmZ7IXR7CAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
-    &gt;
-      &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
-        alt=&quot;two-cases-of-sources&quot;
-        title=&quot;&quot;
-        src=&quot;/static/b6feaafe896e8fc3bd743dc32108be5b/5a190/two-cases-of-sources.png&quot;
-        srcset=&quot;/static/b6feaafe896e8fc3bd743dc32108be5b/772e8/two-cases-of-sources.png 200w,
-/static/b6feaafe896e8fc3bd743dc32108be5b/e17e5/two-cases-of-sources.png 400w,
-/static/b6feaafe896e8fc3bd743dc32108be5b/5a190/two-cases-of-sources.png 800w,
-/static/b6feaafe896e8fc3bd743dc32108be5b/d7ba6/two-cases-of-sources.png 1107w&quot;
-        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
-      /&gt;
-    &lt;/span&gt;
-  &lt;/span&gt;
-  
-  &lt;/a&gt;
-    &lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;Reference&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;스프링으로 시작하는 리액티브 프로그래밍&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://projectreactor.io/docs/core/release/reference/#howtoReadMarbles&quot;&gt;How to read marble diagrams?&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://medium.com/@jshvarts/read-marble-diagrams-like-a-pro-3d72934d3ef5&quot;&gt;Understanding Marble Diagrams for Reactive Streams&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://d2.naver.com/helloworld/2771091&quot;&gt;flatMap 만 사용하기는 그만! Reactor 오퍼레이터 파헤치기&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[reactive streams 개념 정리와 spring webMVC 와 webFlux 코드 비교]]></title><description><![CDATA[…]]></description><link>https://bingbingpa.github.io/blocking-io-and-non-blocking-io/</link><guid isPermaLink="false">https://bingbingpa.github.io/blocking-io-and-non-blocking-io/</guid><pubDate>Fri, 02 Feb 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;리액티브 시스템과 리액티브 프로그래밍&lt;/h3&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 01 Feb 2024 14:42:36 GMT</lastBuildDate><item><title><![CDATA[reactive streams 개념 정리와 spring webMVC 와 webFlux 코드 비교]]></title><description><![CDATA[…]]></description><link>https://bingbingpa.github.io/blocking-io-and-non-blocking-io/</link><guid isPermaLink="false">https://bingbingpa.github.io/blocking-io-and-non-blocking-io/</guid><pubDate>Fri, 02 Feb 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;리액티브 시스템과 리액티브 프로그래밍&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;reactive&lt;/code&gt; 의 사전적 의미에는 ‘반응을 하는’이라는 뜻이 있다. 즉, 어떤 이벤트나 상황이 발생했을 때, 반응을 해서 그에 따라 적절하게 행동하는 것을 의미한다.&lt;/li&gt;
 &lt;li&gt;리액티브 시스템은 &lt;strong&gt;반응을 잘하는 시스템&lt;/strong&gt;이다. 다시 말해서 &lt;strong&gt;클라이언트의 요청에 즉각적으로 응답함으로써 지연 시간을 최소화한다.&lt;/strong&gt;&lt;/li&gt;
@@ -13938,4 +13778,164 @@ Artifact는 지워버리고 group명과 동일하게 하여 기본 패키지명�
 &lt;li&gt;이클립스의 마켓에서 gradle 관련 플러그인을 설치하고 해당 플러그인을 통해 gradle 빌드를 한다.&lt;/li&gt;
 &lt;li&gt;또는 cmd창에서 gradle 명령어로 할 수 도 있다.&lt;/li&gt;
 &lt;li&gt;gradle 프로젝트의 루트 폴더에서 build를 하면 기본적인 설정 끝.&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Reactor 개요와 마블다이어그램]]></title><description><![CDATA[Reactor 특징 리액티브 스트림즈의 구현체인  는 리액티브 프로그래밍을 위한 라이브러리이며,
+Reactor Core 라이브러리는 Spring WebFlux 프레임워크 라이브러리로 포함되어 있다. FluxN Reactor 의 Publisher…]]></description><link>https://bingbingpa.github.io/2024-02-10-noname/</link><guid isPermaLink="false">https://bingbingpa.github.io/2024-02-10-noname/</guid><content:encoded>&lt;h3&gt;Reactor 특징&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;리액티브 스트림즈의 구현체인 &lt;code class=&quot;language-text&quot;&gt;Reactor&lt;/code&gt; 는 리액티브 프로그래밍을 위한 라이브러리이며,
+Reactor Core 라이브러리는 Spring WebFlux 프레임워크 라이브러리로 포함되어 있다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Flux[N]&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Reactor 의 Publisher 타입은 크게 두 가지인데, 그중 한가지이다.&lt;/li&gt;
+&lt;li&gt;Flux[N] 이라는 의미는 N 개의 데이터를 emit 한다는 것인데, 다시 말해서 Flux 는 0 개부터 N개, 즉 무한대의 데이터를 emit 할 수 있는
+Reactor 의 Publisher 이다.&lt;/li&gt;
+&lt;li&gt;Publisher 가 Subscriber 에게 데이터를 전달하는 것을 일컬을 때 데이터를 ‘통지(발행, 게시, 방출)한다’라고 하는데 이런 용어들의 공통점은
+입력으로 들어오는 데이터를 제공한다라는 의미이다.&lt;/li&gt;
+&lt;li&gt;리액티브 관련 문서를 보면 Emit 이라는 용어를 많이 볼 수 있는데 우리말로 해석하면 ‘방출하다’, ‘데이터를 내보내다’ 정도로 이해하면 될 것 같다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Mono[0|1]&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Reactor 의 두번째 Publisher 타입이다. Mono 는 데이터를 한 건도 emit 하지 않거나 단 한건만 emit 하는 단발성
+데이터 emit 에 특화된 Publisher 이다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Backpressure-ready network: Reactor 는 Publisher 로부터 전달 받은 데이터를 처리하는 데 있어 과부하가 걸리지 않도록 제어하는
+Backpressure 를 지원한다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;우리말로는 ‘배압’이라고 하는데 가스나 액체 등의 흐름을 제어하기 위해 역으로 가해지는 압력을 의미한다.&lt;/li&gt;
+&lt;li&gt;비슷한 맥락으로 Publisher 로부터 전달되는 대량의 데이터를 Subscriber 가 적절하게 처리하기 위한 제어 방법이 바로 Backpressure 이다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 와 Flux&amp;#x3C;T&gt; 의 차이점은?&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Mono 와 Flux 에 대해 처음 접했을 때 Flux 는 N 개의 데이터를 받을 수 있고, Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 로 리스트로 여러건의
+데이터를 받을 수 있으니까 같은게 아닌가? 라는 생각이 들었다. 차이점을 정리해보면 다음과 같다.&lt;/li&gt;
+&lt;li&gt;Flux 는 각 데이터 항목을 개별적으로 처리하는 반면 Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 는 리스트 전체를 단일 데이터 항목으로 처리한다. 이는 Flux 에서는 각 항목에
+대한 처리가 병렬적이거나 비동기적으로 이루어질 수 있지만, Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 에서는 리스트 전체에 대한 처리가 한 번에 이루어진다는 것을 의미한다.&lt;/li&gt;
+&lt;li&gt;Flux 는 backpressure 를 관리하는데, 이는 subscriber 가 처리할 수 있는 속도에 맞춰 데이터를 제공하는 것을 의미한다. 하지만 Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt;
+는 리스트 전체에 대한 처리가 한 번에 이루어진다.&lt;/li&gt;
+&lt;li&gt;Flux 는 여러 데이터 항목에 대해 여러 개의 onNext 시그널을 발생시키고, 마지막에 onComplete 혹은 onError 시그널을 발생시킨다. 반면 Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt;
+는 단일 데이터 항목(List&amp;#x3C;T&gt;)에 대해서만 onNext 시그널을 발생시키고, 마지막에 onComplete 또는 onError 시그널을 발생시킨다.
+이 부분은 아래의 마블 다이어그램을 보면 조금 더 쉽게 이해 할 수 있다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;요약&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Flux 는 데이터 스트림을 통해 개별적이고 연속적인 데이터 처리를 제공하는 반면, Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 는 단일 단위로 전체 데이터 세트를 처리한다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Flux 는 T 타입의 데이터가 각각 발행되고, Subscriber 가 이를 받을 수 있고, Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 는 List&amp;#x3C;T&gt; 가 모두 준비되어야지만
+이를 발행하고 Subscriber 가 받을 수 있다.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Hello Reactor 코드로 보는 Reactor 의 구성요소&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    Flux&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;just&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;Hello&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Reactor&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; it&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;lowercase&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;Locale&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getDefault&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;::&lt;/span&gt;println&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Flux 는 Reactor 에서 Publisher 의 역할을 한다. 예제에서 Flux 대신 Mono 를 사용할 수도 있고, 이때는 하나의 데이터만을 Mono.just() 로
+Publish 할 수도 있다.&lt;/li&gt;
+&lt;li&gt;subscribe 메서드의 파라미터로 전달된 메소드 참조인 ::println 이 Subscriber 역할을 한다.&lt;/li&gt;
+&lt;li&gt;just, map 은 Reactor 에서 지원하는 Operator 메서드인데, just() 는 데이터를 생성해서 제공하는 역할, map() 은 전달받은 데이터를
+가공하는 역할을 한다.&lt;/li&gt;
+&lt;li&gt;크게 보면 &lt;strong&gt;데이터를 생성해서 제공하고(1단계), 데이터를 가공한 후에(2단계) 전달받은 데이터를 처리한다(3단계)는 3단계를 거친다.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;마블 다이어그램(Marble Diagram)&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;마블은 우리말로 구슬이라는 의미가 있고, 다이어그램은 여러 가지 도형들로 그려진 도표를 뜻한다. 즉, 여러 가지 구슬 모양의 도형으로 구성된 도표로,
+비동기적인 데이터 흐름을 시간의 흐름에 따라 시각적으로 표시한 다이어그램이다. 근데 처음 마블 다이어그램을 보면 이게 뭔가 싶다… 오히려 이것 때문에
+Reactor 에 접근하기가 더 어렵지 않나 개인적으로 생각한다. 그래도 다이어그램을 읽을 수 있으면 삽질을 조금이라도 덜 할 수 있으니 하나하나 살펴보도록 하자.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;마블 다이어그램은 크게 두 개의 타임라인과 Operator 로 구성되어 있다.&lt;/li&gt;
+&lt;li&gt;상단의 타임라인은 Publisher 가 데이터를 emit 하는 타임라인이고, 왼쪽에서 오른쪽으로 시간이 흐르는 것을 의미하기 때문에
+가장 왼쪽에 있는 구슬이 시간상으로 가장 먼저 emit 된 데이터이다.&lt;/li&gt;
+&lt;li&gt;가운데 박스는 Publisher 로부터 전달받은 데이터를 처리하는 Operator 함수이다. Operator 마다 다양한 마블 다이어그램을 가진다.&lt;/li&gt;
+&lt;li&gt;하단의 타임라인은 Operator 함수에서 가공 처리되어 출력으로 내보내진 타임라인이다.&lt;/li&gt;
+&lt;li&gt;| 는 처리되는 요소들의 정상적인 완료를 의미한다.&lt;/li&gt;
+&lt;li&gt;❌ 표시는 에러가 발생해 데이터 처리가 종료되었음을 의미하며, onError Signal 에 해당된다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/85c57af7056e02809887a9e3edf1b321/ee9b6/marble-diagram.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 43.99999999999999%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAABtUlEQVR42oWSXYvTQBSG++O99d4bRRQF92rBioh3LqKCrI27uq26bbdpN2nqZCYfk7TNJI9nWiKIgi+ciyHn83kz6LqOPrzatkVrQ2UrerXOYYwh1RqlFE5yvPqaXv494B8qsoTtrpZGe8lybBuHrUrKzQqbKZptRds0h9yqqjBZRlnaw3vgZLqfqtKUpqllHXg5ekiwPCf5+oRs+ZZHFwmfohB1/4qfwZrs9A7Tsxcsb0Pi6Jbp9Q9ms2upb44b+jN/n952xJtIpmq0WmNLg8ot1hpMtKZMN6johmi5oCq1FG/BWalzeAKDTNb1oYWPZ2XLnDzPpYE9nBOGIaNRwOdgxGL+nV1dHL4byS+K4m+GdV3TR9e10ihnX7c0O0e1A6Vz1uGcKJyR2kgMKSgErRU0dV3imr0Ylgnz3ZFhD9aKq217BH364QHBzTmri2eo8D0nlzGj1YLbx5esPy6Int9lenKPfBOzFYO+TcaycXps6Pn5k/O8kGmeB5xNhkyiK8z8NVkc8GqqGSdixnCM/rKifPcU82bIRkw5MpRfTK7r+g3/L0eaJCRFTKJimj+49YYeXvwCqUWtqD7NT+8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;marble-diagram&quot;
+        title=&quot;&quot;
+        src=&quot;/static/85c57af7056e02809887a9e3edf1b321/5a190/marble-diagram.png&quot;
+        srcset=&quot;/static/85c57af7056e02809887a9e3edf1b321/772e8/marble-diagram.png 200w,
+/static/85c57af7056e02809887a9e3edf1b321/e17e5/marble-diagram.png 400w,
+/static/85c57af7056e02809887a9e3edf1b321/5a190/marble-diagram.png 800w,
+/static/85c57af7056e02809887a9e3edf1b321/ee9b6/marble-diagram.png 1041w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;아래의 다이어그램은 정상적으로 데이터 방출이 완료된 경우와 중간에 cancel 된 경우를 보여준다.&lt;/li&gt;
+&lt;li&gt;왼쪽은 세개의 데이터중 하나의 데이터만 Operator 를 통과 하고 complete signal 이 방출된다는 것을 의미한다.&lt;/li&gt;
+&lt;li&gt;오른쪽은 두 번째 데이터가 들어오고, cancel 신호를 전달하는 경우를 보여준다. 이때 두 번째 데이터만 방출하고, 그 뒤의 데이터는 요청하지 않고
+complete signal 이 방출된다는 것을 의미한다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/b6feaafe896e8fc3bd743dc32108be5b/d7ba6/two-cases-of-sources.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 42%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABbElEQVR42mVR226DMAzl/79ib/uCSXve5WWTpk1jXaEqawsUSqFQaMidMwepXdtZchI7to997OFKhuHaHi7UieACqzhGnudYr9dI0xRlWUJKCY8xhq7r0LYttFYUbqGNgNQc1lr8F4tD36Kpa3TtHrsqR0v5LtYBelEUwfc/sVwuoZUA6wVe5894er9B+P2Al+UWRb5GtavG7v14gvuPW9SrRxTVBjX5XYda6xHOa5oGRVFQlwcyNQrGwelTSkbagwk1jmKNAVMGJQE6vyKV5LN2gFLqRIeXZRnCMEQU/aDbN9hTEhcS7MAI1VCihBBiDDakjA5FdrU/gFPsOenjyO44zu+QHB+uwGw2Iyp8BNMpJpMJ5vM5giBASH53tzSRIDDHvTHmr+D1RjnnY0FHRUZbXMUJFosFqqoaN3m8izzBdruleEF59rLDc3XF+r7HYDTSusPbaoMsSUafE8enUhJpcIcw+KK3PhVz8guOsmZ7IXR7CAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;two-cases-of-sources&quot;
+        title=&quot;&quot;
+        src=&quot;/static/b6feaafe896e8fc3bd743dc32108be5b/5a190/two-cases-of-sources.png&quot;
+        srcset=&quot;/static/b6feaafe896e8fc3bd743dc32108be5b/772e8/two-cases-of-sources.png 200w,
+/static/b6feaafe896e8fc3bd743dc32108be5b/e17e5/two-cases-of-sources.png 400w,
+/static/b6feaafe896e8fc3bd743dc32108be5b/5a190/two-cases-of-sources.png 800w,
+/static/b6feaafe896e8fc3bd743dc32108be5b/d7ba6/two-cases-of-sources.png 1107w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Reference&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;스프링으로 시작하는 리액티브 프로그래밍&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://projectreactor.io/docs/core/release/reference/#howtoReadMarbles&quot;&gt;How to read marble diagrams?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://medium.com/@jshvarts/read-marble-diagrams-like-a-pro-3d72934d3ef5&quot;&gt;Understanding Marble Diagrams for Reactive Streams&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://d2.naver.com/helloworld/2771091&quot;&gt;flatMap 만 사용하기는 그만! Reactor 오퍼레이터 파헤치기&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item></channel></rss>
