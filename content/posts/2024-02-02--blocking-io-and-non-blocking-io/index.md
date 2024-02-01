@@ -79,6 +79,28 @@ public interface Processor<T, R> extends Subscriber<T>, Publisher<R> {
 - Processor 의 경우 별도로 구현해야 하는 메소드가 없다. 다른 인터페이스와 다른 점은 Subscriber 인터페이스와 Publisher 인터페이스를 상속한다는 것이다.
 이는 Processor 가 Publisher 와 Subscriber 의 기능을 모두 가지고 있기 때문이다.
 
+### 리액티브 스트림즈 관련 용어 정의
+- Signal
+  - Publisher 와 Subscriber 간에 주고받는 상호작용을 의미한다.
+  - onSubscribe, onNext, onComplete, onError, request 또는 cancel 메서드를 Signal 이라고 표현한다.
+  - **onSubscribe, onNext, onComplete, onError 메서드는 Subscriber 인터페이스에 정의되지만 이 메서드들을 실제 호출해서
+  사용하는 주체는 Publisher 이기 때문에 Publisher 가 Subscriber 에게 보내는 Signal 이라고 볼 수 있다.**
+  - **request 와 cancel 메서드는 Subscription 인터페이스 코드에 정의되지만 이 메서드들을 실제로 사용하는 주체는
+  Subscriber 이므로 Subscriber 가 Publisher 에게 보내는 Signal 이라고 볼 수 있다.**
+- Demand
+  - Subscriber 가 Publisher 에게 요청하는 데이터로, Publisher 가 아직 Subscriber 에게 전달하지 않는 Subscriber 가 요청한 데이터를 말한다.
+- Emit
+  - 우리말로 해석하면 '방출하다'의 의미인데, '데이터를 내보내다'정도로 이해하면 될 것 같다.
+  - Publisher 가 emit 하는 Signal 중에서 데이터를 전달하기 위한 onNext Signal 을 데이터를 emit 한다고 표현하기도 한다.
+
+### webFlux + Reactor VS webFlux + coroutine
+- 웹플럭스를 공부하다보니 코틀린을 사용하면 코루틴을 사용하면 Reactor 를 안써도 되지 않을까?라는 생각이 들었다. Reactor 가 지원하는 Operator 가
+많긴 하지만 코드를 작성하다보면 콜백지옥에 빠지는걸 많이 봤기 때문에...
+- 이것 저것 검색을 해보니 단일 비동기 처리를 하거나 코드의 가독성이 중요하다면 코루틴을, 복잡한 데이터 스트림을 다루거나 Backpressure 가 필요하다면
+리액터를 추천한다는 내용이 많았다.
+  - [배민광고리스팅 개발기(feat. 코프링과 DSL 그리고 코루틴)](https://techblog.woowahan.com/7349/)
+- 그리고 지금 회사는 코틀린을 사용하지만 자바를 사용하는 회사가 훨씬 많을테니... 리액터를 공부해두는게 더 나을 것 같다는 생각이 든다.
+
 ### spring webMVC 와 webFlux 비교
 - webMvc(Blocking I/O)
   - api 는 테스트를 위해 요청시 5초 딜레이를 주도록 설정
@@ -250,11 +272,10 @@ class SpringReactiveBranchOfficeApplication {
 ~~~
 
 - webFlux 는 비동기 방식으로 동작하기 때문에 약 5초안에 모든 요청이 완료된다.
-- webMvc 의 로그를 보면 모두 main 스레드에서 수행되지만 webFlux 에서는 각각의 다른 스레드에서 로그가 찍히는걸 볼 수 있다.
-이 부분은 책을 조금 더 공부하면서 정리해보도록 해야겠다.
+- webMvc 의 로그를 보면 모두 main 스레드에서 수행되지만 webFlux 에서는 각 요청이 별도의 스레드에서 실행되는것을 알 수 있다.
 ![web-flux](web-flux.png)
 
-# Blocking I/O 와 Non-Blocking I/O 의 특징
+### Blocking I/O 와 Non-Blocking I/O 의 특징
 - Blocking I/O
   - 작업 스레드의 작업이 종료될 때까지 요청 스레드가 차단된다.
   - 스레드가 차단되는 문제를 보완하기 위해 멀티스레딩 기법을 사용할 수 있다.
@@ -269,6 +290,6 @@ class SpringReactiveBranchOfficeApplication {
     block 을 사용했던 적이 있다. 클라이언트까지 비동기로 처리를 해야 책에 있는 것처럼 제대로 된 효과를 얻을 수 있을 것 같다고 생각한다.
 
 
-- Reference
+### Reference
   - 스프링으로 시작하는 리액티브 프로그래밍
 - [사용한 샘플 코드](https://github.com/bingbingpa/dev-book/tree/main/spring-reactive/src/main/kotlin/me/bingbingpa/ch03)
