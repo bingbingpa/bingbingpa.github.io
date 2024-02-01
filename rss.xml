@@ -1,4 +1,164 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 19 Jan 2024 13:20:48 GMT</lastBuildDate><item><title><![CDATA[reactive streams 개념 정리와 spring webMVC 와 webFlux 코드 비교]]></title><description><![CDATA[…]]></description><link>https://bingbingpa.github.io/blocking-io-and-non-blocking-io/</link><guid isPermaLink="false">https://bingbingpa.github.io/blocking-io-and-non-blocking-io/</guid><pubDate>Sun, 14 Jan 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;리액티브 시스템과 리액티브 프로그래밍&lt;/h3&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 01 Feb 2024 14:40:37 GMT</lastBuildDate><item><title><![CDATA[Reactor 개요와 마블다이어그램]]></title><description><![CDATA[Reactor 특징 리액티브 스트림즈의 구현체인  는 리액티브 프로그래밍을 위한 라이브러리이며,
+Reactor Core 라이브러리는 Spring WebFlux 프레임워크 라이브러리로 포함되어 있다. FluxN Reactor 의 Publisher…]]></description><link>https://bingbingpa.github.io/noname/</link><guid isPermaLink="false">https://bingbingpa.github.io/noname/</guid><pubDate>Sat, 10 Feb 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;Reactor 특징&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;리액티브 스트림즈의 구현체인 &lt;code class=&quot;language-text&quot;&gt;Reactor&lt;/code&gt; 는 리액티브 프로그래밍을 위한 라이브러리이며,
+Reactor Core 라이브러리는 Spring WebFlux 프레임워크 라이브러리로 포함되어 있다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Flux[N]&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Reactor 의 Publisher 타입은 크게 두 가지인데, 그중 한가지이다.&lt;/li&gt;
+&lt;li&gt;Flux[N] 이라는 의미는 N 개의 데이터를 emit 한다는 것인데, 다시 말해서 Flux 는 0 개부터 N개, 즉 무한대의 데이터를 emit 할 수 있는
+Reactor 의 Publisher 이다.&lt;/li&gt;
+&lt;li&gt;Publisher 가 Subscriber 에게 데이터를 전달하는 것을 일컬을 때 데이터를 ‘통지(발행, 게시, 방출)한다’라고 하는데 이런 용어들의 공통점은
+입력으로 들어오는 데이터를 제공한다라는 의미이다.&lt;/li&gt;
+&lt;li&gt;리액티브 관련 문서를 보면 Emit 이라는 용어를 많이 볼 수 있는데 우리말로 해석하면 ‘방출하다’, ‘데이터를 내보내다’ 정도로 이해하면 될 것 같다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Mono[0|1]&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Reactor 의 두번째 Publisher 타입이다. Mono 는 데이터를 한 건도 emit 하지 않거나 단 한건만 emit 하는 단발성
+데이터 emit 에 특화된 Publisher 이다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Backpressure-ready network: Reactor 는 Publisher 로부터 전달 받은 데이터를 처리하는 데 있어 과부하가 걸리지 않도록 제어하는
+Backpressure 를 지원한다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;우리말로는 ‘배압’이라고 하는데 가스나 액체 등의 흐름을 제어하기 위해 역으로 가해지는 압력을 의미한다.&lt;/li&gt;
+&lt;li&gt;비슷한 맥락으로 Publisher 로부터 전달되는 대량의 데이터를 Subscriber 가 적절하게 처리하기 위한 제어 방법이 바로 Backpressure 이다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 와 Flux&amp;#x3C;T&gt; 의 차이점은?&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Mono 와 Flux 에 대해 처음 접했을 때 Flux 는 N 개의 데이터를 받을 수 있고, Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 로 리스트로 여러건의
+데이터를 받을 수 있으니까 같은게 아닌가? 라는 생각이 들었다. 차이점을 정리해보면 다음과 같다.&lt;/li&gt;
+&lt;li&gt;Flux 는 각 데이터 항목을 개별적으로 처리하는 반면 Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 는 리스트 전체를 단일 데이터 항목으로 처리한다. 이는 Flux 에서는 각 항목에
+대한 처리가 병렬적이거나 비동기적으로 이루어질 수 있지만, Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 에서는 리스트 전체에 대한 처리가 한 번에 이루어진다는 것을 의미한다.&lt;/li&gt;
+&lt;li&gt;Flux 는 backpressure 를 관리하는데, 이는 subscriber 가 처리할 수 있는 속도에 맞춰 데이터를 제공하는 것을 의미한다. 하지만 Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt;
+는 리스트 전체에 대한 처리가 한 번에 이루어진다.&lt;/li&gt;
+&lt;li&gt;Flux 는 여러 데이터 항목에 대해 여러 개의 onNext 시그널을 발생시키고, 마지막에 onComplete 혹은 onError 시그널을 발생시킨다. 반면 Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt;
+는 단일 데이터 항목(List&amp;#x3C;T&gt;)에 대해서만 onNext 시그널을 발생시키고, 마지막에 onComplete 또는 onError 시그널을 발생시킨다.
+이 부분은 아래의 마블 다이어그램을 보면 조금 더 쉽게 이해 할 수 있다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;요약&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Flux 는 데이터 스트림을 통해 개별적이고 연속적인 데이터 처리를 제공하는 반면, Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 는 단일 단위로 전체 데이터 세트를 처리한다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Flux 는 T 타입의 데이터가 각각 발행되고, Subscriber 가 이를 받을 수 있고, Mono&amp;#x3C;List&amp;#x3C;T&gt;&gt; 는 List&amp;#x3C;T&gt; 가 모두 준비되어야지만
+이를 발행하고 Subscriber 가 받을 수 있다.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Hello Reactor 코드로 보는 Reactor 의 구성요소&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    Flux&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;just&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;Hello&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Reactor&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; it&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;lowercase&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;Locale&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getDefault&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;::&lt;/span&gt;println&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Flux 는 Reactor 에서 Publisher 의 역할을 한다. 예제에서 Flux 대신 Mono 를 사용할 수도 있고, 이때는 하나의 데이터만을 Mono.just() 로
+Publish 할 수도 있다.&lt;/li&gt;
+&lt;li&gt;subscribe 메서드의 파라미터로 전달된 메소드 참조인 ::println 이 Subscriber 역할을 한다.&lt;/li&gt;
+&lt;li&gt;just, map 은 Reactor 에서 지원하는 Operator 메서드인데, just() 는 데이터를 생성해서 제공하는 역할, map() 은 전달받은 데이터를
+가공하는 역할을 한다.&lt;/li&gt;
+&lt;li&gt;크게 보면 &lt;strong&gt;데이터를 생성해서 제공하고(1단계), 데이터를 가공한 후에(2단계) 전달받은 데이터를 처리한다(3단계)는 3단계를 거친다.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;마블 다이어그램(Marble Diagram)&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;마블은 우리말로 구슬이라는 의미가 있고, 다이어그램은 여러 가지 도형들로 그려진 도표를 뜻한다. 즉, 여러 가지 구슬 모양의 도형으로 구성된 도표로,
+비동기적인 데이터 흐름을 시간의 흐름에 따라 시각적으로 표시한 다이어그램이다. 근데 처음 마블 다이어그램을 보면 이게 뭔가 싶다… 오히려 이것 때문에
+Reactor 에 접근하기가 더 어렵지 않나 개인적으로 생각한다. 그래도 다이어그램을 읽을 수 있으면 삽질을 조금이라도 덜 할 수 있으니 하나하나 살펴보도록 하자.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;마블 다이어그램은 크게 두 개의 타임라인과 Operator 로 구성되어 있다.&lt;/li&gt;
+&lt;li&gt;상단의 타임라인은 Publisher 가 데이터를 emit 하는 타임라인이고, 왼쪽에서 오른쪽으로 시간이 흐르는 것을 의미하기 때문에
+가장 왼쪽에 있는 구슬이 시간상으로 가장 먼저 emit 된 데이터이다.&lt;/li&gt;
+&lt;li&gt;가운데 박스는 Publisher 로부터 전달받은 데이터를 처리하는 Operator 함수이다. Operator 마다 다양한 마블 다이어그램을 가진다.&lt;/li&gt;
+&lt;li&gt;하단의 타임라인은 Operator 함수에서 가공 처리되어 출력으로 내보내진 타임라인이다.&lt;/li&gt;
+&lt;li&gt;| 는 처리되는 요소들의 정상적인 완료를 의미한다.&lt;/li&gt;
+&lt;li&gt;❌ 표시는 에러가 발생해 데이터 처리가 종료되었음을 의미하며, onError Signal 에 해당된다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/85c57af7056e02809887a9e3edf1b321/ee9b6/marble-diagram.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 43.99999999999999%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAABtUlEQVR42oWSXYvTQBSG++O99d4bRRQF92rBioh3LqKCrI27uq26bbdpN2nqZCYfk7TNJI9nWiKIgi+ciyHn83kz6LqOPrzatkVrQ2UrerXOYYwh1RqlFE5yvPqaXv494B8qsoTtrpZGe8lybBuHrUrKzQqbKZptRds0h9yqqjBZRlnaw3vgZLqfqtKUpqllHXg5ekiwPCf5+oRs+ZZHFwmfohB1/4qfwZrs9A7Tsxcsb0Pi6Jbp9Q9ms2upb44b+jN/n952xJtIpmq0WmNLg8ot1hpMtKZMN6johmi5oCq1FG/BWalzeAKDTNb1oYWPZ2XLnDzPpYE9nBOGIaNRwOdgxGL+nV1dHL4byS+K4m+GdV3TR9e10ihnX7c0O0e1A6Vz1uGcKJyR2kgMKSgErRU0dV3imr0Ylgnz3ZFhD9aKq217BH364QHBzTmri2eo8D0nlzGj1YLbx5esPy6Int9lenKPfBOzFYO+TcaycXps6Pn5k/O8kGmeB5xNhkyiK8z8NVkc8GqqGSdixnCM/rKifPcU82bIRkw5MpRfTK7r+g3/L0eaJCRFTKJimj+49YYeXvwCqUWtqD7NT+8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;marble-diagram&quot;
+        title=&quot;&quot;
+        src=&quot;/static/85c57af7056e02809887a9e3edf1b321/5a190/marble-diagram.png&quot;
+        srcset=&quot;/static/85c57af7056e02809887a9e3edf1b321/772e8/marble-diagram.png 200w,
+/static/85c57af7056e02809887a9e3edf1b321/e17e5/marble-diagram.png 400w,
+/static/85c57af7056e02809887a9e3edf1b321/5a190/marble-diagram.png 800w,
+/static/85c57af7056e02809887a9e3edf1b321/ee9b6/marble-diagram.png 1041w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;아래의 다이어그램은 정상적으로 데이터 방출이 완료된 경우와 중간에 cancel 된 경우를 보여준다.&lt;/li&gt;
+&lt;li&gt;왼쪽은 세개의 데이터중 하나의 데이터만 Operator 를 통과 하고 complete signal 이 방출된다는 것을 의미한다.&lt;/li&gt;
+&lt;li&gt;오른쪽은 두 번째 데이터가 들어오고, cancel 신호를 전달하는 경우를 보여준다. 이때 두 번째 데이터만 방출하고, 그 뒤의 데이터는 요청하지 않고
+complete signal 이 방출된다는 것을 의미한다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/b6feaafe896e8fc3bd743dc32108be5b/d7ba6/two-cases-of-sources.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 42%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABbElEQVR42mVR226DMAzl/79ib/uCSXve5WWTpk1jXaEqawsUSqFQaMidMwepXdtZchI7to997OFKhuHaHi7UieACqzhGnudYr9dI0xRlWUJKCY8xhq7r0LYttFYUbqGNgNQc1lr8F4tD36Kpa3TtHrsqR0v5LtYBelEUwfc/sVwuoZUA6wVe5894er9B+P2Al+UWRb5GtavG7v14gvuPW9SrRxTVBjX5XYda6xHOa5oGRVFQlwcyNQrGwelTSkbagwk1jmKNAVMGJQE6vyKV5LN2gFLqRIeXZRnCMEQU/aDbN9hTEhcS7MAI1VCihBBiDDakjA5FdrU/gFPsOenjyO44zu+QHB+uwGw2Iyp8BNMpJpMJ5vM5giBASH53tzSRIDDHvTHmr+D1RjnnY0FHRUZbXMUJFosFqqoaN3m8izzBdruleEF59rLDc3XF+r7HYDTSusPbaoMsSUafE8enUhJpcIcw+KK3PhVz8guOsmZ7IXR7CAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;two-cases-of-sources&quot;
+        title=&quot;&quot;
+        src=&quot;/static/b6feaafe896e8fc3bd743dc32108be5b/5a190/two-cases-of-sources.png&quot;
+        srcset=&quot;/static/b6feaafe896e8fc3bd743dc32108be5b/772e8/two-cases-of-sources.png 200w,
+/static/b6feaafe896e8fc3bd743dc32108be5b/e17e5/two-cases-of-sources.png 400w,
+/static/b6feaafe896e8fc3bd743dc32108be5b/5a190/two-cases-of-sources.png 800w,
+/static/b6feaafe896e8fc3bd743dc32108be5b/d7ba6/two-cases-of-sources.png 1107w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Reference&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;스프링으로 시작하는 리액티브 프로그래밍&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://projectreactor.io/docs/core/release/reference/#howtoReadMarbles&quot;&gt;How to read marble diagrams?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://medium.com/@jshvarts/read-marble-diagrams-like-a-pro-3d72934d3ef5&quot;&gt;Understanding Marble Diagrams for Reactive Streams&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://d2.naver.com/helloworld/2771091&quot;&gt;flatMap 만 사용하기는 그만! Reactor 오퍼레이터 파헤치기&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[reactive streams 개념 정리와 spring webMVC 와 webFlux 코드 비교]]></title><description><![CDATA[…]]></description><link>https://bingbingpa.github.io/blocking-io-and-non-blocking-io/</link><guid isPermaLink="false">https://bingbingpa.github.io/blocking-io-and-non-blocking-io/</guid><pubDate>Fri, 02 Feb 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;리액티브 시스템과 리액티브 프로그래밍&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;reactive&lt;/code&gt; 의 사전적 의미에는 ‘반응을 하는’이라는 뜻이 있다. 즉, 어떤 이벤트나 상황이 발생했을 때, 반응을 해서 그에 따라 적절하게 행동하는 것을 의미한다.&lt;/li&gt;
 &lt;li&gt;리액티브 시스템은 &lt;strong&gt;반응을 잘하는 시스템&lt;/strong&gt;이다. 다시 말해서 &lt;strong&gt;클라이언트의 요청에 즉각적으로 응답함으로써 지연 시간을 최소화한다.&lt;/strong&gt;&lt;/li&gt;
@@ -68,7 +228,7 @@
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 74.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAABYlAAAWJQFJUiTwAAACJklEQVR42pVT2ZKbQBDb//+6ZJNK1ngB29zXcBsw4I7U2Gv7LUtV13CNWi1p3sZxlCLPpaqMzMssvK7X638Vr3m+SFmWUhS59H0nb23TyK/3H+I4tlwuF/nuNc+z2J97+f3+U9I0lrf7y2VZSE2u64plfWKy6rcZze7/TZiqNAbMjNRVKedzDzKTNlDAaZrE905yOroSYA1DT3wfa+BLgDUOAzEYyRQFpCkBVkgSR5LGsf7D6rr2AchRfd8T17XFPx0VhPeHgyPHg6sjHXHv4Rsb+95R4iiUKAoUOM8zaSDdF+D5fMYGGx9DydJEDBgMfa8ic5w8S9HEA/MAYJ6CRrgnYAzACqZ0XfcA7LGJDBJ0LdAtwSh0jUDsvqWglB6blmXWop5al1mYFJKi5go4kKHrgF2MbkaSJJaA2vio0Fc5AtwnUaT6GZOrIazKlCjzypAPzt5SXciobetvx2cYhgdDArrOpiFHbZr6EV4UR2NUpmmrcRw0Rsu8jb+uyysgfyA7o+MU21jUME91PZ0OcNpCrA7qvmPv1X0+h5Cjwv8k9QQ4woBMUmj3ae10w976EGv3V3YffxSMZtEYOlrXlTQohpvZpGntc2wY7HEYbyO+asN3OTbYtqWy3GvLpqvOrzhdLyNTs6LIJGNMUGmSaGD5jiaRVXGLD52lFMXNPB4KglL7L4Zt2+q4rOxWNIiHnUGnpjyzLRorGBpxZI5Z1/XtSFYK+A+8bnn1JAnepgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 74.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAABYlAAAWJQFJUiTwAAACJ0lEQVR42pVT2ZLaQBDj/78u2aSSxWAb8H2Nb2xjm47UwAJvWVd1ja9RqyXNZhxHKfJcqsrIvMzC63q9/lfxmueLlGUpRZFL33eyaZtGfn38EMex5XK5yHeveZ7F3u/l98dPSdNYNo+Xy7KQmlzXFcv6wmTVbzOaPf6bMFVpDJgZqatSzuceZCZtoIDTNInvneR0dCXAGoae+D7WwJcAaxwGYjCSKQpIUwKskCSOJI1j/YfVde0TkKP6vieua4t/OioI7w8HR44HFyPtsDri4Rsb+95R4iiUKAoUOM8zaSDdF+D5fMYGGx9DydJEDBgMfa8ic5w8S9HEA/MAYJ6CRrgnYAzACqZ0XfcE7LGJDBJ0LdAtwSh0jUDsfktBKT02LcusRT21LrMwKSRFzRVwIEPXAbsY3YwkSSwBtfFRoa9yBLhPokj1MyZXQ1iVKVHmnSEfnJ2lupBR29bfjs8wDE+GBHSdm4YctWnqZ3hRHI1RmaZbjeOgMVrm2/jrurwD8geyMzpOcRuLGuaprqfTAU5biNVB3XfsnbrP5xByVPifpF4ARxiQSQrt9tZWN+ysT7G2f2X7+UfBaBaNoaN1XUmDYriZTZrWvsaGwR6H8T7iuzZ8l2ODbVsqy6Nu2XTV+RWn621kalYUmWSMCSpNEg0s39Eksiru8aGzlKK4m8dDQVBq/8WwbVsdl5XdiwbxsDPo1JRntkVjBUMjjswx67q+H8lKAf8BwJV59p3LegUAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -159,6 +319,46 @@
 &lt;ul&gt;
 &lt;li&gt;Processor 의 경우 별도로 구현해야 하는 메소드가 없다. 다른 인터페이스와 다른 점은 Subscriber 인터페이스와 Publisher 인터페이스를 상속한다는 것이다.
 이는 Processor 가 Publisher 와 Subscriber 의 기능을 모두 가지고 있기 때문이다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;리액티브 스트림즈 관련 용어 정의&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Signal&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Publisher 와 Subscriber 간에 주고받는 상호작용을 의미한다.&lt;/li&gt;
+&lt;li&gt;onSubscribe, onNext, onComplete, onError, request 또는 cancel 메서드를 Signal 이라고 표현한다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;onSubscribe, onNext, onComplete, onError 메서드는 Subscriber 인터페이스에 정의되지만 이 메서드들을 실제 호출해서
+사용하는 주체는 Publisher 이기 때문에 Publisher 가 Subscriber 에게 보내는 Signal 이라고 볼 수 있다.&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;request 와 cancel 메서드는 Subscription 인터페이스 코드에 정의되지만 이 메서드들을 실제로 사용하는 주체는
+Subscriber 이므로 Subscriber 가 Publisher 에게 보내는 Signal 이라고 볼 수 있다.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Demand&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Subscriber 가 Publisher 에게 요청하는 데이터로, Publisher 가 아직 Subscriber 에게 전달하지 않는 Subscriber 가 요청한 데이터를 말한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Emit&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;우리말로 해석하면 ‘방출하다’의 의미인데, ‘데이터를 내보내다’정도로 이해하면 될 것 같다.&lt;/li&gt;
+&lt;li&gt;Publisher 가 emit 하는 Signal 중에서 데이터를 전달하기 위한 onNext Signal 을 데이터를 emit 한다고 표현하기도 한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;webFlux + Reactor VS webFlux + coroutine&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;웹플럭스를 공부하다보니 코틀린을 사용하면 코루틴을 사용하면 Reactor 를 안써도 되지 않을까?라는 생각이 들었다. Reactor 가 지원하는 Operator 가
+많긴 하지만 코드를 작성하다보면 콜백지옥에 빠지는걸 많이 봤기 때문에…&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;이것 저것 검색을 해보니 단일 비동기 처리를 하거나 코드의 가독성이 중요하다면 코루틴을, 복잡한 데이터 스트림을 다루거나 Backpressure 가 필요하다면
+리액터를 추천한다는 내용이 많았다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://techblog.woowahan.com/7349/&quot;&gt;배민광고리스팅 개발기(feat. 코프링과 DSL 그리고 코루틴)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;그리고 지금 회사는 코틀린을 사용하지만 자바를 사용하는 회사가 훨씬 많을테니… 리액터를 공부해두는게 더 나을 것 같다는 생각이 든다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3&gt;spring webMVC 와 webFlux 비교&lt;/h3&gt;
 &lt;ul&gt;
@@ -269,7 +469,7 @@
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 11.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAaElEQVR42j2MSQ6AIBAE+QVwwhgSNsOO//9ZO0PUw6Rm6xJzTtRawRxjwEWLHCqMMTioUinQIUC1BkV/mmZJPGPE7H1nG9069d57iLXWXjBZ6pJFif0XXixhIQU+qSSy8ObMm2dhzhkP5oY8ch2cPM8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 11.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAaUlEQVR42j2MSQqAMBAE/YV6ikggm2SP//9Z2xPUw1CzdS29d+ScIWytwXiN6DKUUjhYISXs1mErBRv/ds4reXqPXuvMFt4qe2stljHGXAhFaoJG8vUXXiJxFDLwSVdShLdk3rwIY4x4AOYKPHHoGH+xAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -368,8 +568,7 @@
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;ul&gt;
 &lt;li&gt;webFlux 는 비동기 방식으로 동작하기 때문에 약 5초안에 모든 요청이 완료된다.&lt;/li&gt;
-&lt;li&gt;webMvc 의 로그를 보면 모두 main 스레드에서 수행되지만 webFlux 에서는 각각의 다른 스레드에서 로그가 찍히는걸 볼 수 있다.
-이 부분은 책을 조금 더 공부하면서 정리해보도록 해야겠다.
+&lt;li&gt;webMvc 의 로그를 보면 모두 main 스레드에서 수행되지만 webFlux 에서는 각 요청이 별도의 스레드에서 실행되는것을 알 수 있다.
 
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
@@ -385,7 +584,7 @@
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 11.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAb0lEQVR42h2OSw7EMAhDe4uyHlVK2vwTyP1v5jFZWEjYfnCpKlprmHNirYXwPUihIMaIUgpSzhAXfWFOWsfdO37vi8k5uB9jHHnn2nuj03CYmiKkBzlUZEKMxw6QYKEvzAmLN+XARZiZHZg/VGvFHw20POs9DHyhAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 11.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAcUlEQVR42h2OSw7EIAxDe4tmtqNK0OEbINz/Zh6HhRUptl9yrbXQWsMYA3NOhN+DFApijCilIOUMcdEX5j6t4+4d3/fF4FTuVfXIO9feG52Gw5YthPQgh4pMiPHYARIs9IU56YqbZQdOwszswPyhWiv+DgY86yXHFqIAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -405,7 +604,7 @@
   &lt;/a&gt;
     &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1&gt;Blocking I/O 와 Non-Blocking I/O 의 특징&lt;/h1&gt;
+&lt;h3&gt;Blocking I/O 와 Non-Blocking I/O 의 특징&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;Blocking I/O&lt;/p&gt;
@@ -427,12 +626,10 @@
 block 을 사용했던 적이 있다. 클라이언트까지 비동기로 처리를 해야 책에 있는 것처럼 제대로 된 효과를 얻을 수 있을 것 같다고 생각한다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Reference&lt;/p&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Reference&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;스프링으로 시작하는 리액티브 프로그래밍&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://github.com/bingbingpa/dev-book/tree/main/spring-reactive/src/main/kotlin/me/bingbingpa/ch03&quot;&gt;사용한 샘플 코드&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[스프링 Async multi config 설정하기]]></title><description><![CDATA[@Async 기본으로 사용하기 main 클래스에 @EnableAsync 추가해준다. 비동기로 처리하고자 하는 메소드에 @Async 를 붙여주면 끝! 문제점 @Async 의 기본설정인 SimpleAsyncTaskExecutor…]]></description><link>https://bingbingpa.github.io/spring-async-config/</link><guid isPermaLink="false">https://bingbingpa.github.io/spring-async-config/</guid><pubDate>Sun, 06 Feb 2022 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;@Async 기본으로 사용하기&lt;/h3&gt;
 &lt;ul&gt;
@@ -503,7 +700,7 @@ block 을 사용했던 적이 있다. 클라이언트까지 비동기로 처리�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 30%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA90lEQVR42m2QWXKEQAxDuUsgEDKTDL1vwP1PpUhN1qp8uMpdLT9bGlpr2PcdtVa02mDSHckn2IeHDx7HcUCaOSU8sR/Zj9TP3uN1XfHCCiHgPE8kaoYvYKmF0IYt3hCdgA6OQ4eWfQIFmrh4bH+BXkAuSyliyDmjlIIYI3LK2MIN3gaYdwvrbP+TZuHQxP6Z4Inv2doOXFnOue4wcEkHqgRMBD78BdzeDAyH9CcrC8UCCahajPkGWnstFnhQI9sarKXS8h3Bxm5ZVnqGyux3horgnwzF6MDK/HRFyYWWL6Asew7JSqZm5tDIXlfK+sxrfiz7fpRcfgBHEsIVVaUrygAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 30%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAPdJREFUeNptkFlyhEAMQ7lLIBAykwy9b8D9T6VITdaqfLjKXS0/Wxpaa9j3HbVWtNpg0h3JJ9iHhw8ex3FAmjklPLEf2Y/Uz97jdV3xwgoh4DxPJGqGL2CphdCGLd4QnYAOjkOHln0CBZq4eGx/gV5ALkspYsg5o5SCGCNyytjCDd4GmHcL62z/k2bh0MT+meCJ79naDlxZzrnuMHBJB6oETAQ+/AXc3gwMh/QnKwvFAgmoWoz5Blp7LRZ4UCPbGqyl0vIdwcZuWVZ6hsrsd4aK4J8MxejAyvx0RcmFli+gLHsOyUqmZubQyF5XyvrMa34s+36UXH4ARxLCFVWlK8oAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -636,7 +833,7 @@ block 을 사용했던 적이 있다. 클라이언트까지 비동기로 처리�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 31%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAxklEQVR42qXQWw6CMBQEUBajJhj6sNSWPoD9r2q8U1Dhz8SPye3z5LZdzhm1VrCmlOGiwuQTrLYYxxHzPCPI3jUlXGR8LaWltxb3vodSCm9jGAZ0R7DkIqD+gG50f4JlAyNB84D3Hosg8RdQ9rTWZ5BxQe2gRYgB67IgCNZAOfcFzQfkfcYYg45d8Vms25P3P5QOY4xY1/XUIVHm2GGtczOsrHW8lOQwK2P9gKcLW4chtK69rN9kTPQ2TS290Q3kv00y5zmCL+FbwciDtLHdAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 31%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAMZJREFUeNql0FsOgjAUBFAWoyYY+rDUlj6A/a9qvFNQ4c/Ej8nt8+S2Xc4ZtVawppThosLkE6y2GMcR8zwjyN41JVxkfC2lpbcW976HUgpvYxgGdEew5CKg/oBudH+CZQMjQfOA9x6LIPEXUPa01meQcUHtoEWIAeuyIAjWQDn3Bc0H5H3GGIOOXfFZrNuT9z+UDmOMWNf11CFR5thhrXMzrKx1vJTkMCtj/YCnC1uHIbSuvazfZEz0Nk0tvdEN5L9NMuc5gi/hW8HIg7Sx3QAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -671,7 +868,7 @@ block 을 사용했던 적이 있다. 클라이언트까지 비동기로 처리�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 26.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA8klEQVR42j2QWW6EMBBEucsYZiQ+sI0XvJsouf+RKtUoyofVpqrc3Y8lpYxSMlKp+PIOQwcY49BaRa0V+3livS6spWBN6akfreGoF94vepKT45zDImJvDbV3/MSAaSKs9ZhzYI6J3Xu8GFb0FetrDLyNQaQ+mJFG930zPxFCwBJi5JSIyOmNU/PhoLVFygmJ2m4tNgY3brIxu6ULn+PASV18aZJyfu6W2iIflVvm+ofMDR/k3ojdsLsTSlDpr8zKlm8ie+LJdtJIcnI8t14ymzUahcJ38P/Ig2ijDyI7KGYU/acSXZADH3fe5ZcN4kpeGv4Ccx2kTCbopsoAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 26.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAPJJREFUeNo9kFluhDAQRLnLGGYkPrCNF7ybKLn/kSrVKMqH1aaq3N2PJaWMUjJSqfjyDkMHGOPQWkWtFft5Yr0urKVgTempH63hqBfeL3qSk+OcwyJibw21d/zEgGkirPWYc2COid17vBhW9BXrawy8jUGkPpiRRvd9Mz8RQsASYuSUiMjpjVPz4aC1RcoJidpuLTYGN26yMbulC5/jwEldfGmScn7ultoiH5Vb5vqHzA0f5N6I3bC7E0pQ6a/MypZvInviyXbSSHJyPLdeMps1GoXCd/D/yINoow8iOyhmFP2nEl2QAx933uWXDeJKXhr+AnMdpEwm6KbKAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -706,7 +903,7 @@ block 을 사용했던 적이 있다. 클라이언트까지 비동기로 처리�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 18.999999999999996%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAmElEQVR42m1QWw6EIBDzOCKEp6Ig4N7/Ut0ZNpJo9qPplMm0DdO2bVgJNuxQNsBaB601pJQdy7L8xXt/66m1hlorarvQrk+fU0rI59mZA51zFGQHlFIQQjyMhuFJhzlnMJdSUJhZE45974Yxxm6e0tFnY8wIeTefYvCw2iKEgEDH87piJhbEkprwO5vc7W4z7/3Q/EW/vcEXNjZ99/r/EvYAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 18.999999999999996%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAJhJREFUeNptUFsOhCAQ8zgihKeiIODe/1LdGTaSaPaj6ZTJtA3Ttm1YCTbsUDbAWgetNaSUHcuy/MV7f+uptYZaK2q70K5Pn1NKyOfZmQOdcxRkB5RSEEI8jIbhSYc5ZzCXUlCYWROOfe+GMcZuntLRZ2PMCHk3n2LwsNoihIBAx/O6YiYWxJKa8Dub3O1uM+/90PxFv73BFzY2fff6/xL2AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1232,7 +1429,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 23%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA1klEQVR42pWPXW7CMBCEfZNSe9dxAkhAVZFATMiPA6RSe//TTNcJCITEAw+fvDsaeWfU4bjCZ+Fh2wDuz+BjA+4CaL2BJguTpG+hvF/iw2YwqZAtoOdLmefQ0eBEsw7a8IQcGIkaJ3fifkWV1QqmOMDVDSjPYYsSvPegbQFbt6Dv7ZS67eStwb6CWX+Bw0m0MGrRy6cL7DBAVfUGedWiDD128kE//GDXdLj8/sGLWceUMfXIYmxhblr2sF9nVUrlGTmwS+HERFKVkgxWapMYX9Z7qjppDv+Hs5iTQoDD5AAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 23%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAANZJREFUeNqVj11uwjAQhH2TUnvXcQJIQFWRQEzIjwOkUnv/00zXCQiExAMPn7w7Gnln1OG4wmfhYdsA7s/gYwPuAmi9gSYLk6Rvobxf4sNmMKmQLaDnS5nn0NHgRLMO2vCEHBiJGid34n5FldUKpjjA1Q0oz2GLErz3oG0BW7eg7+2Uuu3krcG+gll/gcNJtDBq0cunC+wwQFX1BnnVogw9dvJBP/xg13S4/P7Bi1nHlDH1yGJsYW5a9rBfZ1VK5Rk5sEvhxERSlZIMVmqTGF/We6o6aQ7/h7OYk0KAw+QAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1277,7 +1474,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 40.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABA0lEQVR42n1Sy3LDIAz0//9XOk19S2+++OoxTxuDAT82gpo06dTRzA4Sj5VWouKMoes6KKWw73vGtm0v/rquD6T4HSofQnastTDGYJosnHMYxzHH8zxjWZZTPCdLqLz3CERa1zWu1098325omgYflwu+KG7bNidc4i/Bf8RFVRVjzJeUVhBSgkkNpoaMnnxOe5LO8rkQ0FofSqYXJMJkVSJLzPNAEgU9YgM4NxlK0EOhYWnf6RGe5Cc1Z5YrLIRWD3BUlZMKExdEJPNqek6glcvc29RT+1TRKSHjHD1NnJMsT20I1Jd4IGRElH6HY5DlFxT/ITlZmvJkfvpRkrzD3+9SCO9+5W3fWzgiGAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 40.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAQNJREFUeNp9UstywyAM9P//VzpNfUtvvvjqMU8bgwE/NoKaNOnU0cwOEo+VVqLijKHrOiilsO97xrZtL/66rg+k+B0qH0J2rLUwxmCaLJxzGMcxx/M8Y1mWUzwnS6i89whEWtc1rtdPfN9uaJoGH5cLvihu2zYnXOIvwX/ERVUVY8yXlFYQUoJJDaaGjJ58TnuSzvK5ENBaH0qmFyTCZFUiS8zzQBIFPWIDODcZStBDoWFp3+kRnuQnNWeWKyyEVg9wVJWTChMXRCTzanpOoJXL3NvUU/tU0Skh4xw9TZyTLE9tCNSXeCBkRJR+h2OQ5RcU/yE5WZryZH76UZK8w9/vUgjvfuVt31s4IhgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1312,7 +1509,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 54%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAABlklEQVR42n1S7W6jMBDk/Z+szZ9TdWnvToQQIBCwIUDBhO/p7qauUFrdSsOyNoxnvOuUZQmlFKqqwrquWJblR/De/8AxzzMcYwwY4zjKot3cfsgxTZN8w/kRTGTh8OlMGAQBjscjfN+XHEURwjCE67qyNgzDl4NHdds1hx9d1wmJ/dnzPDngdDrBOxykbttWSIe+R/8JrlnV1pHzeA82lmXFxDbodKlp/255Rk9Ed9Lhm2KHnphocR/n2HkxXim/hApx3SEzI3LT43K54HDwEJ3PiJMELV3RMIzobje5Q9K3IaRimBf8ijSe/RRu3sAvDc5Nj+C9R0LEKsvEfl3XaJoGNyIypgVPCE8H98AqddjObZyxzyrs01Lwmlb4fSnxpt8Rlg2uRSGjxciInBWnaQqd50RYf5FyCKEZJjxHOZ7CXPLuXGDHdVTA1RUpTKXrCdmN41jAxEppUWwhY3NXOOGPqvCXFP0j2PymagQFKSBrxfWKq6CE1jkSUqm0lu4zGXecbTv37toOrz/g820zCfzj42Db+ABlqk6E39Q/IwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 54%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAZZJREFUeNp9Uu1uozAQ5P2frM2fU3Vp706EECAQsCFAwYTv6e6mrlBa3UrDsjaMZ7zrlGUJpRSqqsK6rliW5Ufw3v/AMc8zHGMMGOM4yqLd3H7IMU2TfMP5EUxk4fDpTBgEAY7HI3zflxxFEcIwhOu6sjYMw5eDR3XbNYcfXdcJif3Z8zw54HQ6wTscpG7bVkiHvkf/Ca5Z1daR83gPNpZlxcQ26HSpaf9ueUZPRHfS4Ztih56YaHEf59h5MV4pv4QKcd0hMyNy0+NyueBw8BCdz4iTBC1d0TCM6G43uUPStyGkYpgX/Io0nv0Ubt7ALw3OTY/gvUdCxCrLxH5d12iaBjciMqYFTwhPB/fAKnXYzm2csc8q7NNS8JpW+H0p8abfEZYNrkUho8XIiJwVp2kKnedEWH+RcgihGSY8Rzmewlzy7lxgx3VUwNUVKUyl6wnZjeNYwMRKaVFsIWNzVzjhj6rwlxT9I9j8pmoEBSkga8X1iqughNY5ElKptJbuMxl3nG079+7aDq8/4PNtMwn84+Ng2/gAZapOhN/UPyMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1345,7 +1542,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 85.50000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsTAAALEwEAmpwYAAACIElEQVR42q2UW6+TQBDH+f4fxPPiiw9GEx9MjJp4OefB3sw55bawFNhdWgqld/7ObKm2WmuaSPLvwuzMb2eGKY4xBnmeoygK7Ha7P7Tf72+Ss1wusd1u0bbAnn7YuONNNtDV0rper7HZbM7EMZfkrFYrG5DEAqkUKFQGlSYkiUTGSNPMQq9l23aJ2Ay3dNpqvcGLt19w9+o9nr18h+dvPuHu9Ud8+PwAEQbW8VpWfFjbVeTs2EgBT1mNUcKqMJRzDGSFxebgdAy6JgaynHZ/CPpfl9ML+3hMHuEq32oYj9AXQ4gyhmd8fAt6GMXfac+Dq12MszGe0idEtJ+rw3RUVYW6ZtVwvgb3uPcf0Jv0MTYu4kwiTELk0xwTkyKQAWQuyR4j0am1l02JGUlEAkIIKKUwn88t2HFDH1ESIVXkrBWmxQxaacyKKYwp4I5d+B75iIiymaLQxu43dQOjNZIksaAlTQtPjCNEbB1YPOSGSuBBr6gEQ4DBYADP8zCZTKC7P0GWZSjLEpoSyLLcgo5ygjC0p7ATO+eUPgdzgKJDXIKlaWoD2Y8lu5X9At+3+4vF4lByRD2QknoUx1Z8f/rMgcf7Ux3tvNYEa5rGQh3RAX8HHeGnh5z6MEh3PeRqVr96KP4aeAl0BqT28DO/LIbxd+EMeIsYqKjnHMu9+wmMouifmV2SBaoDkGeQPzAWGAQBGHqLuKqIsjRGd7009qUw8AfigAKyoRlL6AAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 85.50000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAiBJREFUeNqtlFuvk0AQx/n+H8Tz4osPRhMfTIyaeDnnwd7MOeW2sBTYXVoKpXf+zmyptlprmkjy78LszG9nhimOMQZ5nqMoCux2uz+03+9vkrNcLrHdbtG2wJ5+2LjjTTbQ1dK6Xq+x2WzOxDGX5KxWKxuQxAKpFChUBpUmJIlExkjTzEKvZdt2idgMt3Taar3Bi7dfcPfqPZ69fIfnbz7h7vVHfPj8ABEG1vFaVnxY21Xk7NhIAU9ZjVHCqjCUcwxkhcXm4HQMuiYGspx2fwj6X5fTC/t4TB7hKt9qGI/QF0OIMoZnfHwLehjF32nPg6tdjLMxntInRLSfq8N0VFWFumbVcL4G97j3H9Cb9DE2LuJMIkxC5NMcE5MikAFkLskeI9GptZdNiRlJRAJCCCilMJ/PLdhxQx9REiFV5KwVpsUMWmnMiimMKeCOXfge+YiIspmi0MbuN3UDozWSJLGgJU0LT4wjRGwdWDzkhkrgQa+oBEOAwWAAz/MwmUyguz9BlmUoyxKaEsiy3IKOcoIwtKewEzvnlD4Hc4CiQ1yCpWlqA9mPJbuV/QLft/uLxeJQckQ9kJJ6FMdWfH/6zIHH+1Md7bzWBGuaxkId0QF/Bx3hp4ec+jBIdz3kala/eij+GngJdAak9vAzvyyG8XfhDHiLGKio5xzLvfsJjKLon5ldkgWqA5BnkD8wFhgEARh6i7iqiLI0Rne9NPalMPAH4oACsqEZS+gAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1410,7 +1607,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 80%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB1ElEQVR42o1Ui3KEIAz0/z+y7cy9PBUE3w8kzeaA0961U2YyKMiyu0nMTmqhShlyzpH3PsUwjGSb9hDjNMvetm0c/hhhPZsWR0ppKsuK+n6QAxhd35OuDSldk7UNLcua9n4b2M+2zZHWmvL8TjUD4BYMgGsGU9rIhdM8p0PvIgE6BlBKUX4vaJqmdFvbdcIuBljKuR3AnlkCXNZVmCDathU/sAHJhkEQDftnjKV1dUcP/TPiejaOI92LggaeMR6AROM4Mcue+mEQ+WC89xHTT9k4m8GbPM/p4/OLs63Txw2zLSolazrIxnPByTPWvlRFApwZsKwqulyvcsAHL8AOWUaibJBes2y8G9MQvH+RD8mQdL3dhAVkpjpkC5q2E+COI86oR1gAZS5URGQngMuyCENI2mcMh4VRiMjQhHcQwDcAd27blQ17YYxhUJWqPnookgMALhQgXkNM3DUzk8EMwJRlSLtzDSLTigs8Mhy5JluW/JDbHbroXYfEyHzolPP5QkVRJl8gEUkCczz/1SUHwLJlwNqmbMbCBkMU9yMGeX9m9ljUKSC57le6XG50Op+ln6MseFilOjQC+K+fg/cb+9Qxy1paDLfLz4HLyTaPtoN//5X8DQGk38ewAnFhAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 80%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAdRJREFUeNqNVItyhCAM9P8/su3MvTwVBN8PJM3mgNPetVNmMijIsrtJzE5qoUoZcs6R9z7FMIxkm/YQ4zTL3rZtHP4YYT2bFkdKaSrLivp+kAMYXd+Trg0pXZO1DS3LmvZ+G9jPts2R1pry/E41A+AWDIBrBlPayIXTPKdD7yIBOgZQSlF+L2iapnRb23XCLgZYyrkdwJ5ZAlzWVZgg2rYVP7AByYZBEA37Z4yldXVHD/0z4no2jiPdi4IGnjEegETjODHLnvphEPlgvPcR00/ZOJvBmzzP6ePzi7Ot08cNsy0qJWs6yMZzwckz1r5URQKcGbCsKrpcr3LABy/ADllGomyQXrNsvBvTELx/kQ/JkHS93YQFZKY6ZAuathPgjiPOqEdYAGUuVERkJ4DLsghDSNpnDIeFUYjI0IR3EMA3AHdu25UNe2GMYVCVqj56KJIDAC4UIF5DTNw1M5PBDMCUZUi7cw0i04oLPDIcuSZblvyQ2x266F2HxMh86JTz+UJFUSZfIBFJAnM8/9UlB8CyZcDapmzGwgZDFPcjBnl/ZvZY1Ckgue5XulxudDqfpZ+jLHhYpTo0Avivn4P3G/vUMctaWgy3y8+By8k2j7aDf/+V/A0BpN/HsAJxYQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1450,7 +1647,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 83.50000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsTAAALEwEAmpwYAAACSUlEQVR42n2UyW4TQRCG+115Ch4GcUfiGSJx4AASgjjBGcwQz770MvtiB/FT1bNkLBwOn6q3qvq7ehFxJnGMUhzDxOLFGWTZXKGGLF5gnjNVA3FwH/Hl6y123/e42z/gfu8gydUFMZHqEjk5ZaZCxnbDMq4osYjSHM7PX0ilRtX1NkuuiwlTQJrSthNVWKeUA86kmz4nVKRU6KJCIhWk0sg5aNOiG0Z0/Yi2H9BQEqb9D9s1Ig8f4O4/48fBxd1uB9/3Eccx4ihClmUwRkNJiSxNkRJKSUg5kec52RxGa9uua1LYdB2UMXagaRo7WFWVZRgGPD094Xw+r5xOp5VxZu2PI4SignIdfc+D1gZlWZIqQ0qUVceJsiy3lse2CVnAQk1wQtFRnUxRIkkSu90gCOyW2eHZebLstFW4ZVFPh1IgpHodj0cLB+TArJLVsiq2murEbVbKba5vQb7LVheE46X45vhU+Aw91axt6ZSprqxuqeliF7Zb3cI1F6mu6aVIBL5nlYVhiIgUh2Fg22Ew2akcod3Bcz+Ya22sahYjeDthFNsFyyKeYJbM2z7bvu+tGoa3eXHKml5DlKTT3ZsxNMZZl8x8+lwvbvP945Kw8zCMa+AluIiTDM7hkS72Aa7r2utTzMGYtU3BmvlqTAcwXBzGeigtZcPvEX/OA4q6gaKnKO0b3lJay3O85hr8B/CzFbd+hFdvb/D6/Ud49Iz455gefP0P9jPQ10noc+AvTAT0Kbz5cI93nxzIqkTZdJSxvQ7PvQTNV22PvxtgBRrarrBTAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 83.50000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAklJREFUeNp9lMluE0EQhvtdeQoeBnFH4hkiceAAEoI4wRnMEM++9DL7YgfxU9WzZCwcDp+qt6r6u3oRcSZxjFIcw8TixRlk2VyhhixeYJ4zVQNxcB/x5estdt/3uNs/4H7vIMnVBTGR6hI5OWWmQsZ2wzKuKLGI0hzOz19IpUbV9TZLrosJU0Ca0rYTVVinlAPOpJs+J1SkVOiiQiIVpNLIOWjTohtGdP2Ith/QUBKm/Q/bNSIPH+DuP+PHwcXdbgff9xHHMeIoQpZlMEZDSYksTZESSklIOZHnOdkcRmvbrmtS2HQdlDF2oGkaO1hVlWUYBjw9PeF8Pq+cTqeVcWbtjyOEooJyHX3Pg9YGZVmSKkNKlFXHibIst5bHtglZwEJNcELRUZ1MUSJJErvdIAjsltnh2Xmy7LRVuGVRT4dSIKR6HY9HCwfkwKyS1bIqtprqxG1Wym2ub0G+y1YXhOOl+Ob4VPgMPdWsbemUqa6sbqnpYhe2W93CNReprumlSAS+Z5WFYYiIFIdhYNthMNmpHKHdwXM/mGttrGoWI3g7YRTbBcsinmCWzNs+277vrRqGt3lxyppeQ5Sk092bMTTGWZfMfPpcL27z/eOSsPMwjGvgJbiIkwzO4ZEu9gGu69rrU8zBmLVNwZr5akwHMFwcxnooLWXD7xF/zgOKuoGipyjtG95SWstzvOYa/AfwsxW3foRXb2/w+v1HePSM+OeYHnz9D/Yz0NdJ6HPgL0wE9Cm8+XCPd58cyKpE2XSUsb0Oz70EzVdtj78bYAUa2q6wUwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1489,7 +1686,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 88.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsTAAALEwEAmpwYAAACAUlEQVR42pWUe0/bMBTF8/2/1SZNCKYVtEmbCpSJpE3zch52HnbS6uzchKIgWsj++Cm16xyfe3NsL0wUhG2Uwg9j7Pn7eReNyDhOFaIoRlZqpMXHKK7xtNYoqwqNtXDDACv0PRlGxjnn4D6h5ztV3cBr2hb7IMDucYM2z+Eo/oayhOMaEbXc9ByOtF0HPy3htU0DdXWN4MtXRNc3yFd3UKtbPifUjxXqn7/QixO6uOSu7SxyXdMhBYvNBvF6DRNsUT37qHwfmq7NdgvtB2h34SR4qVwigkoEW5ZT1QaJUlCVRmEM3OGA/kgOEzK+VK4ggp11KA17WNc1LOsX2x3FZQMZv+vTGWen+ZpVZiqHaI0ln3vhI0fzTTpunmYKPttlTD05NCzT8CniS8XmiKg7HlE1rcSmQZokiHY7KMZGRAVZtIgX0fz2DkGY8KMUBRLGJfh2hZSTCcULzklPl3Jg+Os4QZpXdCiuHh7RMS6OERn4p3DK1yXmGWxYaslTIuEeT8opJvI8lfI/PdSasUtSJkSOHj+G9DCJ47HUeRyWYO0UbKkqyvUUmziOkGUZtJzdMaj9uOiVhb0041emQEh3Qbjn9VOik50P0y3zykK3A0W9inEJ7x9geOcNRQlLp90MyxOwtJf7sWRGJb75jmZ9j/7pL9zm6S2//2B46dFnyBX3D2Deax8da4nwAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 88.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAgFJREFUeNqVlHtP2zAUxfP9v9UmTQimFbRJmwqUiaRN83Iedh520urs3ISiIFrI/vgptescn3tzbC9MFIRtlMIPY+z5+3kXjcg4ThWiKEZWaqTFxyiu8bTWKKsKjbVwwwAr9D0ZRsY55+A+oec7Vd3Aa9oW+yDA7nGDNs/hKP6GsoTjGhG13PQcjrRdBz8t4bVNA3V1jeDLV0TXN8hXd1CrWz4n1I8V6p+/0IsTurjkru0scl3TIQWLzQbxeg0TbFE9+6h8H5quzXYL7Qdod+EkeKlcIoJKBFuWU9UGiVJQlUZhDNzhgP5IDhMyvlSuIIKddSgNe1jXNSzrF9sdxWUDGb/r0xlnp/maVWYqh2iNJZ974SNH8006bp5mCj7bZUw9OTQs0/Ap4kvF5oioOx5RNa3EpkGaJIh2OyjGRkQFWbSIF9H89g5BmPCjFAUSxiX4doWUkwnFC85JT5dyYPjrOEGaV3Qorh4e0TEujhEZ+Kdwytcl5hlsWGrJUyLhHk/KKSbyPJXyPz3UmrFLUiZEjh4/hvQwieOx1HkclmDtFGypKsr1FJs4jpBlGbSc3TGo/bjolYW9NONXpkBId0G45/VTopOdD9Mt88pCtwNFvYpxCe8fYHjnDUUJS6fdDMsTsLSX+7FkRiW++Y5mfY/+6S/c5uktv/9geOnRZ8gV9w9g3msfHWuJ8AAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1528,7 +1725,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 63.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAABMElEQVR42p2TW3OCMBCF8/9/WbGgUMEXageK5kJAuYtPp9k48NAyTvHhmzDL5szZS1h0CLHb+dhudwiCD7w5Dt5dF67nwTMxPwjgbDbIshOUyiGkglxCKQghwcJDhP1+D9/3EUYROOfgQpifwn5PJ4nluTbky2htc9j5fJ6D2gTHccTtdvvDMAxPoZy6rsGKosD1erW0bTsn9H2/CrrTkOCjHIWyLK0g0XXdosvnjOC6BJtKJYckSo4n8TUOO4PUFzAppe3f2p4toS8VWMpLO0kSJXdT2WvoDI0hERrsePxCHMdI0xRJkmByTH39L7l67OFnmoFRv5qmQVVVL1Pbs8ZJ5g9B2p9h6Fevyu+hqMIMZdo/Gjst9cvc7yirxrwULnAyr+U7y+an9grUe2Hu/wDD9NjlJrnwqQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 63.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAATBJREFUeNqdk1tzgjAQhfP/f1mxoFDBF2oHiuZCQLmLT6fZOPDQMk7x4Zswy+bM2UtYdAix2/nYbncIgg+8OQ7eXReu58EzMT8I4Gw2yLITlMohpIJcQikIIcHCQ4T9fg/f9xFGETjn4EKYn8J+TyeJ5bk25MtobXPY+Xyeg9oEx3HE7Xb7wzAMT6Gcuq7BiqLA9Xq1tG07J/R9vwq605DgoxyFsiytINF13aLL54zgugSbSiWHJEqOJ/E1DjuD1BcwKaXt39qeLaEvFVjKSztJEiV3U9lr6AyNIREa7Hj8QhzHSNMUSZJgckx9/S+5euzhZ5qBUb+apkFVVS9T27PGSeYPQdqfYehXr8rvoajCDGXaPxo7LfXL3O8oq8a8FC5wMq/lO8vmp/YK1Hth7v8Aw/TY5Sa58KkAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1566,7 +1763,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 17.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAyElEQVR42o2Jy06DQABF+XaLtFRSaNH6SvyN/oYL3VRbH7Ugj8JCHQaccpwZExfGhTc5uS/nUymEEJqGpvnG5L/6D792KSVlVbFKdzh+dMpgHOGHc4aTOQd+yOHRFC+YEZ1c6jzD1f8wiInPrmw3hMcXTOJz/U1xRyGeFzBwxzh3m5zVNuMpLbh9TLXnJHnJNit4eEntbrohLSrNzn7PScaryWVNsrxnvViwub7B4R/qNR+totv31KKlVXs61VO+SbuJTlG/S+tfMGka2cZVeoIAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 17.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAMhJREFUeNqNictOg0AARfl2i7RUUmjR+kr8jf6GC91UWx+1II/CQh0GnHKcGRMXxoU3Obkv51MphBCahqb5xuS/+g+/diklZVWxSnc4fnTKYBzhh3OGkzkHfsjh0RQvmBGdXOo8w9X/MIiJz65sN4THF0zic/1NcUchnhcwcMc4d5uc1TbjKS24fUy15yR5yTYreHhJ7W66IS0qzc5+z0nGq8llTbK8Z71YsLm+weEf6jUfraLb99SipVV7OtVTvkm7iU5Rv0vrXzBpGtnGVXqCAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1602,7 +1799,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 42%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABMElEQVR42nWQzU7CQBSF5/3fwChQCAWKkqiJCx+AsMEUKZUC7ZCWn+n0Z21hc7wzUlJBFl/OOT33TpPLdhuOKArBOddst1vKG3wXBQ6HA1HgeDxqivO3a8qO7fYCaZoiyzJIKZEkifZxHGMv9lqlTCFEfPISglQIob3O5FWn3mG+7+MWQeBjtfLhzhdYLJaUgxtzAc2tEIYhmArl4H9ewTlxo6vuRFEENvfU30uWFX/B8rL7mz3Pw3q9BotjiTzP6HaSbqDul2pV5Fn6mxOp+7LLNJU52ld3V8qsp2c8GCaMdg8da4BGq4t6q3Oie9b+4AUts49akzJh9gZomhZqtNtotHF3b+D17R1s9OHAnrqYfXkYjqcax51fYX/OKtmDPXEwIe+ObQzrBka9R/Bwgx+wzjdbg0WXJwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 42%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAATBJREFUeNp1kM1OwkAUhef938AoUAgFipKoiQsfgLDBFCmVAu2Qlp/p9GdtYXO8M1JSQRZfzjk9906Ty3YbjigKwTnXbLdbyht8FwUOhwNR4Hg8aorzt2vKju32AmmaIssySCmRJIn2cRxjL/ZapUwhRHzyEoJUCKG9zuRVp95hvu/jFkHgY7Xy4c4XWCyWlIMbcwHNrRCGIZgK5eB/XsE5caOr7kRRBDb31N9LlhV/wfKy+5s9z8N6vQaLY4k8z+h2km6g7pdqVeRZ+psTqfuyyzSVOdpXd1fKrKdnPBgmjHYPHWuARquLeqtzonvW/uAFLbOPWpMyYfYGaJoWarTbaLRxd2/g9e0dbPThwJ66mH15GI6nGsedX2F/zirZgz1xMCHvjm0M6wZGvUfwcIMfsM43W4NFlycAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1637,7 +1834,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 116.00000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAXCAYAAAALHW+jAAAACXBIWXMAAAsTAAALEwEAmpwYAAABrklEQVR42qVVCZKCMBDk/19UURBF5JD7ht7pKC67igqmaipHJZ3uORLN81ysVmv40lvWAaZpIs8LHA4WojiG57ow9yZs+wg/CGDt9wijCGx93ysbN82VA6fTSZlpGlivN+CaY9vY6FtstzqOx6NcuoKub2DLvikwBZhlGXzfRxiGiIVRXddo21ZZJeOqqq5j6WlN09wBn7U7YCQykiRRB6IoVPOpNoC9ZHgFjJEKqOt5yo9jaWP7SDIBYwGj5PHGKWlT7Q9gmqaIpWcUn7H6HFAkMij0YVmWCOSCVNZfSXvD0LtHOZc5+7btlksOJGEJQsn3tED/MpqTgHme43x2lB9pvGCp/xQg/WYYBi6XCxzHQdd1D76bxZABOUup9X2nwP4fns2QkimVDKNb6dW3khuzXZSHyS2xi6KQSslUDX8NyCgPLN/V7SSg5/3mIQG5xhT6uvQGyayWQnxbj56qWQyf+ZDjaoHsh1pu2gaM/BCQuemj0oalx7cwEb9RKtkyhXgZbU60tcAP5EM6yAdlySfkY7fbqnkusimd/pyTj1pZlCqilEwA9dCq12aZ5B9fJgyH2k28EwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 116.00000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAXCAYAAAALHW+jAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAa5JREFUeNqlVQmSgjAQ5P9fVFEQReSQ+4be6Sguu4oKpmoqRyWd7jkSzfNcrFZr+NJb1gGmaSLPCxwOFqI4hue6MPcmbPsIPwhg7fcIowhsfd8rGzfNlQOn00mZaRpYrzfgmmPb2OhbbLc6jsejXLqCrm9gy74pMAWYZRl830cYhoiFUV3XaNtWWSXjqqquY+lpTdPcAZ+1O2AkMpIkUQeiKFTzqTaAvWR4BYyRCqjrecqPY2lj+0gyAWMBo+TxxilpU+0PYJqmiKVnFJ+x+hxQJDIo9GFZlgjkglTWX0l7w9C7RzmXOfu27ZZLDiRhCULJ97RA/zKak4B5nuN8dpQfabxgqf8UIP1mGAYulwscx0HXdQ++m8WQATlLqfV9p8D+H57NkJIplQyjW+nVt5Ibs12Uh8ktsYuikErJVA1/DcgoDyzf1e0koOf95iEBucYU+rr0BsmslkJ8W4+eqlkMn/mQ42qB7IdabtoGjPwQkLnpo9KGpce3MBG/USrZMoV4GW1OtLXAD+RDOsgHZckn5GO326p5LrIpnf6ck49aWZQqopRMAPXQqtdmmeQfXyYMh9pNvBMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1684,7 +1881,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 23.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAsElEQVR42pVQyQrCMBCd1KbZNy0I1gT6/x/5zKQeLHjQwzBheGtIOo1LjqAQQCmDlgVEBBJ07H8nJA2pCOLj6JPF/XGDMQZaa8zz/Ltgaw0ppXcqMfa6rtj3HbU+UVvF9tw6JiLnDB88lFIIvVGMEaUUlGsZ5kMjl9wBy8nFWDMIPN77IcKmjGUyp2bxITqMEqyzB19pBSnPlZb+j9M0jSSip/begXF8d/3Ngpz4W+UXKsJr/dKz+uMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 23.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAALBJREFUeNqVUMkKwjAQndSm2TctCNYE+v8f+cykHix40MMwYXhrSDqNS46gEEApg5YFRAQSdOx/JyQNqQji4+iTxf1xgzEGWmvM8/y7YGsNKaV3KjH2uq7Y9x21PlFbxfbcOiYi5wwfPJRSCL1RjBGlFJRrGeZDI5fcAcvJxVgzCDze+yHCpoxlMqdm8SE6jBKsswdfaQUpz5WW/o/TNI0koqf23oFxfHf9zYKc+FvlFyrCa/3Ss/rjAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1721,7 +1918,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 86%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAB/UlEQVR42o1UTY/TMBDN/78i8QsQZw4ckeCOhIS4gVZamraOnebLjuM4TvKYcbatly1dLD2NPXHGb96MndXG45dw2CmDx90Bv/MjtHUYxgnWERI7PME6v/kTXz94OD8hG9yIuuvR6R5N20V02sD0NkKbHr0d4nzzb+uzj79rY8Bx5nlB1luL/FBgLxSkVBCiiFaVJZQqoy2khFQKRyFwOB7j96KQtFdAlB1yqdH2I3hkTFdUFrIZsCwrbo11XS/gPcuybOA1/bJh82fD4LDf7yHpRJ4zdbY2weg9wjxHnI9ck4OQHJb5iRjKklI6oWpalFUdocoqoiB/2xn4aSaELQCSQEkWzDJz44j94UjaiCjqNc2Xad+S4Oy/BJyIYV030FpjpODnTTOlx5rc0/NmQNboVLeYKf9ADKcwR2zz63r0Idp/jUvAEEIshLn01rXHeK7J8qGsHwe8xfAcLBaFfxJU4dhzaus/loD7rqqqaLtO3005bams9ytauiWGNGzaFsz4Xi++mvIyB7QUiBnu8pwYnmJxuOJ/C39vXNvGz8TQ0H3UpBXpR5rxdUxvzXInzRcaagecpMFsJ4CKaKkgjm+Lc/Eh4Plr2j3T8KF5xNvv7/Hm2zt8+PmJgq5UzRD7MDzZ/x0x5YNW+PjwhfAZX4sfz9kk2lzSuoH00fgDLa8toO22i/YAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 86%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAf1JREFUeNqNVE2P0zAQzf+/IvELEGcOHJHgjoSEuIFWWpq2jp3my47jOE7ymHG2rZctXSw9jT1xxm/ejJ3VxuOXcNgpg8fdAb/zI7R1GMYJ1hESOzzBOr/5E18/eDg/IRvciLrr0ekeTdtFdNrA9DZCmx69HeJ882/rs4+/a2PAceZ5QdZbi/xQYC8UpFQQoohWlSWUKqMtpIRUCkchcDge4/eikLRXQJQdcqnR9iN4ZExXVBayGbAsK26NdV0v4D3LsmzgNf2yYfNnw+Cw3+8h6USeM3W2NsHoPcI8R5yPXJODkByW+YkYypJSOqFqWpRVHaHKKqIgf9sZ+GkmhC0AkkBJFswyc+OI/eFI2ogo6jXNl2nfkuDsvwSciGFdN9BaY6Tg500zpcea3NPzZkDW6FS3mCn/QAynMEds8+t69CHaf41LwBBCLIS59Na1x3iuyfKhrB8HvMXwHCwWhX8SVOHYc2rrP5aA+66qqmi7Tt9NOW2prPcrWrolhjRs2hbM+F4vvpryMge0FIgZ7vKcGJ5icbjifwt/b1zbxs/E0NB91KQV6Uea8XVMb81yJ80XGmoHnKTBbCeAimipII5vi3PxIeD5a9o90/ChecTb7+/x5ts7fPj5iYKuVM0Q+zA82f8dMeWDVvj48IXwGV+LH8/ZJNpc0rqB9NH4Ay2vLaDttov2AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1756,7 +1953,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 30%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAw0lEQVR42o2QgWrEIAyG+/4POW71egcHK7WeJjHaf0mPwrGNssBHjOhn4nBfFB+PijA3POYV4xgw3e4I4YpPI5cCj23b/sXQWwMToTVFzhkpJTAzjvBDvRtH/sEvYVVFfGYUEsSUEdeEZ2GQqFGhrZ92pNoMtXPtJRQrppVxjYQpCW6pWi0IC+HylbGyno4s9iiz7Ln3joGr/d9SMBou2Ym0713mgkgufBv7DRe6jIjBImgu3Nu2hY/2F37xLLyrA3d9A+bT1gqZR7m+AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 30%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAMNJREFUeNqNkIFqxCAMhvv+Dzlu9XoHByu1niYx2n9Jj8KxjbLAR4zoZ+JwXxQfj4owNzzmFeMYMN3uCOGKTyOXAo9t2/7F0FsDE6E1Rc4ZKSUwM47wQ70bR/7BL2FVRXxmFBLElBHXhGdhkKhRoa2fdqTaDLVz7SUUK6aVcY2EKQluqVotCAvh8pWxsp6OLPYos+y5946Bq/3fUjAaLtmJtO9d5oJILnwb+w0XuoyIwSJoLtzbtoWP9hd+8Sy8qwN3fQPm09YKmUe5vgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1797,7 +1994,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 48.50000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABUUlEQVR42o1SPU/DMBTM/2RkY4I/w4AQDBUsSAwIFgZYYAGpRXQp/UBNpTbNJyFx8+nksF+aYEIksHR6tnPvdO8czfQZWBTDCyIELEIYBIiiCHEc/wtJkjRVQnsfDqAvFpiMx/A8ryGmafon2mIkOB69Qdd1TKdTzGYzzOdzLJdL2JYNy7Jg2zZM02z2juMIVHebzea3Q0l0XZcIq9WKxAzDgO/7CMMQjDGqKuq7rmg0Jj44jkukoihQlmVT6yX3XZA8FeRwvV6j3+/TqEHwSTlK8ZxzfAiXTIyV8RxZXqEtQuLbKnPVsiwjAXngslGcuRCjxb9dqm5VwThJ4bMYec4rwXZDsR31djLEzsUh9q5OsX/dw+7lEQ5uesgL/oMvJ0kyTn0k2B6hdvdqLHD8dIfzl0fCyfM9zgYPJKC6rLKuMqUM1X+ohnwt0Ymu1cVX8QUtJ/7gnQQyFgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 48.50000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAVFJREFUeNqNUj1PwzAUzP9kZGOCP8OAEAwVLEgMCBYGWGABqUV0Kf1ATaU2zSchcfPp5LBfmmBCJLB0erZz73TvHM30GVgUwwsiBCxCGASIoghxHP8LSZI0VUJ7Hw6gLxaYjMfwPK8hpmn6J9piJDgevUHXdUynU8xmM8zncyyXS9iWDcuyYNs2TNNs9o7jCFR3m83mt0NJdF2XCKvVisQMw4Dv+wjDEIwxqirqu65oNCY+OI5LpKIoUJZlU+sl912QPBXkcL1eo9/v06hB8Ek5SvGcc3wIl0yMlfEcWV6hLULi2ypz1bIsIwF54LJRnLkQo8W/XapuVcE4SeGzGHnOK8F2Q7Ed9XYyxM7FIfauTrF/3cPu5REObnrIC/6DLydJMk59JNgeoXb3aixw/HSH85dHwsnzPc4GDySguqyyrjKlDNV/qIZ8LdGJrtXFV/EFLSf+4J0EMhYAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1833,7 +2030,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 20.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAvklEQVR42qXQzQqCQBQF4HnjVu16jpb9QJSWlWlZFEJFVkph0CqCqFZh1FKaGfU0Giatu/AxnGEWcw9hjCGWThAE+GfI+XJFfziBtbRRqtaRyxegG2OMzRnM6QJza421s8XK3mRETu+cjfvl7vYgh+MJzY6GiqyiWG6gJilotnuC9tXqZOIsKz3I4o2kqOhqBlR9KBjQBiMQKjaMxFdvnof74wnf98XaXNRAE5wzcPYR5zD8rSSKwuSk9JXU9Qb56RykzB0vwwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 20.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAL5JREFUeNql0M0KgkAUBeB541bteo6W/UCUlpVpWRRCRVZKYdAqgqhWYdRSmhn1NBomrbvwMZxhFnMPYYwhlk4QBPhnyPlyRX84gbW0UarWkcsXoBtjjM0ZzOkCc2uNtbPFyt5kRE7vnI375e72IIfjCc2OhoqsolhuoCYpaLZ7gvbV6mTiLCs9yOKNpKjoagZUfSgY0AYjECo2jMRXb56H++MJ3/fF2lzUQBOcM3D2Eecw/K0kisLkpPSV1PUG+ekcpMwdL8MAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1873,7 +2070,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 37%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAjklEQVR42p1Ryw7DIAzL/38qoyBoSikvL+lj2m0aliw4BMc2ZIxBzhljDPTepykC4FxA1lqEEKDorU2JNeEQrukAqRhvGzila9MExn3upYG891AuzuEo5RoQ+/9ScUZWh0rtsYjgVGSpSiPvpYJqrWBmxBhP0RmHzxu3JtDzw58+vu4/u7tn1aF5LVKbxxu4mCi2txAyxgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 37%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAI5JREFUeNqdUcsOwyAMy/9/KqMgaEopLy/pY9ptGpYsOATHNmSMQc4ZYwz03qcpAuBcQNZahBCg6K1NiTXhEK7pAKkYbxs4pWvTBMZ97qWBvPdQLs7hKOUaEPv/UnFGVodK7bGI4FRkqUoj76WCaq1gZsQYT9EZh88btybQ88OfPr7uP7u7Z9WheS1Sm8cbuJgotrcQMsYAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1911,7 +2108,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 52%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA6UlEQVR42qWS2Q6CQAxF5/8/TWSPPigaNYCyDMOwPl5bIgaNRIkPJ03oTDm3IDZbH5ZtEw5cz4OxNrE2TTiuC8uy4fk+VoaB0/mCKL4ijOIZIsTUF8HhiCDYY7fbUw1QliW01kOdopT6CRGGIdI0RZIkyLIMXdd9pO/7eR79pq4heBAb8KW2bYfG3NBvaF1BsJWUEjVN56gjS4b3j3rNKTLHZYqieNlF0zRP61/gsywl8jwfDNlqupelcVtCjZGrqhoesNUUfvNY55ieu0mKnFFcNvznY4yGN1lCFIr+M1Llyjt4t1wC378DjL/60EtvGUAAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 52%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAOlJREFUeNqlktkOgkAMRef/P01kjz4oGjWAsgzDsD5eWyIGjUSJDydN6Ew5tyA2Wx+WbRMOXM+DsTaxNk04rgvLsuH5PlaGgdP5gii+IoziGSLE1BfB4Ygg2GO321MNUJYltNZDnaKU+gkRhiHSNEWSJMiyDF3XfaTv+3ke/aauIXgQG/Cltm2HxtzQb2hdQbCVlBI1TeeoI0uG9496zSkyx2WKonjZRdM0T+tf4LMsJfI8HwzZarqXpXFbQo2Rq6oaHrDVFH7zWOeYnrtJipxRXDb852OMhjdZQhSK/jNS5co7eLdcAt+/A4y/+tBLbxlAAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -1948,7 +2145,7 @@ open 으로 상속이 가능한 상태이어야 한다. 그래서 all-open 플�
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 15%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAjUlEQVR42pWOzQrCMBCE8/4PIXj3fWqJIHXVmrZppTX/MWOSg+DRgdmP2cMwTG0riDcYhEDXdViWJ4wxsNbiX6WUwAYiHPY7tNcz2uYIzk+g/CO6VEopMY4jhBgwZT7kitus0M8v3LNp2tAvqpYVsXJ8tnkHxBjhnKsuC7XWP7nSBRgXYXxhgC7Zx2/hB+Z95pcYJrjWAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 15%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAI1JREFUeNqVjs0KwjAQhPP+DyF4931qiSB11Zq2aaU1/zFjkoPg0YHZj9nDMExtK4g3GIRA13VYlieMMbDW4l+llMAGIhz2O7TXM9rmCM5PoPwjulRKKTGOI4QYMGU+5IrbrNDPL9yzadrQL6qWFbFyfLZ5B8QY4ZyrLgu11j+50gUYF2F8YYAu2cdv4QfmfeaXGCa41gAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -2211,7 +2408,7 @@ docker-compose -f docker-compose-dev.yml up -d&lt;/code&gt;&lt;/pre&gt;&lt;/div&
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 57.00000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAABrUlEQVR42o1Si27TUAy9//8/QLd2HQKtgg2hbl3ZmtKkeXTJ1rzLbt452F47QBowS0fH8fH1tW+ssiSE1hpt26Lve1SlRkqxJEkQhiGiKEJd12Bj/X9Q3p0HXZSomlaQ5zkc24JpWvA8T8BFsyxDmqbY7XbCL4HPKs+/R3D/gN2jRt12iJMU6/Uatm0L2DdN8xmWZQmvVivxmQ/frutChdutjNfRyGx802KxwHK5hGEshV8DwzDgOA5UHMcoiwJd1z0VzHLpzHUdSWB2D0wdOHvtD519ige+D3UXPCChrqr9w3sbH28HQxyNxhidnOJ4dIrBcIzB8YlgOH4vsXdHI8rZ6xR/Q2c+nX/hNwwQxikeiwpFVWMTbDG5mGI2v8WH80ucfb7A1+kVLmffBLP5Da5JY55eXVNsLvg4mcC0bKgNFYzTXAr+0KVA10/jVz0QR1v6wyleMpKxT0WuC2HF4za0Ll3Xo6V37H4DWxHRBlBB/mkca2gTasov60Z85lpWjrUWqmka/M24g8Vqg1vLR5xpvMZUVVWy4Xz7gX/5PW7WAWbffYRp8Rzr/sE/AfYIOj1dbGS3AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 57.00000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAa1JREFUeNqNUotu01AMvf//P0C3dh0CrYINoW5d2ZrSpHl0yda8y27eOdheO0AaMEtHx/Hx9bVvrLIkhNYabdui73tUpUZKsSRJEIYhoihCXddgY/1/UN6dB12UqJpWkOc5HNuCaVrwPE/ARbMsQ5qm2O12wi+BzyrPv0dw/4Ddo0bddoiTFOv1GrZtC9g3TfMZlmUJr1Yr8ZkP367rQoXbrYzX0chsfNNiscByuYRhLIVfA8Mw4DgOVBzHKIsCXdc9Fcxy6cx1HUlgdg9MHTh77Q+dfYoHvg91Fzwgoa6q/cN7Gx9vB0McjcYYnZzieHSKwXCMwfGJYDh+L7F3RyPK2esUf0NnPp1/4TcMEMYpHosKRVVjE2wxuZhiNr/Fh/NLnH2+wNfpFS5n3wSz+Q2uSWOeXl1TbC74OJnAtGyoDRWM01wK/tClQNdP41c9EEdb+sMpXjKSsU9FrgthxeM2tC5d16Old+x+A1sR0QZQQf5pHGtoE2rKL+tGfOZaVo61FqppGvzNuIPFaoNby0ecabzGVFVVsuF8+4F/+T1u1gFm332EafEc6/7BPwH2CDo9XWxktwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -2292,7 +2489,7 @@ stages &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 9.499999999999998%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAaElEQVR42lWN2wqDQAxE/f8PLEihgr6saOIlyErS3TFbt9AGDoeZh0nz6p7o+wHrskJEoKowM5hbi9/pg9oPNZc+54xyXzft+EAIoxPAzFgccpgI5E9ITrBEzHvEtN+mmrfjRE7pb/AC4J+aosBd22AAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 9.499999999999998%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAGhJREFUeNpVjdsKg0AMRP3/DyxIoYK+rGjiJchK0t0xW7fQBg6HmYdJ8+qe6PsB67JCRKCqMDOYW4vf6YPaDzWXPueMcl837fhACKMTwMxYHHKYCORPSE6wRMx7xLTfppq340RO6W/wAuCfmqLAXdtgAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -2331,7 +2528,7 @@ stages &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 33.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA00lEQVR42pWR3W6DMAxGef9X3MUKpLAfUiAhcUxIvsUpvduq1dKRYis6+iw3b5+MTkd8zQ5KKXS9wnUY8X5pMekbpHLO/6ahwOA9wnvC5hzs5hDjgeMQ0kuyKjR2wx4jjLVYVlOFWVLVZHhRCDSjDehnj+tKGC1jMNI7tNriw9BTqWwhmwmB+Z5wWH0VCCJVi69cpocwPxfSKQynUBVJtxD6VQgnhLakHkta+ZR+4SEkCqAQyh32u/DmGNMWKrq89dl/F2bPf15ZKqUELqsKsdxB5j80DyLhUNdQ4AAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 33.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAANNJREFUeNqVkd1ugzAMRnn/V9zFCqSwH1IgIXFMSL7FKb3bqtXSkWIrOvosN2+fjE5HfM0OSil0vcJ1GPF+aTHpG6Ryzv+mocDgPcJ7wuYc7OYQ44HjENJLsio0dsMeI4y1WFZThVlS1WR4UQg0ow3oZ4/rShgtYzDSO7Ta4sPQU6lsIZsJgfmecFh9FQgiVYuvXKaHMD8X0ikMp1AVSbcQ+lUIJ4S2pB5LWvmUfuEhJAqgEMod9rvw5hjTFiq6vPXZfxdmz39eWSqlBC6rCrHcQeY/NA8i4VDXUOAAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -2366,7 +2563,7 @@ stages &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 64.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACNklEQVR42oVTi26cMBDk/z8uUdO7cgfh/cZgDOZhDNx0cZS2SZV2pZV2V2I8sztYtyhAy1uwlkOtGqvesB8H0jSFbduIogi+78NxHOR5gTMejwe+CuubE6AhMLkoyHmBnBaMVG+bxqY1HsdO9QZN9b7vvwC/SssLfXTE8POr8yTAuxZiOaD3479AvwGDGMs84/hjeEZVVYjjhFbR/VPiX5LTMIHgHMuyfNhP3w/EnBPTyfRqVcjyDBP1+76ZnJcZcpRmHaIXZiVWnGUQXYd1XT/Ieo9zPpOCXvRw7g5Y3aBhHXgrUJc14jDGQI+zipFSBevuh+C8g/rEcJgUyrJCGAYQQqDqaniVh7hN4LEUYZsh4QkCFiIXOQpZgE8dMSTbSCkxDPLDLpZ1I7sEuDt30zPFcBtvCFSAeItM+osPd3YR6RjREYHtDSzb9REmGaqGQ4wzSkae5IIspGgvPcZpNIDN2sKRDsIlhDd6lPSdonr2kOgU6SNFu7ewHPcVHUlq25Zs0pk8gYScUDNm5lpp5EOOC7/A6R0D+Ep5E3dc+Q/Tu5OLcikJMPCMbeq6RtM05lJn8l6iollRFBjlSDuL8FQ84cIuuBPoncBe6hc8F8+w+Q3f2wvSMYN181xM40QHKMGI0flXnCnkTOw42ac3kuulxrW/4nXyEKwBwjWEO7qwe/tN+uqh1jUZOwrpwspI60juO8OD/ufTm0qpt6uvEsVUGOBGk3XWBtVcoZyJiGrANMOgB/wERYzgScXByD8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 64.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAjZJREFUeNqFU4tunDAQ5P8/LlHTu3IH4f3GYAzmYQzcdHGUtkmVdqWVdldiPLM7WLcoQMtbsJZDrRqr3rAfB9I0hW3biKIIvu/DcRzkeYEzHo8HvgrrmxOgITC5KMh5gZwWjFRvm8amNR7HTvUGTfW+778Av0rLC310xPDzq/MkwLsWYjmg9+O/QL8BgxjLPOP4Y3hGVVWI44RW0f1T4l+S0zCB4BzLsnzYT98PxJwT08n0alXI8gwT9fu+mZyXGXKUZh2iF2YlVpxlEF2HdV0/yHqPcz6Tgl70cO4OWN2gYR14K1CXNeIwxkCPs4qRUgXr7ofgvIP6xHCYFMqyQhgGEEKg6mp4lYe4TeCxFGGbIeEJAhYiFzkKWYBPHTEk20gpMQzywy6WdSO7BLg7d9MzxXAbbwhUgHiLTPqLD3d2EekY0RGB7Q0s2/URJhmqhkOMM0pGnuSCLKRoLz3GaTSAzdrCkQ7CJYQ3epT0naJ69pDoFOkjRbu3sBz3FR1JatuWbNKZPIGEnFAzZuZaaeRDjgu/wOkdA/hKeRN3XPkP07uTi3IpCTDwjG3qukbTNOZSZ/JeoqJZURQY5Ug7i/BUPOHCLrgT6J3AXuoXPBfPsPkN39sL0jGDdfNcTONEByjBiNH5V5wp5EzsONmnN5Lrpca1v+J18hCsAcI1hDu6sHv7TfrqodY1GTsK6cLKSOtI7jvDg/7n05tKqberrxLFVBjgRpN11gbVXKGciYhqwDTDoAf8BEWM4EnFwcg/AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -2754,7 +2951,7 @@ stages &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 36%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAABvElEQVR42oWR32tScRjGzx+gaHjp1G6kNtmGzR3X/Hk8TVPnaraaoXghWZdRUaxugv6GCiq0LUFo/0DRbQMvRLqyi+guPGoELpgRZx4/Hc/oQgh64Mv7/b7wPu/zPF+Bf2A8Hk+dCYbDId1ul36/b1Slo9DpdFAUhV6vZ/QGgwFCu93m48EBzWaTRqNBq9WaIte0kVFrtRpOpxOPx4MoikSiYWKyTCgYxOv14nA4KJfLCHfv3UcMBIknk/hXznNte5uJKHWkoR5r/PqtGoSVSgWLxYLdbicQkUlnMoSjEpJ8gYWFRUwmE/l8HuHR4yck0hniF1P4V0PcuHmLwyOVz98O+dL5yaevP/h+BLu7r7HZbLhcLqR4iq1cDnktQXJ9gyXfMqesVorFIsLtOw9YCYSIxPRN3iWu5q6fWNVlatoYVT023tVqFas+NGOfYfGcj5CubjUsIequzs7OYTabKRQKCO/ef+DFy1fs7b3h6bPnvN3fn8pwNDrJsKpbdrhO4/P78S2LzHnmcZ+ZZV4nn0TldrsplUoI//vlv4T1ep1gOEr2yhaXLm+SSq8TlWJs6PfNbJa1eIKdnYf8AUsMfkcdo6+9AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 36%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAbxJREFUeNqFkd9rUnEYxs8foGh46dRupDbZhs0d1/x5PE1T52q2mqF4IVmXUVGsboL+hgoqtC1BaP9A0W0DL0S6sovoLjxqBC6YEWcePx3P6EIIeuDL+/2+8D7v8zxfgX9gPB5PnQmGwyHdbpd+v29UpaPQ6XRQFIVer2f0BoMBQrvd5uPBAc1mk0ajQavVmiLXtJFRa7UaTqcTj8eDKIpEomFiskwoGMTr9eJwOCiXywh3791HDASJJ5P4V85zbXubiSh1pKEea/z6rRqElUoFi8WC3W4nEJFJZzKEoxKSfIGFhUVMJhP5fB7h0eMnJNIZ4hdT+FdD3Lh5i8Mjlc/fDvnS+cmnrz/4fgS7u6+x2Wy4XC6keIqtXA55LUFyfYMl3zKnrFaKxSLC7TsPWAmEiMT0Td4lruaun1jVZWraGFU9Nt7VahWrPjRjn2HxnI+Qrm41LCHqrs7OzmE2mykUCgjv3n/gxctX7O294emz57zd35/KcDQ6ybCqW3a4TuPz+/Eti8x55nGfmWVeJ59E5Xa7KZVKCP/75b+E9XqdYDhK9soWly5vkkqvE5VibOj3zWyWtXiCnZ2H/AFLDH5HHaOvvQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -2868,7 +3065,7 @@ stages &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 25%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAABD0lEQVR42pWQ30rCABjF9zpdltWmTqE/mqAmhSRF3WQO2haxmkEQIze3O6UoMk0v8hGqN4h6juoFdu/EX2vQRXTlgQPn4vDj+45wYVlUNR1NVzEMA0VR8DyXX00mE6aRUNnZRVpaJZPNki8USaXTHNRqEejH4/E4Kn58fnHesLHtBs1mE8dxwmxH2XVdrPCw4fARYV/RyZU2KW9VKJQ2WMmscWLWCYIggo1GQQR8fXtnJiaxIIkk5RRSIokYjzO/KJJIyszOxVA1DWF7r0oqkyNfXGc5hMXlNIeq9u9l3/e56fTpDQZ0H/qRO/dd2lfX9MJ8e9fh6fkF4dLx0I4NTk0Ts34WbnlEq9X+A5xmx29Zpik11X+DyQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 25%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAQ9JREFUeNqVkN9KwgAYxfc6XZbVpk6hP5qgJoUkRd1kDtoWsZpBECM3tzulKDJNL/IRqjeIeo7qBXbvxF9r0EV05YED5+Lw4/uOcGFZVDUdTVcxDANFUfA8l19NJhOmkVDZ2UVaWiWTzZIvFEml0xzUahHox+PxOCp+fH5x3rCx7QbNZhPHccJsR9l1XazwsOHwEWFf0cmVNilvVSiUNljJrHFi1gmCIIKNRkEEfH17ZyYmsSCJJOUUUiKJGI8zvyiSSMrMzsVQNQ1he69KKpMjX1xnOYTF5TSHqvbvZd/3uen06Q0GdB/6kTv3XdpX1/TCfHvX4en5BeHS8dCODU5NE7N+Fm55RKvV/gOcZsdvWaYpNdV/g8kAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -2944,7 +3141,7 @@ stages &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 32%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABZElEQVR42l2PvXLaUBSE1dMyA5UlJJIiSeFJAQrBUiyQ4EqypAjEX0zhghTBkCrJgzqPwAOAK7ovR7fMndk5s7v3zO4x9oefPP3Y8/y853A4sFqtGI1GjMdjPcMwZDb7ymI5116NzWbDWmZRFERRxGQyYTgccjweMeJshi9LUxUTTRV99xO2beM4Dt2uw+3tR7z7L0QqJE5S4jglSR8EKYPBZ9rtNq1Wi0ajgVIKI6+2TLOMNCsIQknyfMybGyzLwjRNum/e0pNFV2PAXeDR6/c177mu/lej2Wzqxsb26TvVes3mccv626M0VfLB1C01nA4dW5Y6ltZNS8KEd4TXuuPYckmXtrQsyxLj9fXC5XLhfD5zvV75+/KCO/QZy0lpkpBopDrd833ev/uAr1IJnmq99rM8JwgCdrsdBv+90+mEykrmyyXzhWC5opxXVDILaXDn3ZNXtbfQfq3PhD/kBb9+/+EfkRTorp3Hdb0AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 32%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAWRJREFUeNpdj71y2lAUhNXTMgOVJSSSIknhSQEKwVIskOBKsqQIxF9M4YIUwZAqyYM6j8ADgCu6L0e3zJ3ZObO798zuMfaHnzz92PP8vOdwOLBarRiNRozHYz3DMGQ2+8piOddejc1mw1pmURREUcRkMmE4HHI8HjHibIYvS1MVE00VffcTtm3jOA7drsPt7Ue8+y9EKiROUuI4JUkfBCmDwWfa7TatVotGo4FSCiOvtkyzjDQrCEJJ8nzMmxssy8I0Tbpv3tKTRVdjwF3g0ev3Ne+5rv5Xo9ls6sbG9uk71XrN5nHL+tujNFXywdQtNZwOHVuWOpbWTUvChHeE17rj2HJJl7a0LMsS4/X1wuVy4Xw+c71e+fvygjv0GctJaZKQaKQ63fN93r/7gK9SCZ5qvfazPCcIAna7HQb/vdPphMpK5ssl84VguaKcV1QyC2lw592TV7W30H6tz4Q/5AW/fv/hH5EU6K6dx3W9AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -3242,7 +3439,7 @@ stages &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 27.500000000000004%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAyElEQVR42n1Riw7CIAzk/3/RzFc0JuqGc8KAAmdbt2RZ1IZLKbmjHDUxZQhCJJzOF4whIRLXfPYaE1Arr6o55wIfSPmRCpzz2DQ7pFyVLzoj5MIgkgvPKpI6FxaweB2RmF+Ew/sQsN3twVvly10mcSfpKLmqIE8vyGh7h2EYFN57HA5HXO+WxcxLpBptMrmU2iy7q7VFPJ4OXdfCWotn36Nptri1diZ/1Rj8CiZ+s0y54l+w5Y+9JdJk2/FQ6jSUuhzK/C1r8PkbXYvXUC6by8IAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 27.500000000000004%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAMhJREFUeNp9UYsOwiAM5P9/0cxXNCbqhnPCgAJnW7dkWdSGSym5oxw1MWUIQiSczheMISES13z2GhNQK6+qOecCH0j5kQqc89g0O6RclS86I+TCIJILzyqSOhcWsHgdkZhfhMP7ELDd7cFb5ctdJnEn6Si5qiBPL8hoe4dhGBTeexwOR1zvlsXMS6QabTK5lNosu6u1RTyeDl3XwlqLZ9+jaba4tXYmf9UY/AomfrNMueJfsOWPvSXSZNvxUOo0lLocyvwta/D5G12L11Aum8vCAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -3770,7 +3967,7 @@ thread1&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span cl
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 48%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABqElEQVR42m1S23LaMBD1x3SCZMu25Av4IoEpAUwdIFDSaTJ5SV7SmU5e0g9I//x0JUJj2jycWWnPntVe5AVBgD583z+ereXM3T/CWWwP3r8OC845ZJJCX7aoTYVaG5jx2FlNiKLow2R/E56TAmxwgdxM8eXlFdffWrSrFXZfD1hvtrjqOkipwHuavt7rl++7FjlZDuEPoFe3yEY1yss98qrBaLxEOdsiYJ/e4th/7b+3LARCmb0hRxBJJM0OQSghywWEHCLKNJTuyBcjVLmLE2FE+vekHuc+OKOXSBgmFdmYkiUQcQqf2uds4O62RXcWseOCSCEgK1QBRn6bx1WYyBgWaT5CRkhUDCWl2/KRk9S2Jm6INE1ofrGrKIlD4pQbSZalUEodK5zcPmH9/ILNZor19oCb73eYL5YQ7AKfH39h9/MHVu0UV5s99ocbTJoGISWcP//G9cMdum5JmnsYY6hSBm9oGvoeC9R1QdBEjFEUhauwaOYwsxmqqkBZ1dAkynOamwhoOS3MdEJc6TTWb7+b5zZlZ+ifNs2P1g6ZZnPGnXDiTrE9/AHU8T9T+sjAdwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 48%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAahJREFUeNptUtty2jAQ9cd0gmTLtuQL+CKBKQFMHSBQ0mkyeUle0plOXtIPSP/8dCVCY9o8nFlpz57VXuQFQYA+fN8/nq3lzN0/wllsD96/DgvOOWSSQl+2qE2FWhuY8dhZTYii6MNkfxOekwJscIHcTPHl5RXX31q0qxV2Xw9Yb7a46jpIqcB7mr7e65fvuxY5WQ7hD6BXt8hGNcrLPfKqwWi8RDnbImCf3uLYf+2/tywEQpm9IUcQSSTNDkEoIcsFhBwiyjSU7sgXI1S5ixNhRPr3pB7nPjijl0gYJhXZmJIlEHEKn9rnbODutkV3FrHjgkghICtUAUZ+m8dVmMgYFmk+QkZIVAwlpdvykZPUtiZuiDRNaH6xqyiJQ+KUG0mWpVBKHSuc3D5h/fyCzWaK9faAm+93mC+WEOwCnx9/YffzB1btFFebPfaHG0yaBiElnD//xvXDHbpuSZp7GGOoUgZvaBr6HgvUdUHQRIxRFIWrsGjmMLMZqqpAWdXQJMpzmpsIaDktzHRCXOk01m+/m+c2ZWfonzbNj9YOmWZzxp1w4k6xPfwB1PE/U/rIwHcAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -3816,7 +4013,7 @@ thread1&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span cl
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 27.999999999999996%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABBUlEQVR42l1QW3LEIAzLdSDhDQFCILtp738l1Sbb6Uw/NAJZyMbLGRVq0OhJTx7Z4h472jlwtI4918neWahtg1KaoKC0fkDnjfSNeF1XLD5E9PFCv94YrxvX+8ZJ97NfKLXB+wD2VCfRakEb7GN84bq/0fpAjAmVvNZoLMZa5FJRj4bj7JMZKWeariCROcaIHCxqKYhpR5jaPs/ckKc21tEPVg50NMnxBLa/wIO0k4NTmhMmb3HkiLjnGcRIe0EgzhOZwj0W/jtPaYydbKkBN3HawJHG+1lX2t0mYdQ2a+yxjjzOP2wMArGmnS5SSkghIKWYLMSHSRescX1ixa9X/If8vKP6D84NvvaxP7TAAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 27.999999999999996%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAQVJREFUeNpdUFtyxCAMy3Ug4Q0BQiC7ae9/JdUm2+lMPzQCWcjGyxkVatDoSU8e2eIeO9o5cLSOPdfJ3lmobYNSmqCgtH5A5430jXhdVyw+RPTxQr/eGK8b1/vGSfezXyi1wfsA9lQn0WpBG+xjfOG6v9H6QIwJlbzWaCzGWuRSUY+G4+yTGSlnmq4gkTnGiBwsaimIaUeY2j7P3JCnNtbRD1YOdDTJ8QS2v8CDtJODU5oTJm9x5Ii45xnESHtBIM4TmcI9Fv47T2mMnWypATdx2sCRxvtZV9rdJmHUNmvssY48zj9sDAKxpp0uUkpIISClmCzEh0kXrHF9YsWvV/yH/Lyj+g/ODb72sT+0wAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -4108,7 +4305,7 @@ thread1&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span cl
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 61%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAAsTAAALEwEAmpwYAAABh0lEQVR42n1Si5KCMAzk///xTkVaSlsRCshTctlgPXS860x4tNvNbpJkHCdqu47KsqTrtaLudqP3Nc0zhTow5irRti2t6/o8j994J9M0kfeeiqLgsFRVNS3LQjPH/X4X4Dwv5Kx7YkA6c5Jlh4mkCR4dK2xCIypxwTlHlt9QHteNlVdVJWcQsCWwVLPySCgKxdI4ig2AsrOiLFOU50b2nrbZSeCkxhg5R2ilqQ4fCMcHYXkpKde5hGXybqcQmMCXvfOcLJeEhSmoadrXGgp4GOSyYYDirMgM0qZpXgjxr5lMP5IqpaQMf1vm+mitRUHxVsPNcpDGiAuoZPsow34J4cqdggLvL0zqyaIp1ooi7CPQTZDifIvfpgxDxLDC/Tz1fS/d7Dmk00LshBhjgjVweeAGJZJucyA5iJEw2c9QBJ+zjA6HI6XpmdJTKjWLhFCCup14/+v7QEfGRezAZx8IO7GC8ZBBNtswR0JggUM9EZhf+X64eCHEBuwZHolMbXOGrmNE9oT/rR/VIZ0K6lClxwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 61%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAYdJREFUeNp9UouSgjAM5P//8U5FWkpbEQrIU3LZYD10vOtMeLTbzW6SZBwnaruOyrKk67Wi7naj9zXNM4U6MOYq0bYtrev6PI/feCfTNJH3noqi4LBUVTUty0Izx/1+F+A8L+Sse2JAOnOSZYeJpAkeHStsQiMqccE5R5bfUB7XjZVXVSVnELAlsFSz8kgoCsXSOIoNgLKzoixTlOdG9p622UngpMYYOUdopakOHwjHB2F5KSnXuYRl8m6nEJjAl73znCyXhIUpqGna1xoKeBjksmGA4qzIDNKmaV4I8a+ZTD+SKqWkDH9b5vporUVB8VbDzXKQxogLqGT7KMN+CeHKnYIC7y9M6smiKdaKIuwj0E2Q4nyL36YMQ8Swwv089X0v3ew5pNNC7IQYY4I1cHngBiWSbnMgOYiRMNnPUASfs4wOhyOl6ZnSUyo1i4RQgrqdeP/r+0BHxkXswGcfCDuxgvGQQTbbMEdCYIFDPRGYX/l+uHghxAbsGR6JTG1zhq5jRPaE/60f1SGdCupQpccAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -4149,7 +4346,7 @@ thread1&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span cl
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 64%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAABtElEQVR42m1Tia6DMAzj///xTdpogXK0lGPl2vLiQCd2VELlcB3bCQnxCmGi+z2Qs4687/j+Tsuy4BM9n0/Z53mmaZqo6zpq21bO4Bnfz1cC8DCONAwDaaWorhsKDJyY4LyAwbuqqqgoDK3rKoU/lxCu6yZAqPCsoG4aUdJzERBFtdZa6vteiJrGitKu6/dih9okWgIIYBxSOqcsL0ix4qquX0pAvJMOVJYVZVnGGM2uanH4RYiXzjkyxlB6SwVsXUsjK4g5eu/FheP3tzSlNFWs1IujN0JIBqnlxlRH9YJVuhMhFKJodxACo3VGrf9BGEIQQigwpmSFisFaqmMChJAV9pxZfzhRrO56Tclxll+WA5NBCexCWab36sgSBNHyPjZemoJINOdtZdz8OyHsQKFWmZAZHg1jYD1/NSVmOAz7mAEH0nHc8388HvvYRFIsCZ0vdByjhA7G6iiKwyiGZmAKNBP+XS5UMlbmMJKdd8xWe4SOQ5btLcv6yhoWEQ0ag2/YfWzKJ1ncoQZ/A3ZcZxd4hgNkXlc15ZwzimBSkgj6JP21zv/stm1C6njQMRUN79M00z9C8eupC44NzQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 64%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAbRJREFUeNptU4mugzAM4///8U3aaIFytJRj5dry4kAndlRC5XAd2wkJ8Qphovs9kLOOvO/4/k7LsuATPZ9P2ed5pmmaqOs6attWzuAZ389XAvAwjjQMA2mlqK4bCgycmOC8gMG7qqqoKAyt6yqFP5cQrusmQKjwrKBuGlHScxEQRbXWWur7XoiaxorSruv3YofaJFoCCGAcUjqnLC9IseKqrl9KQLyTDlSWFWVZxhjNrmpx+EWIl845MsZQeksFbF1LIyuIOXrvxYXj97c0pTRVrNSLozdCSAap5cZUR/WCVboTIRSiaHcQAqN1Rq3/QRhCEEIoMKZkhYrBWqpjAoSQFfacWX84Uazuek3JcZZflgOTQQnsQlmm9+rIEgTR8j42XpqCSDTnbWXc/Dsh7EChVpmQGR4NY2A9fzUlZjgM+5gBB9Jx3PN/PB772ERSLAmdL3Qco4QOxuooisMohmZgCjQT/l0uVDJW5jCSnXfMVnuEjkOW7S3L+soaFhENGoNv2H1syidZ3KEGfwN2XGcXeIYDZF5XNeWcM4pgUpII+iT9tc7/7LZtQup40DEVDe/TNNM/QvHrqQuODc0AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -4893,7 +5090,7 @@ thread1&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span cl
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 33.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAABEklEQVR42nVR7Y6EIBDzaUREF2EV5UNR3M29/xP1RjSbnNn7MZkWhrZAIYTAver66PWFj94gxIAQ3MW/nTnXi/vCf9h6B2stBPH6KvFlrrgLfJJxDs6pU7q201hSQlxXPKSCaB5oWpk7r/+e/yTkJFBVh0idcT9NeP+8cqrjCRjjKNm1n3kFqZ9I7xeklJkfwqcgAaU7GDPAjIZSyJxK9wZSPcmwJdxjnEZo1eFJs8NAnMxGH2Csz7zrJIqcjFyNc3SlmKtTmhwZJWbgVZXd+8li23c452HHHsviEWeHwfQIi8MaPQyJFnsKSGnN5eyI4A3SvmFPCzx9xLzOhCPSFjFRIh8Xmo2UUqEs2fVUp+mBfwG7zdsR7JhJ+wAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 33.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAARJJREFUeNp1Ue2OhCAQ82lERBdhFeVDUdzNvf8T9UY0m5zZ+zGZFoa2QCGEwL3q+uj1hY/eIMSAENzFv50514v7wn/YegdrLQTx+irxZa64C3yScQ7OqVO6ttNYUkJcVzykgmgeaFqZO6//nv8k5CRQVYdInXE/TXj/vHKq4wkY4yjZtZ95BamfSO8XpJSZH8KnIAGlOxgzwIyGUsicSvcGUj3JsCXcY5xGaNXhSbPDQJzMRh9grM+86ySKnIxcjXN0pZirU5ocGSVm4FWV3fvJYtt3OOdhxx7L4hFnh8H0CIvDGj0MiRZ7CkhpzeXsiOAN0r5hTws8fcS8zoQj0hYxUSIfF5qNlFKhLNn1VKfpgX8Bu83bEeyYSfsAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -5769,7 +5966,7 @@ c&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&q
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 88.99999999999999%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsTAAALEwEAmpwYAAACsElEQVR42m1Uy1LbQBDUDyVVFMQYjMEvWbZlyXo5BDBg3i8DSVWqUrmkkhsflO9JcuCQAxWbL+hMj3YFJjlMjXa009uz07PO7/t7/PrxE7PHR8xmM2P59/TFWmPTGf5Mp/8Y4w8PD3C+391hK4wQZm8xSDKxIaJ0qN/0scbzGM2XvV6vD88PCt/xQ9RdD8dnF3AODo5QWqmg3e3B9bpoibmdnqz9PGa/X3iCcW+r3cFGo4XFUhmb2yM4hydnKK2uIYgSxGQWp2IJQvGMpcNNZcm1Mk4zZc+96dBWlaFaa2BrtAfn6OQUb4RhMIglIdPEkIBRquBJkSSA9HEOZg/n3o6UvSykFPDwP4ADAxglT8kEjrMnEK2Eh0iOH4RYXF7B9u6+ASxX0BdAJuaAaeGZkJe3qYC0/iAyd+wLuz6a0pA35VUBJMPjU6FbLQC0u6bEnMFQQbv9UBvSaLVRa7qF1WXN+1PAkQEsCSAZBlGMvsiC0rAHsDFkxOT1ehOV9Q2sVudtHtCU7AcDvRuCkQ2BtHTxnpRGMBolQqsZz5gCSh+eAFfW0BNAApChmjAmWN7xRA8IjQVaTaIV8R4bblsZbj0HJCu72WpQm5JkBejANizKdcqDCeh2uihXqs+6LIAslZdvG2Obk+jopYWYYzOCjFPwNqfWbGFnbzwPmE9BWsxtbBLtt4IJMKXCsePdVdZr6pdEh3MlsynUmJZm2WRmIoyAuY7MhHhGh5RSveXqpGjJx6dnWK7ksrFjphMizBIRMxkWLLOcYU8mw8qLRNjQtY063u3swhntj/FqYQlNeTW6MpP2NeF31zxR9nXxenmca04HQWjU4uuFRW2U8+XrN6V6fnWNy+tbXIinXU5udH1+OcH17QdMbt7ncYldcZ/8P7+a6Bs4PjrB7vgQHz99xl/httpqVYlBKQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 88.99999999999999%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAArBJREFUeNptVMtS20AQ1A8lVRTEGIzBL1m2Zcl6OQQwYN4vA0lVqlK5pJIbH5TvSXLgkAMVmy/oTI92BSY5TI12tNPbs9Ozzu/7e/z68ROzx0fMZjNj+ff0xVpj0xn+TKf/GOMPDw9wvt/dYSuMEGZvMUgysSGidKjf9LHG8xjNl71erw/PDwrf8UPUXQ/HZxdwDg6OUFqpoN3twfW6aIm5nZ6s/Txmv194gnFvq93BRqOFxVIZm9sjOIcnZyitriGIEsRkFqdiCULxjKXDTWXJtTJOM2XPvenQVpWhWmtga7QH5+jkFG+EYTCIJSHTxJCAUargSZEkgPRxDmYP596OlL0spBTw8D+AAwMYJU/JBI6zJxCthIdIjh+EWFxewfbuvgEsV9AXQCbmgGnhmZCXt6mAtP4gMnfsC7s+mtKQN+VVASTD41OhWy0AtLumxJzBUEG7/VAb0mi1UWu6hdVlzftTwJEBLAkgGQZRjL7IgtKwB7AxZMTk9XoTlfUNrFbnbR7QlOwHA70bgpENgbR08Z6URjAaJUKrGc+YAkofngBX1tATQAKQoZowJlje8UQPCI0FWk2iFfEeG25bGW49ByQru9lqUJuSZAXowDYsynXKgwnodrooV6rPuiyALJWXbxtjm5Po6KWFmGMzgoxT8Dan1mxhZ288D5hPQVrMbWwS7beCCTClwrHj3VXWa+qXRIdzJbMp1JiWZtlkZiKMgLmOzIR4RoeUUr3l6qRoycenZ1iu5LKxY6YTIswSETMZFiyznGFPJsPKi0TY0LWNOt7t7MIZ7Y/xamEJTXk1ujKT9jXhd9c8UfZ18Xp5nGtOB0Fo1OLrhUVtlPPl6zelen51jcvrW1yIp11ObnR9fjnB9e0HTG7e53GJXXGf/D+/mugbOD46we74EB8/fcZf4bbaalWJQSkAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -7196,7 +7393,7 @@ t&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&q
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 163.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAhCAYAAADZPosTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAE/UlEQVR42o1W2VIbVxTUj7hsEFpGs+/7aLQBDiCQhM0SG5DtxN+QH8hL/iDlVCUkT6l8RkxRfkr5LV/T6XuFFMkC2w9dc0el2zpL9zmqXF29QlH4OD7O0etn6HZzFO0COZHlObJCvOdolwXa4nPxWZatoCgK+L6P6XSKyuHhCErjCTqpgiSoI48biEITUWzC93QEoQXd0qEZLWi6imaziXq9Lp+NRkNCURQ8fvwYR0dHqIwnEzRqVSSeTcIAkeeinUVoxy4GqYVOO0MQRDAsB4ZhwHY9WLYNtdWCqqoSuq6jWq1iQq7KaDzG5uYmTNtFUnTQ3+5gPHkqU0iTGGGUwDJNGKYlLxqWLYlbS4SapknCMbkkYZWENn81SXOkrEmnWzJdF2lgM/VEkosftGwHjhesEIrnGuEmX2xDQ+IaSLKSFz24ns+0mrMoeEFGIiPSFkQPRigIHVND5ptImbbnh0jzNnRNXFQXF+dYjm6dcDSWL4auwWIXbcdlRw0ZlaI0ZQfFRYH5+VPi9RpW2RQWPYxTeKyRy5T9MJL129vvYn+/jd3dFIdHfZTthJJRVkjXU2ZTRMHzsksSysSPEWcUdtFGb9BDWbJZaYQ+z0Weym5/NkJRQ5PSyCmRxAsRWZQQ6xjwPYhSWVN5DhP5DKOYndYX9Z3rcFHDDab8qqXhjOJ9Zlh4TomcmzzX6QSm11JmUJYwq2lTQoh848mTGeHx8THqtM9bw8YF0z33I5wFCS6CGFOH8gk9RujQIbaEc/e0LEtGKpCkmWzm6ckJKsIuW7UaIgp7j8LeZv36ToAdplYkGdxIkNoUtgnLNeH4gtCic0zWuJR1LrsD+LTn6cnzuWw2obIOGm2lGiZaOmUjrMazbRsLiLqp6rJDdNkQ4ZxqdWvVeqLLWaeHKBGjKEbELudliYuLEc7P+riaDrGz3UazcecetbXQpyAVSll1CqMqOEkyNiY1beSsX0gP90nS64YYDFLEkS8b8qlz7pHNJt6qBs4o6LFm4oipjGt1nNQaqDGiZkPh3GtKQQupzCNbjnBNh1eqjlPqb0TiI0rouNnCM6KliQhmULV1X4vU743Qpgz6HAhlmCJ3Q3TZcSEHN+TI8i1YjjkDO206Bqe3LgdJHMdyCv0/YEcj2WUxQH1KRcw7Mb6cIKT+eOZlwxYrgI6Q0OQqEKkKqXieNxP2xgYEV+Xk9IxfIhkJRKeFQG2XcO7OhMNmrYHzcv4dj3dV1v3s/FtULl+/lhIpewO0u32JvOQQuDuX/QEKykkMjjXIz3vyewEn1fTN96i8/G6KDi/tHQzxzf4Bnu7tc8LscHV2UPDSYPcph20hR1tE50RJuoY4y1lbDy8vr8QaPYTDVKMoQsKlJDwqJo86l8XSgH0IK8IWnfEoYOFN0Tk5RcQX1fskcj9WZCP2ckxCW3iZwjVIJqCLMfWVxCuEP4wmeEGbTdjpMTs1oQVHmoET3cSIAm/Od8jSLvks4U8kfE4JjDjXDqnBMXfJIfV3GsZ4Q9Lm3LtfSzgdTzCklnYY3YA+HXDvCuzwHBHKV6S8sgJek3CfLukrLXQ5AObY5nsq5t5iwX+ZUFrvx+EIE2rpgH9BDvgcEntcnxP6+FKhR7e25L+tOqd67QGIf2CPHj3CcDhE5d8//8LNu1/w/vp3vP/1eobfrvH3z+/wz/UfuP3wAbe3t1/Ezc0NPn78iP8AYBJMrYZcwcQAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 163.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAhCAYAAADZPosTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAABP1JREFUeNqNVtlSG1cU1I+4bBBaRrPv+2i0AQ4gkITNEhuQ7cTfkB/IS/4g5VQlJE+pfEZMUX5K+S1f0+l7hRTJAtsPXXNHpds6S/c5qlxdvUJR+Dg+ztHrZ+h2cxTtAjmR5TmyQrznaJcF2uJz8VmWraAoCvi+j+l0isrh4QhK4wk6qYIkqCOPG4hCE1Fswvd0BKEF3dKhGS1ouopms4l6vS6fjUZDQlEUPH78GEdHR6iMJxM0alUknk3CAJHnop1FaMcuBqmFTjtDEEQwLAeGYcB2PVi2DbXVgqqqErquo1qtYkKuymg8xubmJkzbRVJ00N/uYDx5KlNIkxhhlMAyTRimJS8ali2JW0uEmqZJwjG5JGGVhDZ/NUlzpKxJp1syXRdpYDP1RJKLH7RsB44XrBCK5xrhJl9sQ0PiGkiykhc9uJ7PtJqzKHhBRiIj0hZED0YoCB1TQ+abSJm254dI8zZ0TVxUFxfnWI5unXA0li+GrsFiF23HZUcNGZWiNGUHxUWB+flT4vUaVtkUFj2MU3iskcuU/TCS9dvb72J/v43d3RSHR32U7YSSUVZI11NmU0TB87JLEsrEjxFnFHbRRm/QQ1myWWmEPs9FnspufzZCUUOT0sgpkcQLEVmUEOsY8D2IUllTeQ4T+QyjmJ3WF/Wd63BRww2m/Kql4YzifWZYeE6JnJs81+kEptdSZlCWMKtpU0KIfOPJkxnh8fEx6rTPW8PGBdM99yOcBQkughhTh/IJPUbo0CG2hHP3tCxLRiqQpJls5unJCSrCLlu1GiIKe4/C3mb9+k6AHaZWJBncSJDaFLYJyzXh+ILQonNM1riUdS67A/i05+nJ87lsNqGyDhptpRomWjplI6zGs20bC4i6qeqyQ3TZEOGcanVr1Xqiy1mnhygRoyhGxC7nZYmLixHOz/q4mg6xs91Gs3HnHrW10KcgFUpZdQqjKjhJMjYmNW3krF9ID/dJ0uuGGAxSxJEvG/Kpc+6RzSbeqgbOKOixZuKIqYxrdZzUGqgxomZD4dxrSkELqcwjW45wTYdXqo5T6m9E4iNK6LjZwjOipYkIZlC1dV+L1O+N0KYM+hwIZZgid0N02XEhBzfkyPItWI45AzttOganty4HSRzHcgr9P2BHI9llMUB9SkXMOzG+nCCk/njmZcMWK4COkNDkKhCpCql4njcT9sYGBFfl5PSMXyIZCUSnhUBtl3DuzoTDZq2B83L+HY93Vdb97PxbVC5fv5YSKXsDtLt9ibzkELg7l/0BCspJDI41yM978nsBJ9X0zfeovPxuig4v7R0M8c3+AZ7u7XPC7HB1dlDw0mD3KYdtIUdbROdESbqGOMtZWw8vL6/EGj2Ew1SjKELCpSQ8KiaPOpfF0oB9CCvCFp3xKGDhTdE5OUXEF9X7JHI/VmQj9nJMQlt4mcI1SCagizH1lcQrhD+MJnhBm03Y6TE7NaEFR5qBE93EiAJvznfI0i75LOFPJHxOCYw41w6pwTF3ySH1dxrGeEPS5ty7X0s4HU8wpJZ2GN2APh1w7wrs8BwRylekvLICXpNwny7pKy10OQDm2OZ7KubeYsF/mVBa78fhCBNq6YB/QQ74HBJ7XJ8T+vhSoUe3tuS/rTqneu0BiH9gjx49wnA4ROXfP//Czbtf8P76d7z/9XqG367x98/v8M/1H7j98AG3t7dfxM3NDT5+/Ij/AGASTK2GXMHEAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -7455,7 +7652,7 @@ text &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 49.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAACKElEQVR42mWSaU9TQRRA36808Q+40bBIaYuCxUgURSVGRaB9SxeB0iCI0JQttEDpw1L6Sh9dqGhiTNDEROJCKhqO41RR8cPJzWxn7tw7yuWwhTuQwxOs4/6F5xgLl5HFqWVwiX3ugCWjS8aT5FBa9DwXfBYN/joONS+RYzHv0Aqc7opwyqPiGEjTols0q9l/0TYlLQLlxqjJncgKvaOrIqboGV6m5/EytyOrcu6uWOsMpmn0Z7koDrQKYVvIxhnYoi1oS1qNvFjLSZSiOQEvVagGOSr6Mcc6KMevw6sQVAwRVeLzMZGxzdWxKi5tgzM3n9L0IEFD3xzneqdx+tbxRqqiPAUU25wUMp2vpRC1bYMvBY2Dgs63cpBaMSgu04nN1YXekZI4bHL21hRND5M096/QeH8Jt77JldEdPCJzKTwqaxyWQ+znfKSjXeSne/heCfGxIIS7mhQ6tCJuvykyS+I2clwKFeiK7uId2xWyCp0j5T9CKhq1UpgDO8Beup/3G0Pygs8nhB7tOY578+LZWSnpGC4KSpJj4VZ6UtZqP2/wJtXPnjnAW3OQDzmVT3YYXujMzAqhui2EmfoTDUsKfsuOhaJBSjXzRBb+0PZRjXdTjl2jEuvmXapPNorXPhYWZ0SGJdr1DM6htGjAjszwb7yRCu3hbZTo9CxrS+MkFidJJadYSz5jNTFFYmGCJcF6YpxH0QXOD4pv4d+gccCkVbP+5+f/9G/yA5osXoPJ/yUcAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 49.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAihJREFUeNplkmlPU0EUQN+vNPEPuNGwSGmLgsVIFEUlRkWgfUsXgdIgiNCULbRA6cNS+kofXahoYkzQxETiQioajuNUUfHDyc1sZ+7cO8rlsIU7kMMTrOP+hecYC5eRxallcIl97oAlo0vGk+RQWvQ8F3wWDf46DjUvkWMx79AKnO6KcMqj4hhI06JbNKvZf9E2JS0C5caoyZ3ICr2jqyKm6BlepufxMrcjq3LurljrDKZp9Ge5KA60CmFbyMYZ2KItaEtajbxYy0mUojkBL1WoBjkq+jHHOijHr8OrEFQMEVXi8zGRsc3VsSoubYMzN5/S9CBBQ98c53qncfrW8UaqojwFFNucFDKdr6UQtW2DLwWNg4LOt3KQWjEoLtOJzdWF3pGSOGxy9tYUTQ+TNPev0Hh/Cbe+yZXRHTwicyk8KmsclkPs53yko13kp3v4XgnxsSCEu5oUOrQibr8pMkviNnJcChXoiu7iHdsVsgqdI+U/QioatVKYAzvAXrqf9xtD8oLPJ4Qe7TmOe/Pi2Vkp6RguCkqSY+FWelLWaj9v8CbVz545wFtzkA85lU92GF7ozMwKobothJn6Ew1LCn7LjoWiQUo180QW/tD2UY13U45doxLr5l2qTzaK1z4WFmdEhiXa9QzOobRowI7M8G+8kQrt4W2U6PQsa0vjJBYnSSWnWEs+YzUxRWJhgiXBemKcR9EFzg+Kb+HfoHHApFWz/ufn//Rv8gOaLF6Dyf8lHAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -7499,7 +7696,7 @@ text &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 42.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAABp0lEQVR42m2S23KcMBBE+Y7ECfYuCIn7XSxgDLvs2k7Zznv+/z86PXKlKg9+ODVImulpjfDebhYf5Hmy2NsBt37AVrcYkwxTFEMxRmnuCCLzJaGO4R9DzMsKL7OPyPoJaT8itQMye0LcWRhSM9kyLuOM03CCrzTuuXcv8T8etMH3hyOGpw3euzV470ld4HfR4BedvGWl4xpEqNi5PAQuNiz+ilYZ5Mx5HUZ4L89X7OuC0Vq0RYWU9jOTODTddE2HgS6bqkEQKIRhBEURFerPSLS4ZO7GPa+yI+y0wFBMNgWfRYJ8d22PiXNtOFeVfs4zjFNHwKYH5hzJHZlFUOcF5qcVLWeX1w20FNBlyGTBZAVMXkIzynlW1i4nZp3EA90d2fwHBRcR7McJpSTSoVBUUlQhZ2FKoShO3EsqaULUP9gsEujUkJ/MeeTMPcMr2XWDpmhEMUWxb+x4x84+xep5gd3O6NczTpcdJV88bjskveWfYV3MeTufZmaTwtto+4NzvBU1LmmBhd0nWpd5zHy9C696zSvsfHU5d/D7nOQOWe/MWXmbP1z/BSblFp5kv27JAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 42.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAadJREFUeNptkttynDAQRPmOxAn2LgiJ+10sYAy77NpO2c57/v8/Oj1ypSoPfjg1SJrpaY3w3m4WH+R5stjbAbd+wFa3GJMMUxRDMUZp7ggi8yWhjuEfQ8zLCi+zj8j6CWk/IrUDMntC3FkYUjPZMi7jjNNwgq807rl3L/E/HrTB94cjhqcN3rs1eO9JXeB30eAXnbxlpeMaRKjYuTwELjYs/opWGeTMeR1GeC/PV+zrgtFatEWFlPYzkzg03XRNh4Eum6pBECiEYQRFERXqz0i0uGTuxj2vsiPstMBQTDYFn0WCfHdtj4lzbThXlX7OM4xTR8CmB+YcyR2ZRVDnBeanFS1nl9cNtBTQZchkwWQFTF5CM8p5VtYuJ2adxAPdHdn8BwUXEezHCaUk0qFQVFJUIWdhSqEoTtxLKmlC1D/YLBLo1JCfzHnkzD3DK9l1g6ZoRDFFsW/seMfOPsXqeYHdzujXM06XHSVfPG47JL3ln2FdzHk7n2Zmk8LbaPuDc7wVNS5pgYXdJ1qXecx8vQuves0r7Hx1OXfw+5zkDlnvzFl5mz9c/wUm5RaeZL9uyQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -7553,7 +7750,7 @@ text &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 3.4999999999999996%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAARUlEQVR42iXJSwqAMBAEUY9jJyokQ8zHhSJ4/yOVDu76dU12H+Srk87K1gvu/jSiRWRiHYFQRKxiaWJOQvnz/je3b+/+v/fPH2xgcA6CAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 3.4999999999999996%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAEVJREFUeNolyUsKgDAQBFGPYycqJEPMx4UieP8jlQ7u+nVNdh/kq5POytYL7v40okVkYh2BUESsYmliTkL58/43t2/v/r/3zx9sYHAOggAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -7588,7 +7785,7 @@ text &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 9%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAeElEQVR42kWMWQ7CMBBDexhEmGmWNiGiBVqksv5y/8M8koLEh2V5nsdNfmf8kOnniXAeycuA9IokYdcJEoX2IJjwlTvqeqts64SNCHZQbOn4k9L42ZVgCJPBjoa4KN3cEq/FL8r++fd0U/JL10768TqS7oU/6p/yAa9GPx5T4FoeAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 9%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAHhJREFUeNpFjFkOwjAQQ3sYRJhpljYhogVapLL+cv/DPJKCxIdleZ7HTX5n/JDp54lwHsnLgPSKJGHXCRKF9iCY8JU76nqrbOuEjQh2UGzp+JPS+NmVYAiTwY6GuCjd3BKvxS/K/vn3dFPyS9dO+vE6ku6FP+qf8gGvRj8eU+BaHgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -7660,7 +7857,7 @@ text &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 67%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACNElEQVR42oVUiY7TMBTM/38bAmkXStIzzX3bjnM23Q7z3F0ECETUp+fkXfbMuJ6dVtzfHhimGa/fdoiSFKfLFXlR0Yeo2w4MY1puWG4b5Hk8Hvj1+XgX71VNB9W16LoOcRwjTVNkWYamrhFFkfNt26BpWg5d/t8wKxuE4QWn04lFDcqSOzudUbNRWZaMhQh8H5fwinFefxb+yzxjRzSdRquMM2UsLtfYWZIVuBKCOM1dztsfO/vb4wl+2xuII7DdH+AP/SBDFAdoKN2jqGr0dnCxdbvjxmRn2++28ZvXmQGGybofYIfJNRMveAkRwzhj5wf49PkLNHcv303/rJG8jxo5qbbTkxRNUhRJ0VoRxxpaPddlWWAcLI6HA2ISNI0jqqqE7Q0M4+q9rshzdEIcYXGkxMRJ5CJSOVMyYRQjilNc4wSnc4ivu+/wg4NbJ8RTIJCclBhneYnj+eJIy6sW3rLeYMeJDC6Y16fWOm1ckWiwrDkwzVzziuuqbt1ORLdSIyZrS2hW1noC8nK7O3ZrJgqWeVk7hsUXVYOMO5fmLeOyTrmrgRISEuZ1w7K9e2mo+hHzPPNIAQLafr93mrxQf0mS4ED8RODzskKPN6fP4/FIYizMuDr2Ja61dkM8mbYPfFcoN6Rr2+cNochzvltLZmki+Civ3U16fXmBoqSKRrkb5lP4FS+BHNvLScqVDYSEJMsJcuEAFi/W8Kg1lSCYNpSYYJYyT3Dr+T+gTE+tGnQcYCihH1CC2mJbza9OAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 67%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAjRJREFUeNqFVImO0zAUzP9/GwJpF0rSM819245zNt0O89xdBAhE1Kfn5F32zLienVbc3x4Yphmv33aIkhSnyxV5UdGHqNsODGNablhuG+R5PB749fl4F+9VTQfVtei6DnEcI01TZFmGpq4RRZHzbdugaVoOXf7fMCsbhOEFp9OJRQ3Kkjs7nVGzUVmWjIUIfB+X8IpxXn8W/ss8Y0c0nUarjDNlLC7X2FmSFbgSgjjNXc7bHzv72+MJftsbiCOw3R/gD/0gQxQHaCjdo6hq9HZwsXW748ZkZ9vvtvGb15kBhsm6H2CHyTUTL3gJEcM4Y+cH+PT5CzR3L99N/6yRvI8aOam205MUTVIUSdFaEccaWj3XZVlgHCyOhwNiEjSNI6qqhO0NDOPqva7Ic3RCHGFxpMTESeQiUjlTMmEUI4pTXOMEp3OIr7vv8IODWyfEUyCQnJQYZ3mJ4/niSMurFt6y3mDHiQwumNen1jptXJFosKw5MM1c84rrqm7dTkS3UiMma0toVtZ6AvJyuzt2ayYKlnlZO4bFF1WDjDuX5i3jsk65q4ESEhLmdcOyvXtpqPoR8zzzSAEC2n6/d5q8UH9JkuBA/ETg87JCjzenz+PxSGIszLg69iWutXZDPJm2D3xXKDeka9vnDaHIc75bS2ZpIvgor91Nen15gaKkika5G+ZT+BUvgRzby0nKlQ2EhCTLCXLhABYv1vCoNZUgmDaUmGCWMk9w6/k/oExPrRp0HGAooR9QgtpiW82vTgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -7748,7 +7945,7 @@ text &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 70.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAACJ0lEQVR42nWTiZLiMAxE8///x3AHyH05iXPfPS0XsMPujqtUMcZuv5Zka9s2NP34jn6cEacK17uDRBVw/RBZXsINIhRVg26Y0XJf3Q2cT5AhGq+wRGCcF/wcZVHAeTygyxJKZWibGmEYYhyGj30iOD3PipgMq257lDyYpiniJEGe5+aPaZpQUDjLMn5LrOuKZVl4gTLiURRBkXxe1g9KS9ctRQrc7CuOxyNSCszzjKqqeDDAYb9HHCcYSNe2Lc7nE3a7HfZcf7g+llXItj+Euul4U84DPZqmMYRCorU2Al3XGapxHM28oX2hneeJjrIPwrflh+MgpV2lcjiu+7aWcE3SEcexIRbRvu/xVEDK/dPfghUFgyA0RTjRsud5Jke2bZs8nU4nuK7HPQG/rnEhQyiTLP8/oesHiEgTsTAeD0oOpRgiLOH7viGUPIptI/CboBDGpEvOZ3hfX0hIJpYll2L7drsZURESwZflXwV7KcrhAJtVuzIyznmS+VHG4v1+h8Mc13X9Qfir5U7ahnTB5WIojSAppPJSjFffScWFbvjR3FKUf/qwGUYk9wcWJn8KfGiKbNuKhkR935kG17rkdzQh7TRQuGVxgijF+iR7DYsVgL7YyImfNy0KEne8pG475KVGoSsT8n5lvdA1SoYqNCruFyqx/wpLkssSIggj9qOLTHLn+ea3w3YJ+Uo8dkEQ0j5flMeKh1HCF6VMSqIoNK/L81zkfKrfZHYwW/yqoTcAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 70.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAidJREFUeNp1k4mS4jAMRPP//8dwB8h9OYlz3z0tF7DD7o6rVDHGbr+WZGvbNjT9+I5+nBGnCte7g0QVcP0QWV7CDSIUVYNumNFyX90NnE+QIRqvsERgnBf8HGVRwHk8oMsSSmVomxphGGIcho99Ijg9z4qYDKtue5Q8mKYp4iRBnufmj2maUFA4yzJ+S6zrimVZeIEy4lEUQZF8XtYPSkvXLUUK3OwrjscjUgrM84yqqngwwGG/RxwnGEjXti3O5xN2ux32XH+4PpZVyLY/hLrpeFPOAz2apjGEQqK1NgJd1xmqcRzNvKF9oZ3niY6yD8K35YfjIKVdpXI4rvu2lnBN0hHHsSEW0b7v8VRAyv3T34IVBYMgNEU40bLneSZHtm2bPJ1OJ7iuxz0Bv65xIUMokyz/P6HrB4hIE7EwHg9KDqUYIizh+74hlDyKbSPwm6AQxqRLzmd4X19ISCaWJZdi+3a7GVEREsGX5V8FeynK4QCbVbsyMs55kvlRxuL9fofDHNd1/UH4q+VO2oZ0weViKI0gKaTyUoxX30nFhW740dxSlH/6sBlGJPcHFiZ/CnxoimzbioZEfd+ZBte65Hc0Ie00ULhlcYIoxfokew2LFYC+2MiJnzctChJ3vKRuO+SlRqErE/J+Zb3QNUqGKjQq7hcqsf8KS5LLEiIII/aji0xy5/nmt8N2CflKPHZBENI+X5THiodRwhelTEqiKDSvy/Nc5Hyq32R2MFv8qqE3AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -8447,7 +8644,7 @@ docker-compose up --build -d&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 8%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAeklEQVR42l2O2w6CMBBE+RNF5WJiGilIA1ZLKRFE/f/PObZ9Mj7sw86cndlkl5fsiyN6GBGyJs2KuP/O9pBTXRTz+uZuHaKqoyZbxTQ/Ub1Gej9kJeEgzUquxtJ2fQT/A0OJkA3usbC8PnT6xsZzp7P0j1iMm9BmiNwXZEY+l8CjMxsAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 8%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAHpJREFUeNpdjtsOgjAQRPkTReViYhopSANWSykRRP3/zzm2fTI+7MPOnJ3ZZJeX7IsjehgRsibNirj/zvaQU10U8/rmbh2iqqMmW8U0P1G9Rno/ZCXhIM1KrsbSdn0E/wNDiZAN7rGwvD50+sbGc6ez9I9YjJvQZojcF2RGPpfAozMbAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -8509,7 +8706,7 @@ docker-compose up --build -d&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 17.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAwElEQVR42nWP1xKCMBBF+RNRIJQIFkZEQAZCCVjG9v/fck1Wxxf1YSft7tkTIwgXMG2GcBUj2WWYMY/Kcv1P6fdtXkB0EnGS0h3jIUQvkWQ5eLSkzCbNYEwshqnjElB0PWwv+ALqTFqUOF9v6McjXAVjwRxV26GRA0rRKIYamhUwTAXTwCjeoBvGP0CHgJf7g4aygMNXVvJwwr4SaOVI5juVMaZvIF+sUVT1T+Dry3uyK2tBdo7P1b6hHm2mz4lan5S6feZTQkuyAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 17.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAMBJREFUeNp1j9cSgjAQRfkTUSCUCBZGREAGQglYxvb/33JNVscX9WEn7e7ZEyMIFzBthnAVI9llmDGPynL9T+n3bV5AdBJxktId4yFEL5FkOXi0pMwmzWBMLIap4xJQdD1sL/gC6kxalDhfb+jHI1wFY8EcVduhkQNK0SiGGpoVMEwF08Ao3qAbxj9Ah4CX+4OGsoDDV1bycMK+EmjlSOY7lTGmbyBfrFFU9U/g68t7sitrQXaOz9W+oR5tps+JWp+Uun3mU0JLsgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -8551,7 +8748,7 @@ docker-compose up --build -d&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 38.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABhklEQVR42l2R23KiQBRF+Y6ZqUQFFLwgCgpya+5gNKTm8jL//yFrujtmKpWHVQ1UsXrvcwxxvxCWe465zz7OiaKCNhYkSYkvOcjnQ5bhhSk7P8A7hkRphh+cWLobVpstztZjZi253icMUQ4EYUJVj6SiZJI054g/XUcsCs5xyunNwg1trPVK//hkWjybNnN7pVksHb49zWiHK0YzlcTNmeZek3Ujt+7Gr7LndXglqwcq0VPdMuL7ibgLCfNQpgxwd3s2+4PEl8mPuDLl9PM3RtEViL6kGlvyquVS1OSiIa17RlHz93hm8gJM19PVnO1O1txhy7qOPNW7+m7KlC/TG0acFlog6pZDeNK3qZt3/oF9EOpvak6qqq5nO7qiYv7AXLl8f57TjS8YSV5QVI1MV+v4a++BrKTOjUTVW8o0agmLh+AzlrPmx8ykv94wMlHRDKNGbU5tUaFEekYPoaplu+v/ws/id+HiXSjqhqysqNqeKEm5yMRRkmmZGvTHJhV6Vl9kX4X/ABju/tbC0L/4AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 38.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAYZJREFUeNpdkdtyokAURfmOmalEBRS8IAoKcmvuYDSk5vIy//8ha7o7ZiqVh1UNVLF673MMcb8QlnuOuc8+zomigjYWJEmJLznI50OW4YUpOz/AO4ZEaYYfnFi6G1abLc7WY2Ytud4nDFEOBGFCVY+komSSNOeIP11HLArOccrpzcINbaz1Sv/4ZFo8mzZze6VZLB2+Pc1ohytGM5XEzZnmXpN1I7fuxq+y53V4JasHKtFT3TLi+4m4CwnzUKYMcHd7NvuDxJfJj7gy5fTzN0bRFYi+pBpb8qrlUtTkoiGte0ZR8/d4ZvICTNfT1ZztTtbcYcu6jjzVu/puypQv0xtGnBZaIOqWQ3jSt6mbd/6BfRDqb2pOqqquZzu6omL+wFy5fH+e040vGEleUFSNTFfr+Gvvgaykzo1E1VvKNGoJi4fgM5az5sfMpL/eMDJR0QyjRm1ObVGhRHpGD6GqZbvr/8LP4nfh4l0o6oasrKjanihJucjEUZJpmRr0xyYVelZfZF+F/wAY7v7WwtC/+AAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -8586,7 +8783,7 @@ docker-compose up --build -d&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 37.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABYElEQVR42oWS2XKCQBBF+Y+kUsaoICCrxIVtgAFRSSyroGLikv//iptmEnxKzMOpXmbp2z0jMZ4jZCnKzRbZeost+fnExKncIC1KJJwjbmwYngXNtDDWTaiG9SdSyBLMlgGyYoWILs8jhsIPUecrLGlt7kd43hhY7MdwUh2qp+FJVtAbjH5FShoPfmUhqgLMsxcU+Q4136HMKvhpBcZfERRreJzReopZnMKdzTGmLnTLwcR2hDLTmYpYCnkItkrAiowUcbz5DAc/xjnJ8U7qancGZrjoKwYU1YCsTQTDsQZFNwQjVf/2KS8t6HDEMjFH03FFFcOimZG1px4sd0qHVdHO41BGf6RcaeMuJ3yyUpSkiDOOgOal/rShmfaVNm7b65QMFPUm0iIIESUZfHoMWdPFpa3tNgyJTtFDf4C7Xh/3N5CO5wsOxxOOl0/s6wbN4UPYnL5NSxAnYhwCKhz9wxdNqQNDR8ch/QAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 37.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAWBJREFUeNqFktlygkAQRfmPpFLGqCAgq8SFbYABUUksq6Bi4pL//4qbZhJ8SszDqV5m6ds9IzGeI2Qpys0W2XqLLfn5xMSp3CAtSiScI25sGJ4FzbQw1k2ohvUnUsgSzJYBsmKFiC7PI4bCD1HnKyxpbe5HeN4YWOzHcFIdqqfhSVbQG4x+RUoaD35lIaoCzLMXFPkONd+hzCr4aQXGXxEUa3ic0XqKWZzCnc0xpi50y8HEdoQy05mKWAp5CLZKwIqMFHG8+QwHP8Y5yfFO6mp3Bma46CsGFNWArE0Ew7EGRTcEI1X/9ikvLehwxDIxR9NxRRXDopmRtaceLHdKh1XRzuNQRn+kXGnjLid8slKUpIgzjoDmpf60oZn2lTZu2+uUDBT1JtIiCBElGXx6DFnTxaWt7TYMiU7RQ3+Au14f9zeQjucLDscTjpdP7OsGzeFD2Jy+TUsQJ2IcAioc/cMXTakDQ0fHIf0AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -10898,7 +11095,7 @@ systemctl restart haproxy&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 42%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABE0lEQVR42lVRxw6FMAzr/38bdyQ4MCSGGAVa9sqrI4J4SFHaNLEdo8h953nSPM84Utu2lKYp5XlOcRxT4+5hGJK1lutlWZLneVxD+L7P9SAIuF8ZY2iaJrqui+77puM4aNs22vedSax7L4qC+r6nJEmYMMsyapqG6rrmO97WdaVlWUiBcXEXgOFDcRgGJgEZ7hgShRjuuo4BQIw+EOsHWIEVCrTuXgBRuD5EUI0NUJMNDndGRg/qAGaFYBNWNCPgKQCQERj8ZumRLIEZBfPhidb6fQCjnM3jIQjRi00YyMX+ESCZFcIzZAESpQhrDXs4jiN7xes+b2LBV4SKooj/XlVVr1/SiCz+iHdYC74JyJ+vLv8AshNonjZhx/oAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 42%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAARNJREFUeNpVUccOhTAM6/9/G3ckODAkhhgFWvbKqyOCeEhR2jSxHaPIfed50jzPOFLbtpSmKeV5TnEcU+PuYRiStZbrZVmS53lcQ/i+z/UgCLhfGWNomia6rovu+6bjOGjbNtr3nUmsey+Kgvq+pyRJmDDLMmqahuq65jve1nWlZVlIgXFxF4DhQ3EYBiYBGe4YEoUY7rqOAUCMPhDrB1iBFQq07l4AUbg+RFCNDVCTDQ53RkYP6gBmhWATVjQj4CkAkBEY/GbpkSyBGQXz4YnW+n0Ao5zN4yEI0YtNGMjF/hEgmRXCM2QBEqUIaw17OI4je8XrPm9iwVeEiqKI/15VVa9f0ogs/oh3WAu+Ccifry7/ALITaJ42Ycf6AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -11380,7 +11577,7 @@ psql -U postgres&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 72.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB0UlEQVR42mVT7YKiMAzkaQ6oQAstHwIq7q4/7vb9nyc3k1Jd3B9jNG0nmUnMXLhIN9yk8Yuc7Cj5yQPdAQVRecQ3VK9Yu1FKO0sWCa/SjTcQDlLUo7TTQ5rhUxyiG7+k8pvkzSKFXYHliD1fhbuU7iKZ9au0/RW4iEWXRd2LccsBrFzUEx6fd0xH4My4FfdWySp3lqabpW4BRjtJ3aD9Ojzx24Lf8ssqgHwm4aSdRdJJmvAhfv4WDwv8dFd/WZT3iBMKFnxc9W9xJzTo5o/pIkoHr2ax40PasCpZtOMF5sw+PJIwlrCp8ZS80MM43QSDQxcWsRiWBSmRyPidQ6TvphmenZX18CJsuiiXxPSwxEX6GfPItedoxe4zI/OUn5t2X7O0Pj0koys/buIw5Vi11wupY+3CXuUEH1OOZLxbtvBXC+LMRW91ygHm+2lTYsphJ5TIbuhP6R9qgXYHJZRtSMA87hM8y0nIqXEHudxuf6R+4eFTjnE6NP3N4VEBO9/zema62CE/UtVkNiVwmk/J7DIBltDnFoMoT0HJ8x9QwrTUaQi04TjJ/geCrk2LN1QXvZ30DfNZ/lbhHWnXXt87HcR8+4v//12W7VvjfPsHVZv8B++DuDOu5MUNAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 72.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAdFJREFUeNplU+2CojAM5GkOqEALLR8CKu6uP+72/Z8nN5NSXdwfYzRtJ5lJzFy4SDfcpPGLnOwo+ckD3QEFUXnEN1SvWLtRSjtLFgmv0o03EA5S1KO000Oa4VMcohu/pPKb5M0ihV2B5Yg9X4W7lO4imfWrtP0VuIhFl0Xdi3HLAaxc1BMen3dMR+DMuBX3Vskqd5amm6VuAUY7Sd2g/To88duC3/LLKoB8JuGknUXSSZrwIX7+Fg8L/HRXf1mU94gTChZ8XPVvcSc06OaP6SJKB69mseND2rAqWbTjBebMPjySMJawqfGUvNDDON0Eg0MXFrEYlgUpkcj4nUOk76YZnp2V9fAibLool8T0sMRF+hnzyLXnaMXuMyPzlJ+bdl+ztD49JKMrP27iMOVYtdcLqWPtwl7lBB9TjmS8W7bwVwvizEVvdcoB5vtpU2LKYSeUyG7oT+kfaoF2ByWUbUjAPO4TPMtJyKlxB7ncbn+kfuHhU45xOjT9zeFRATvf83pmutghP1LVZDYlcJpPyewyAZbQ5xaDKE9ByfMfUMK01GkItOE4yf4Hgq5NizdUF72d9A3zWf5W4R1p117fOx3EfPuL//9dlu1b43z7B1Wb/Afvg7gzruTFDQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -12546,7 +12743,7 @@ Choose org.apache.maven.archetypes:maven-archetype-quickstart version:&lt;/code&
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 75.99999999999999%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB4ElEQVR42o1U6VqjQBDkSfbQHCThHu5juEnUaNb3f5ja7tbwRc2a/VFfMzAU1VU9GElRoR0nlE2Lnetj63iwvECwo2u+Z3m+rPkZY72zcbcycb/efIERxAl01yPOCvxarPB7ub6JMxnXz8RGlOZYbS38vF/OG67hs5J/KuRWWaVKUmnNpHa4JdOy5UOm5Qi+I/lAOBwe0PQDaoJue/TTAVXboSNfC93geHoVj9+Ubm4T1t0gL7LSsm6lxnkBV4WizAlCCeYW0Uw47g+krAMTP72c4IcxftwtxHwOib39PqyPXhuJ7mH7IWwaC4/IWM3ZR/ZwPXvqyH2u8/r9WkB7F+aWCPtnqLSAH8VCGKaZwAsjURvnpYTmBAqOr2QP2+GSFa6KSIyCRSJYCAswsuEE3Y8YKZys1OimvXiZ65rCGnE4PtMwu9L6/7RtpN0RRdNJ0nxqOGX2k8mLukE7TKKYO2A1t0bHSIcXGpmJFD4ir2qMD48yPpw8kz2d/hBRIMFcno7Lgb/8iJGQwlRrZLpEUhYyMgn5xgq5MvyIBj9Oxcvgvb4pDr4evWx8RVxniGoFVSkxXJK+SHFru+LjDFl7WG52V85yvUdIP4aU/OMEc2o1q7QkyGuPKo/DNVy2e65/ARr+0I/NEDTtAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 75.99999999999999%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAeBJREFUeNqNVOlao0AQ5En20Bwk4R7uY7hJ1GjW93+Y2u7W8EXNmv1RXzMwFNVVPRhJUaEdJ5RNi53rY+t4sLxAsKNrvmd5vqz5GWO9s3G3MnG/3nyBEcQJdNcjzgr8Wqzwe7m+iTMZ18/ERpTmWG0t/Lxfzhuu4bOSfyrkVlmlSlJpzaR2uCXTsuVDpuUIviP5QDgcHtD0A2qCbnv00wFV26EjXwvd4Hh6FY/flG5uE9bdIC+y0rJupcZ5AVeFoswJQgnmFtFMOO4PpKwDEz+9nOCHMX7cLcR8Dom9/T6sj14bie5h+yFsGguPyFjN2Uf2cD176sh9rvP6/VpAexfmlgj7Z6i0gB/FQhimmcALI1Eb56WE5gQKjq9kD9vhkhWuikiMgkUiWAgLMLLhBN2PGCmcrNTopr14meuawhpxOD7TMLvS+v+0baTdEUXTSdJ8ajhl9pPJi7pBO0yimDtgNbdGx0iHFxqZiRQ+Iq9qjA+PMj6cPJM9nf4QUSDBXJ6Oy4G//IiRkMJUa2S6RFIWMjIJ+cYKuTL8iAY/TsXL4L2+KQ6+Hr1sfEVcZ4hqBVUpMVySvkhxa7vi4wxZe1hudlfOcr1HSD+GlPzjBHNqNau0JMhrjyqPwzVctnuufwEa/tCPzRA07QAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -12981,7 +13178,7 @@ redis-server --service-start&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 52%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABZklEQVR42lWSaXaDMAyEOUqXhM3YeAMMJr3/rVSNbGjzYx56SfgyM1Kjgia9GIpHoiVl2vJJ65Ep5Zc8l3TQZD0ZH0jNTuZOafp8dvTV9m/67gZqADTLXIGHgLbjpGU/GHiKJutIM0iArEHP1A6K2nG69ehHgTaaYfPmaM25gjKtrP31IzNgAGnn7xkutQvsOgq8n4y4EyDcWQaGY6WQksBcXOXF62VxKED/93n97jmM4g4uJfIFdHsgt0WJjbhwCwfFDXfIjvCEs6sCzDP/Bv3iDwAX4Lw68tvG7k4ByjIYijiDNhKpzCXeWOfRWFHH7j4ebYk8RSNALMenRZYQtiTbVnUBcIIZkRDvev7XHVlXoI6I7inWTReX5XzQqWVpiR1Kr7XL9z4VNaOfGGgZaBm2s7NXPZkssnEhxbG0LUsZ64yzgaNL1y02kzfiDHEFtOd7MXCLviA1W3Fz9VZOKdynhG4B/AUwXzewd3eQDgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 52%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAWZJREFUeNpVkml2gzAMhDlKl4TN2HgDDCa9/61UjWxo82Meekn4MjNSo4ImvRiKR6IlZdrySeuRKeWXPJd00GQ9GR9IzU7mTmn6fHb01fZv+u4GagA0y1yBh4C246RlPxh4iibrSDNIgKxBz9QOitpxuvXoR4E2mmHz5mjNuYIyraz99SMzYABp5+8ZLrUL7DoKvJ+MuBMg3FkGhmOlkJLAXFzlxetlcShA//d5/e45jOIOLiXyBXR7ILdFiY24cAsHxQ13yI7whLOrAswz/wb94g8AF+C8OvLbxu5OAcoyGIo4gzYSqcwl3ljn0VhRx+4+Hm2JPEUjQCzHp0WWELYk21Z1AXCCGZEQ73r+1x1ZV6COiO4p1k0Xl+V80KllaYkdSq+1y/c+FTWjnxhoGWgZtrOzVz2ZLLJxIcWxtC1LGeuMs4GjS9ctNpM34gxxBbTnezFwi74gNVtxc/VWTincp4RuAfwFMF83sHd3kA4AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -13012,251 +13209,6 @@ java-1.8.0-openjdk-amd64       &lt;span class=&quot;token number&quot;&gt;1081&l
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ update-java-alternatives -s java-1.8.0-openjdk-amd64&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;터미널에서 &lt;strong&gt;java -version&lt;/strong&gt; 명령어로 버전이 변경 되었는지 확인한다.&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[postgreSQL Replication]]></title><description><![CDATA[1. postgreSQL Replication? PostgreSQL에는 여러가지 Replication 방법이 있는데 Master/Master의 이중화는 아직 써본적이 없어서 Master/Slave로 구성했던 Streaming Replication…]]></description><link>https://bingbingpa.github.io/postgresql-replication/</link><guid isPermaLink="false">https://bingbingpa.github.io/postgresql-replication/</guid><pubDate>Sat, 17 Aug 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. postgreSQL Replication?&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;PostgreSQL에는 여러가지 Replication 방법이 있는데 Master/Master의 이중화는 아직 써본적이 없어서 Master/Slave로 구성했던 Streaming Replication에 대해 기록하려고 한다. Streaming Replication은 WAL(Write  Ahead Log)를 전달해서 Replication을 Transaction Log Shipping 하는 방법중에 하나이다. WAL은 Databse 변경 사항만을 저장한 Log를 말하며, Transaction Log Shipping을 이용한 Replication은 양쪽 DB의 원본이 동일하게 출발하였다면 Primary DB Server에서 발생하는 변경사항을 기록한 WAL 파일들을 다른 DB Server에 순서에 맞춰 적용시키면 동일한 DB가 된다는 개념을 바탕으로 이루어 졌다. &lt;a href=&quot;https://browndwarf.tistory.com/4&quot;&gt;참고사이트&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;2. Master Server 설정&lt;/h2&gt;
-&lt;h3&gt;2-1. Replication(복제)를 위한 user 생성&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Replication을 담당할 사용자 계정을 추가한다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ psql -U postgres&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;postgres&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;#  CREATE ROLE replicator WITH LOGIN REPLICATION;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;psql에서 &lt;strong&gt;\du&lt;/strong&gt; 명령으로 유저가 정상적으로 등록 되었는지 확인 할 수 있다.
-
-  &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/71b9f460e2340a143f6650357e0ed6e1/66caf/user.png&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-  
-  &lt;span
-    class=&quot;gatsby-resp-image-wrapper&quot;
-    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
-  &gt;
-    &lt;span
-      class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 15.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAg0lEQVR42mWO6wrDIAxG7SrW+6UOOvX9n/NbEkah7MchkS85RtXWUGtFzhmvbYNS6oF1TrJSCvS+/+WM1lqQd+9vjDFoIcN7jxgjHEmY47AiWmsJKSWZsdbCUfU/OOOjRNp7x5yTRAHX9cGk8DzbLTXGkPgQeDmEIEL+mHueCcHf134BJcRC9/4I0tsAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
-    &gt;
-      &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
-        alt=&quot;user.png&quot;
-        title=&quot;&quot;
-        src=&quot;/static/71b9f460e2340a143f6650357e0ed6e1/5a190/user.png&quot;
-        srcset=&quot;/static/71b9f460e2340a143f6650357e0ed6e1/772e8/user.png 200w,
-/static/71b9f460e2340a143f6650357e0ed6e1/e17e5/user.png 400w,
-/static/71b9f460e2340a143f6650357e0ed6e1/5a190/user.png 800w,
-/static/71b9f460e2340a143f6650357e0ed6e1/66caf/user.png 853w&quot;
-        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
-      /&gt;
-    &lt;/span&gt;
-  &lt;/span&gt;
-  
-  &lt;/a&gt;
-    &lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;2-2. 권한 설정&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;생성한 replication user가 복제할 수 있게 권한을 부여하고 외부에서 접근 할 수 있도록 postgres.conf 파일과 pg_hba.conf 파일을 수정한다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;su&lt;/span&gt; postgres
-bash-4.2$ &lt;span class=&quot;token function&quot;&gt;vi&lt;/span&gt; postgres.conf
-listen_address &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; ‘*’&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;bash-4.2$ &lt;span class=&quot;token function&quot;&gt;vi&lt;/span&gt; pg_hba.conf
-&lt;span class=&quot;token function&quot;&gt;host&lt;/span&gt;    replication replicator    “Slave IP”/32    trust&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;2-3. replication 관련 설정&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;postgres.conf 파일을 다시 한번 수정한다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;wal_level : replication이 가능한 wal이 생성된다.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;logical : hot_standby + WAL로부터 논리적 변경 집합을 사용하는 데 필요한 정보. WAL 볼륨이 증가하여 백업 서버가 많아 지면 성능이 저하된다고 한다.&lt;/li&gt;
-&lt;li&gt;hot_standby : archive + 백업서버의 읽기 전용 쿼리를 지원한다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;archive_mode : WAL archive 파일을 위한 디스크 확보가 어렵거나 DB의 유지 보수 점검이 어려울 경우에 off로 설정 할수도 있다. 단점으로는 슬레이브 DB의 데이터 갱신이 장시간 지연되었을 경우 그 이후 데이터 처리가 정확히 반영되지 못할 수도 있다. 마스터 DB와 동기화가 이뤄지지 않았을 경우에는 다시 마스터 DB의 복제를 해야 할 필요도 생긴다.&lt;/li&gt;
-&lt;li&gt;max&lt;em&gt;wal&lt;/em&gt;senders : 접속가능한 슬레이브의 접속수를 설정한다.( 슬레이브 수 + 1)&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;wal&lt;em&gt;keep&lt;/em&gt;segments : 리플리케이션용으로 남겨둘 WAL 파일의 수를 지정한다. (8~32가 적당)&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;su&lt;/span&gt; postgres
-bash-4.2$ &lt;span class=&quot;token function&quot;&gt;vi&lt;/span&gt; postgres.conf
-wal_level &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; hot_standby
-archive_mode &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; on
-max_wal_senders &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;2&lt;/span&gt;
-wal_keep_segments &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;32&lt;/span&gt;
-max_replication_slots &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;2&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;2-4. Replication Slot생성&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Replication Slot을 생성하기 위해서는 위에서 변경된 postgresql.conf가 반영된 상태에서 postgreSQL을 재시작 후에 진행 하도록 한다. (sudo service postgresql-”버전” restart)&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;su&lt;/span&gt; postgres
-$ psql -U postgres&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;postgres&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;# SELECT * FROM pg_create_physical_replication_slot(&apos;replication_slot&apos;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;
-  &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/1590c92d158e41c6b3d85ca62ad6d96e/ad12c/slot.png&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-  
-  &lt;span
-    class=&quot;gatsby-resp-image-wrapper&quot;
-    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
-  &gt;
-    &lt;span
-      class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 21.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAk0lEQVR42p2PywrDIBBF1aLxbWoaoiUNCM0+/f+Pu1UpgS7bxWFezJ255DhemGLEtm3w3mMcr9Bag1IKQsjvPPcdOSfklLtw7EwwxiCEAGttz5VSPbZjLW9obc5e48IYSEoJ83yrorkKeKg6WNcH7rVOy9IXpJQYhuGMDc75V08IAcaqq1JKFZzhnOvftOFfVj+8AY6QWJbUUPXcAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
-    &gt;
-      &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
-        alt=&quot;slot.png&quot;
-        title=&quot;&quot;
-        src=&quot;/static/1590c92d158e41c6b3d85ca62ad6d96e/5a190/slot.png&quot;
-        srcset=&quot;/static/1590c92d158e41c6b3d85ca62ad6d96e/772e8/slot.png 200w,
-/static/1590c92d158e41c6b3d85ca62ad6d96e/e17e5/slot.png 400w,
-/static/1590c92d158e41c6b3d85ca62ad6d96e/5a190/slot.png 800w,
-/static/1590c92d158e41c6b3d85ca62ad6d96e/ad12c/slot.png 856w&quot;
-        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
-      /&gt;
-    &lt;/span&gt;
-  &lt;/span&gt;
-  
-  &lt;/a&gt;
-    &lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;3. Slave Server 설정&lt;/h2&gt;
-&lt;h3&gt;3-1. Master DB 복사&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;Slave Server는 postgresql만 설치된 상태에서 진행 하도록 한다. 만약 설정할 db data폴더가 있다면 지우거나 백업 후 실행 하도록 한다.&lt;/li&gt;
-&lt;li&gt;복사하고자 하는 Master server 와 Slaver server 간의 포트를 열어주어야 한다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;pg&lt;em&gt;basebackup을 이용해서 DB를 복사하도록 하고 pg&lt;/em&gt;basebackup과 data폴더 경로는 설치하는 환경에 맞게 바꿔주어야 한다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;su&lt;/span&gt; postgres
-bash-4.2$ /usr/pgsql-9.6/bin/pg_basebackup -R -h “마스터IP” -D /data/pg_data/ -U replicator -v -P -xlog-method&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;stream&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;3-2. postgres.conf 설정&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;postgres.conf 파일을 수정한다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;properties&quot;&gt;&lt;pre class=&quot;language-properties&quot;&gt;&lt;code class=&quot;language-properties&quot;&gt;&lt;span class=&quot;token attr-name&quot;&gt;listen_addresses&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;&apos;*&apos;&lt;/span&gt;
-&lt;span class=&quot;token attr-name&quot;&gt;hot_standby&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;on&lt;/span&gt;
-&lt;span class=&quot;token attr-name&quot;&gt;hot_standby_feedback&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;on&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;3-3. recovery.conf 설정&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;DB 복사후에 초기에는 recovery.conf 파일이 없으므로 복사한 postgres의 데이터 폴더에 파일을 생성한다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;primary&lt;em&gt;slot&lt;/em&gt;name은 Master server에서 설정한 slot name을 작성한다.&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;properties&quot;&gt;&lt;pre class=&quot;language-properties&quot;&gt;&lt;code class=&quot;language-properties&quot;&gt;&lt;span class=&quot;token attr-name&quot;&gt;standby_mode&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;&apos;on&apos;&lt;/span&gt;
-&lt;span class=&quot;token attr-name&quot;&gt;primary_conninfo&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;&apos;user=replicator host=”마스터IP” port=5432 sslmode=prefer sslcompression=1 krbsrvname=postgres&apos;&lt;/span&gt;
-&lt;span class=&quot;token attr-name&quot;&gt;primary_slot_name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&apos;replication_slot&apos;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;4. 설정 확인&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Standby Server의 PostgreSQL Service를 가동 시키면 위에서 설정한 설정 값에 의해 Streaming Replication이 동작하게 된다.&lt;/li&gt;
-&lt;li&gt;Master Server의 pg&lt;em&gt;stat&lt;/em&gt;replication view를 확인해본다.
-
-  &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/207c4a64e69ab10c9e59a6e3e75a175d/2e694/view.png&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-  
-  &lt;span
-    class=&quot;gatsby-resp-image-wrapper&quot;
-    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
-  &gt;
-    &lt;span
-      class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 16%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAm0lEQVR42j2OWQ7CMAxE02xNW8cpoWKp1JZDIMH9LzY4FvAxGmtsP9ts24Z931XH8RA/MM8zmBk5ZxCRqu97mK7T2oqnlDBNhBij9sZxxDAkGOasgHquWJYFlAnrfcX7+UI9VRhjEEKQ5Ulh7QhzUZBzDln2SykCG6RHDcj/oLmVoRgibpcrgg8KbLLWKsB9/Ze32nuPTr52zuID4XRD4cOopEsAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
-    &gt;
-      &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
-        alt=&quot;view.png&quot;
-        title=&quot;&quot;
-        src=&quot;/static/207c4a64e69ab10c9e59a6e3e75a175d/5a190/view.png&quot;
-        srcset=&quot;/static/207c4a64e69ab10c9e59a6e3e75a175d/772e8/view.png 200w,
-/static/207c4a64e69ab10c9e59a6e3e75a175d/e17e5/view.png 400w,
-/static/207c4a64e69ab10c9e59a6e3e75a175d/5a190/view.png 800w,
-/static/207c4a64e69ab10c9e59a6e3e75a175d/2e694/view.png 1048w&quot;
-        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
-      /&gt;
-    &lt;/span&gt;
-  &lt;/span&gt;
-  
-  &lt;/a&gt;
-    &lt;/li&gt;
-&lt;li&gt;systemctl로 service status를 조회해 본다.
-
-  &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/be81e286eb70feb04d6c82bf4b1420c5/e996b/status.png&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-  
-  &lt;span
-    class=&quot;gatsby-resp-image-wrapper&quot;
-    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
-  &gt;
-    &lt;span
-      class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 42%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABOUlEQVR42o2R646CMBCFQQUiVORqgFKutlTU93+847SridnVZH98mQY6pzPnOPqi0Q8DxCDQjR2WZYFSi61tK5AkCeEhigKEIaNqzhs4jvOZgcS6oYO6SsiLwnmeMRFSStR1jaIokOcZjscYh0OMOPbBGInHETzm/RU0TU3DoaSCPEtwOnPOrUAURQSzF13XfeI8ceG4Hyb0PA9JmkJrWr3v7WTTNCHc722T+W+bv634myAIkJLgdV1JcMA4jphp5ZJW3W43/xd6sdvtyJsDlFbgLYcQFE7XkQ0NyryEmhW01ORdDPM4YyaY8LtgVVXIsgyccVRpjVZwNHWDqj6hEgX6rre+mnsmcd/3YYZ4+frurxW83W82VeVTKCeJ9b7+BLQo1KOwfhpvz+StqebxLM9RlieifKOw3x/oBrynKUfZHgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
-    &gt;
-      &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
-        alt=&quot;status.png&quot;
-        title=&quot;&quot;
-        src=&quot;/static/be81e286eb70feb04d6c82bf4b1420c5/5a190/status.png&quot;
-        srcset=&quot;/static/be81e286eb70feb04d6c82bf4b1420c5/772e8/status.png 200w,
-/static/be81e286eb70feb04d6c82bf4b1420c5/e17e5/status.png 400w,
-/static/be81e286eb70feb04d6c82bf4b1420c5/5a190/status.png 800w,
-/static/be81e286eb70feb04d6c82bf4b1420c5/e996b/status.png 1050w&quot;
-        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
-      /&gt;
-    &lt;/span&gt;
-  &lt;/span&gt;
-  
-  &lt;/a&gt;
-    &lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;5. Test&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Master server에서 테이블을 하나 생성후 샘플 데이터를 넣고 Slave server에서 정상적으로 생기는지 확인한다&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Master Server&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;postgres&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;# CREATE TABLE test (id serial, name character varying);&lt;/span&gt;
-postgres&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;# INSERT INTO test (name) VALUES (&apos;tester&apos;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Slave server&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;postgres&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;# SELECT * FROM test;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[rsync를 이용한 파일 동기화]]></title><description><![CDATA[1. ssh 설정 rsync를 통한 파일 동기화를 스케줄을 실행해 같은 시간에 반복적으로 돌릴 경우 원격 서버 접속시 패스워드를 묻게 되므로 ssh key…]]></description><link>https://bingbingpa.github.io/rsync/</link><guid isPermaLink="false">https://bingbingpa.github.io/rsync/</guid><pubDate>Sat, 17 Aug 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. ssh 설정&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;
@@ -13362,6 +13314,251 @@ $ &lt;span class=&quot;token function&quot;&gt;time&lt;/span&gt; &lt;span class=
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;:wq&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;저장&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;위에 설정한 내용은 다음과 같다. 매일 00시에 해당 커맨드를 실행하여 master와 slave의 디렉토리를 동기화하고 로그파일은 지정한 위치에 생성되고 bwlimit옵션에 설정한 네트워크 대역폭으로 해당 파일들을 전송하며, —delete옵션에 의해 mater에서 삭제된 파일은 slave에서 삭제되게 된다.&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[postgreSQL Replication]]></title><description><![CDATA[1. postgreSQL Replication? PostgreSQL에는 여러가지 Replication 방법이 있는데 Master/Master의 이중화는 아직 써본적이 없어서 Master/Slave로 구성했던 Streaming Replication…]]></description><link>https://bingbingpa.github.io/postgresql-replication/</link><guid isPermaLink="false">https://bingbingpa.github.io/postgresql-replication/</guid><pubDate>Sat, 17 Aug 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. postgreSQL Replication?&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;PostgreSQL에는 여러가지 Replication 방법이 있는데 Master/Master의 이중화는 아직 써본적이 없어서 Master/Slave로 구성했던 Streaming Replication에 대해 기록하려고 한다. Streaming Replication은 WAL(Write  Ahead Log)를 전달해서 Replication을 Transaction Log Shipping 하는 방법중에 하나이다. WAL은 Databse 변경 사항만을 저장한 Log를 말하며, Transaction Log Shipping을 이용한 Replication은 양쪽 DB의 원본이 동일하게 출발하였다면 Primary DB Server에서 발생하는 변경사항을 기록한 WAL 파일들을 다른 DB Server에 순서에 맞춰 적용시키면 동일한 DB가 된다는 개념을 바탕으로 이루어 졌다. &lt;a href=&quot;https://browndwarf.tistory.com/4&quot;&gt;참고사이트&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;2. Master Server 설정&lt;/h2&gt;
+&lt;h3&gt;2-1. Replication(복제)를 위한 user 생성&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Replication을 담당할 사용자 계정을 추가한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ psql -U postgres&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;postgres&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;#  CREATE ROLE replicator WITH LOGIN REPLICATION;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;psql에서 &lt;strong&gt;\du&lt;/strong&gt; 명령으로 유저가 정상적으로 등록 되었는지 확인 할 수 있다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/71b9f460e2340a143f6650357e0ed6e1/66caf/user.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 15.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAINJREFUeNpljusKwyAMRu0q1vulDjr1/Z/zWxJGoezHIZEvOUbV1lBrRc4Zr22DUuqBdU6yUgr0vv/ljNZakHfvb4wxaCHDe48YIxxJmOOwIlprCSklmbHWwlH1Pzjjo0Tae8eck0QB1/XBpPA82y01xpD4EHg5hCBC/ph7ngnB39d+ASXEQvf+CNLbAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;user.png&quot;
+        title=&quot;&quot;
+        src=&quot;/static/71b9f460e2340a143f6650357e0ed6e1/5a190/user.png&quot;
+        srcset=&quot;/static/71b9f460e2340a143f6650357e0ed6e1/772e8/user.png 200w,
+/static/71b9f460e2340a143f6650357e0ed6e1/e17e5/user.png 400w,
+/static/71b9f460e2340a143f6650357e0ed6e1/5a190/user.png 800w,
+/static/71b9f460e2340a143f6650357e0ed6e1/66caf/user.png 853w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;2-2. 권한 설정&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;생성한 replication user가 복제할 수 있게 권한을 부여하고 외부에서 접근 할 수 있도록 postgres.conf 파일과 pg_hba.conf 파일을 수정한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;su&lt;/span&gt; postgres
+bash-4.2$ &lt;span class=&quot;token function&quot;&gt;vi&lt;/span&gt; postgres.conf
+listen_address &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; ‘*’&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;bash-4.2$ &lt;span class=&quot;token function&quot;&gt;vi&lt;/span&gt; pg_hba.conf
+&lt;span class=&quot;token function&quot;&gt;host&lt;/span&gt;    replication replicator    “Slave IP”/32    trust&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;2-3. replication 관련 설정&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;postgres.conf 파일을 다시 한번 수정한다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;wal_level : replication이 가능한 wal이 생성된다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;logical : hot_standby + WAL로부터 논리적 변경 집합을 사용하는 데 필요한 정보. WAL 볼륨이 증가하여 백업 서버가 많아 지면 성능이 저하된다고 한다.&lt;/li&gt;
+&lt;li&gt;hot_standby : archive + 백업서버의 읽기 전용 쿼리를 지원한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;archive_mode : WAL archive 파일을 위한 디스크 확보가 어렵거나 DB의 유지 보수 점검이 어려울 경우에 off로 설정 할수도 있다. 단점으로는 슬레이브 DB의 데이터 갱신이 장시간 지연되었을 경우 그 이후 데이터 처리가 정확히 반영되지 못할 수도 있다. 마스터 DB와 동기화가 이뤄지지 않았을 경우에는 다시 마스터 DB의 복제를 해야 할 필요도 생긴다.&lt;/li&gt;
+&lt;li&gt;max&lt;em&gt;wal&lt;/em&gt;senders : 접속가능한 슬레이브의 접속수를 설정한다.( 슬레이브 수 + 1)&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;wal&lt;em&gt;keep&lt;/em&gt;segments : 리플리케이션용으로 남겨둘 WAL 파일의 수를 지정한다. (8~32가 적당)&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;su&lt;/span&gt; postgres
+bash-4.2$ &lt;span class=&quot;token function&quot;&gt;vi&lt;/span&gt; postgres.conf
+wal_level &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; hot_standby
+archive_mode &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; on
+max_wal_senders &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;2&lt;/span&gt;
+wal_keep_segments &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;32&lt;/span&gt;
+max_replication_slots &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;2&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;2-4. Replication Slot생성&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Replication Slot을 생성하기 위해서는 위에서 변경된 postgresql.conf가 반영된 상태에서 postgreSQL을 재시작 후에 진행 하도록 한다. (sudo service postgresql-”버전” restart)&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;su&lt;/span&gt; postgres
+$ psql -U postgres&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;postgres&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;# SELECT * FROM pg_create_physical_replication_slot(&apos;replication_slot&apos;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/1590c92d158e41c6b3d85ca62ad6d96e/ad12c/slot.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 21.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAJNJREFUeNqdj8sKwyAQRdWi8W1qGqIlDQjNPv3/j7tVKYEu28VhXsydueQ4XphixLZt8N5jHK/QWoNSCkLI7zz3HTkn5JS7cOxMMMYghABrbc+VUj22Yy1vaG3OXuPCGEhKCfN8q6K5CnioOljXB+61TsvSF6SUGIbhjA3O+VdPCAHGqqtSShWc4Zzr37ThX1Y/vAGOkFiW1FD13AAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;slot.png&quot;
+        title=&quot;&quot;
+        src=&quot;/static/1590c92d158e41c6b3d85ca62ad6d96e/5a190/slot.png&quot;
+        srcset=&quot;/static/1590c92d158e41c6b3d85ca62ad6d96e/772e8/slot.png 200w,
+/static/1590c92d158e41c6b3d85ca62ad6d96e/e17e5/slot.png 400w,
+/static/1590c92d158e41c6b3d85ca62ad6d96e/5a190/slot.png 800w,
+/static/1590c92d158e41c6b3d85ca62ad6d96e/ad12c/slot.png 856w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;3. Slave Server 설정&lt;/h2&gt;
+&lt;h3&gt;3-1. Master DB 복사&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Slave Server는 postgresql만 설치된 상태에서 진행 하도록 한다. 만약 설정할 db data폴더가 있다면 지우거나 백업 후 실행 하도록 한다.&lt;/li&gt;
+&lt;li&gt;복사하고자 하는 Master server 와 Slaver server 간의 포트를 열어주어야 한다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;pg&lt;em&gt;basebackup을 이용해서 DB를 복사하도록 하고 pg&lt;/em&gt;basebackup과 data폴더 경로는 설치하는 환경에 맞게 바꿔주어야 한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;su&lt;/span&gt; postgres
+bash-4.2$ /usr/pgsql-9.6/bin/pg_basebackup -R -h “마스터IP” -D /data/pg_data/ -U replicator -v -P -xlog-method&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;stream&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;3-2. postgres.conf 설정&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;postgres.conf 파일을 수정한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;properties&quot;&gt;&lt;pre class=&quot;language-properties&quot;&gt;&lt;code class=&quot;language-properties&quot;&gt;&lt;span class=&quot;token attr-name&quot;&gt;listen_addresses&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;&apos;*&apos;&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;hot_standby&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;on&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;hot_standby_feedback&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;on&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;3-3. recovery.conf 설정&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;DB 복사후에 초기에는 recovery.conf 파일이 없으므로 복사한 postgres의 데이터 폴더에 파일을 생성한다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;primary&lt;em&gt;slot&lt;/em&gt;name은 Master server에서 설정한 slot name을 작성한다.&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;properties&quot;&gt;&lt;pre class=&quot;language-properties&quot;&gt;&lt;code class=&quot;language-properties&quot;&gt;&lt;span class=&quot;token attr-name&quot;&gt;standby_mode&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;&apos;on&apos;&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;primary_conninfo&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token attr-value&quot;&gt;&apos;user=replicator host=”마스터IP” port=5432 sslmode=prefer sslcompression=1 krbsrvname=postgres&apos;&lt;/span&gt;
+&lt;span class=&quot;token attr-name&quot;&gt;primary_slot_name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&apos;replication_slot&apos;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;4. 설정 확인&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Standby Server의 PostgreSQL Service를 가동 시키면 위에서 설정한 설정 값에 의해 Streaming Replication이 동작하게 된다.&lt;/li&gt;
+&lt;li&gt;Master Server의 pg&lt;em&gt;stat&lt;/em&gt;replication view를 확인해본다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/207c4a64e69ab10c9e59a6e3e75a175d/2e694/view.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 16%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAJtJREFUeNo9jlkOwjAMRNNsTVvHKaFiqdSWQyDB/S82OBbwMRprbD/bbNuGfd9Vx/EQPzDPM5gZOWcQkarve5iu09qKp5QwTYQYo/bGccQwJBjmrIB6rliWBZQJ633F+/lCPVUYYxBCkOVJYe0Ic1GQcw5Z9kspAhukRw3I/6C5laEYIm6XK4IPCmyy1irAff2Xt9p7j06+ds7iA+F0Q+HDqKRLAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;view.png&quot;
+        title=&quot;&quot;
+        src=&quot;/static/207c4a64e69ab10c9e59a6e3e75a175d/5a190/view.png&quot;
+        srcset=&quot;/static/207c4a64e69ab10c9e59a6e3e75a175d/772e8/view.png 200w,
+/static/207c4a64e69ab10c9e59a6e3e75a175d/e17e5/view.png 400w,
+/static/207c4a64e69ab10c9e59a6e3e75a175d/5a190/view.png 800w,
+/static/207c4a64e69ab10c9e59a6e3e75a175d/2e694/view.png 1048w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;systemctl로 service status를 조회해 본다.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/be81e286eb70feb04d6c82bf4b1420c5/e996b/status.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 800px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 42%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAATlJREFUeNqNkeuOgjAQhUEFIlTkaoBSrrZU1Pd/vOO0q4nZ1WR/fJkGOqcz5zj6otEPA8Qg0I0dlmWBUoutbSuQJAnhIYoChCGjas4bOI7zmYHEuqGDukrIi8J5njERUkrUdY2iKJDnGY7HGIdDjDj2wRiJxxE85v0VNE1Nw6GkgjxLcDpzzq1AFEUEsxdd133iPHHhuB8m9DwPSZpCa1q97+1k0zQh3O9tk/lvm7+t+JsgCJCS4HVdSXDAOI6YaeWSVt1uN/8XerHb7cibA5RW4C2HEBRO15ENDcq8hJoVtNTkXQzzOGMmmPC7YFVVyLIMnHFUaY1WcDR1g6o+oRIF+q63vpp7JnHf92GGePn67q8VvN1vNlXlUygnifW+/gS0KNSjsH4ab8/kranm8SzPUZYnonyjsN8f6Aa8pylH2R4AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;status.png&quot;
+        title=&quot;&quot;
+        src=&quot;/static/be81e286eb70feb04d6c82bf4b1420c5/5a190/status.png&quot;
+        srcset=&quot;/static/be81e286eb70feb04d6c82bf4b1420c5/772e8/status.png 200w,
+/static/be81e286eb70feb04d6c82bf4b1420c5/e17e5/status.png 400w,
+/static/be81e286eb70feb04d6c82bf4b1420c5/5a190/status.png 800w,
+/static/be81e286eb70feb04d6c82bf4b1420c5/e996b/status.png 1050w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;5. Test&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Master server에서 테이블을 하나 생성후 샘플 데이터를 넣고 Slave server에서 정상적으로 생기는지 확인한다&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Master Server&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;postgres&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;# CREATE TABLE test (id serial, name character varying);&lt;/span&gt;
+postgres&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;# INSERT INTO test (name) VALUES (&apos;tester&apos;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Slave server&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;postgres&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;# SELECT * FROM test;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[fdisk 를 통한 파티션 분할]]></title><description><![CDATA[서버 세팅할 때 문서를 제대로 안만들어서 이건 그냥 안까먹게 정리용으로… fdisk -l 명령어로 물리적인 하드웨어 구성 확인 fdisk 파티션나눌 disk경로 나는 start는 default로 하고 end는 할당할 사이즈 만큼 했다. 예) +500G…]]></description><link>https://bingbingpa.github.io/linux-mount/</link><guid isPermaLink="false">https://bingbingpa.github.io/linux-mount/</guid><pubDate>Sun, 28 Jul 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;서버 세팅할 때 문서를 제대로 안만들어서 이건 그냥 안까먹게 정리용으로…&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;fdisk -l&lt;/strong&gt; 명령어로 물리적인 하드웨어 구성 확인&lt;/li&gt;
@@ -13478,7 +13675,7 @@ p or e -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 기본 �
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 66%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACRElEQVR42j1T2ZaiUBDjO+accex2wYVNdlBAdkTt//+bmqTUfqiDwq1UKsk1unGWvCglSjO5XBvJLqVcqqt8b01Zrrd47rSubS/j/SndOMnRcSXJLxJlZwniVFw/FC+MxTzaYvS3h4zzHQ2dNMOkjVXTihtEEiSZmAdLvjam2KdAQgz1CRCEIFFJrKC5+FGiz53liFH3I0BaPXDtBkwL9MPB8QDiy/YNSCYp2Cf5WSz39MswQ192KSQvK/S4YgzzA0BgVTdoqKTGb5YDsM/KK3OvA44Aeg0KVKIgyaWfZinqVvaWreeMcX7qhAqrdvhYAniCVhywt91fDYv3+2YYoaEnIeRIzoWkqAPO2Z4vm/0RDKHhuSSzAYLfdDL1sHDgw+7faiMn6JS9dXMgC4G48nh/SNP3aqyufHv8gF0nHoQumw5OWfJnsZTF91prZR5eA7AunWQdXe+tYa7GUee/X2slYMwA7Keb0m8RiQqgjA1F5gA/ilU3P06UDTW3vRO2umpPiUSU0HCHyChg0w4akxj0W8SGhhTI4xmgLOrClcmCZlBXjRCYcf0gSTV/TIIC1gC8dp0CMtgWpi8AQId5iLUFKFnQtFaDDVPSXDXk/xMyyz4ONSa4HOe5rso1mUEvjDSsFJ+AfEetGJMYOeTNiFL+LmR+/mhK+H5vOy9ARqXuB0kQXB7ooCkB7bfTBOUN4UA2kg2fUXZBlB7qME2iHEbTT4jAK/W8KQFM+NyOJYqx+QSb2jHcr2DjyoE1TaHuNJY36z8hSqm1sq0XEgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 66%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAkRJREFUeNo9U9mWolAQ4zvmnHHsdsGFTXZQQHZE7f//m5qk1H6og8KtVCrJNbpxlrwoJUozuVwbyS6lXKqrfG9NWa63eO60rm0v4/0p3TjJ0XElyS8SZWcJ4lRcPxQvjMU82mL0t4eM8x0NnTTDpI1V04obRBIkmZgHS742ptinQEIM9QkQhCBRSaygufhRos+d5YhR9yNAWj1w7QZMC/TDwfEA4sv2DUgmKdgn+Vks9/TLMENfdikkLyv0uGIM8wNAYFU3aKikxm+WA7DPyitzrwOOAHoNClSiIMmln2Yp6lb2lq3njHF+6oQKq3b4WAJ4glYcsLfdXw2L9/tmGKGhJyHkSM6FpKgDztmeL5v9EQyh4bkkswGC33Qy9bBw4MPu32ojJ+iUvXVzIAuBuPJ4f0jT92qsrnx7/IBdJx6ELpsOTlnyZ7GUxfdaa2UeXgOwLp1kHV3vrWGuxlHnv19rJWDMAOynm9JvEYkKoIwNReYAP4pVNz9OlA01t70TtrpqT4lElNBwh8goYNMOGpMY9FvEhoYUyOMZoCzqwpXJgmZQV40QmHH9IEk1f0yCAtYAvHadAjLYFqYvAECHeYi1BShZ0LRWgw1T0lw15P8TMss+DjUmuBznua7KNZlBL4w0rBSfgHxHrRiTGDnkzYhS/i5kfv5oSvh+bzsvQEal7gdJEFwe6KApAe230wTlDeFANpINn1F2QZQe6jBNohxG00+IwCv1vCkBTPjcjiWKsfkEm9ox3K9g48qBNU2h7jSWN+s/IUqptbKtFxIAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -13512,7 +13709,7 @@ p or e -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 기본 �
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 67.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAACe0lEQVR42jVT2XKiUBDlQzJTcQkKCsi+KcgqGhKTyvz/r/Sc08aHWyj07T5bG1l5lDAtpG57ibNcqqaTnefL3+ValuZWFm+m2F4g0/ssl9ssxamS9daWFPdy/O4uk94Z8c2PYjGafpBT00uPD6dzI+euR8NA9odAtjsHDTeydTyp8b6szjp05/po0mpDnjgrMKiWPYAYzTCiYSfdeBGiPUSJBEmmhYcwkte1KSYa+3h/CGMdxHPE8LQ4ioPfFgZ6qN3uHTGqtpOybkC5kzgv9QML/izWio60TdtRZKQZxKlKwtoCiOevLxkuVwCo8f4gBqE2w0WaflQ9rvMs7TABaazNeDY7V/LjSaI0FzcIxXYPkqAhm6RFKbYCWCkbI84LpXudP/VCUdUqsu16stpYWkRT7j8/cvv4VJ1New89a609gh01JFPXD8Qg1SDJZbze0DDTJqa900ak/GbtoI2rh4020NODlhkQH8+tuh8mqX4zUWvQ3SgrpQVKTmAkeHiRRX6cgG4lJwwmCyLjRSJKyxPuhOruUx6DMaG4/XSVYbrJiGfVDjLf75q5FYqIliaQHmWhKXS5qBqVgEPIhkcpR9CA8WGDAIh8OEltTcv+pf1A6gCN5biKiLoliM3TJJqosWFYGZtzN4iFFy+vK3XsBWdpWrIAuhCX7z//5OPrGywmSGJpTolyvL1rQub7N9CnYkRcN6AkOoaaYc2gGf9TK+pCBMzY4+kDVaSZZN0FDZ/rqqYQYTtOulbcxx7mUC8W0OHnppABa0IkgcHPYAgbDtQca8htcxgbTmKDDmknWtJZ/hpB/ZhHrhpdt37j4wHhI9iV7jjz2MNQrup/J6bJHH22CesAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 67.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAntJREFUeNo1U9lyolAQ5UMyU3EJCgrIvinIKhoSk8r8/6/0nNPGh1so9O0+WxtZeZQwLaRue4mzXKqmk53ny9/lWpbmVhZvptheINP7LJfbLMWpkvXWlhT3cvzuLpPeGfHNj2Ixmn6QU9NLjw+ncyPnrkfDQPaHQLY7Bw03snU8qfG+rM46dOf6aNJqQ544KzColj2AGM0womEn3XgRoj1EiQRJpoWHMJLXtSkmGvt4fwhjHcRzxPC0OIqD3xYGeqjd7h0xqraTsm5AuZM4L/UDC/4s1oqOtE3bUWSkGcSpSsLaAojnry8ZLlcAqPH+IAahNsNFmn5UPa7zLO0wAWmszXg2O1fy40miNBc3CMV2D5KgIZukRSm2AlgpGyPOC6V7nT/1QlHVKrLterLaWFpEU+4/P3L7+FSdTXsPPWutPYIdNSRT1w/EINUgyWW83tAw0yamvdNGpPxm7aCNq4eNNtDTg5YZEB/PrbofJql+M1Fr0N0oK6UFSk5gJHh4kUV+nIBuJScMJgsi40UiSssT7oTq7lMegzGhuP10lWG6yYhn1Q4y3++auRWKiJYmkB5loSl0uagalYBDyIZHKUfQgPFhgwCIfDhJbU3L/qX9QOoAjeW4ioi6JYjN0ySaqLFhWBmbczeIhRcvryt17AVnaVqyALoQl+8//+Tj6xssJkhiaU6Jcry9a0Lm+zfQp2JEXDegJDqGmmHNoBn/UyvqQgTM2OPpA1WkmWTdBQ2f66qmEGE7TrpW3Mce5lAvFtDh56aQAWtCJIHBz2AIGw7UHGvIbXMYG05igw5pJ1rSWf4aQf2YR64aXbd+4+MB4SPYle4489jDUK7qfyemyRx9tgnrAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -13624,7 +13821,7 @@ p or e -&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; 기본 �
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 49%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA80lEQVR42p2SWY6EQAxD6x5sxb5vEo24/8XSvEgl0UDNx3xYEYTYjoPZ912O45B1XWVZFpnnWet/wKwpy1KqqhJrrYRhKGmaShzHEgSBPv+FKIoeMF3XyTAMkiSJ2KKUz+kYtbqulRwhencg+gbTtq1kWaaKcZopUds0ghA9Ku/4xiHPcxXC0YOw73sZx1Gb9lQmB/LEHYO4eVvNkd1JTXO6maZJGwxfHRVF4XXiyB4Zkh+ruYPgDhFIOZgvK2+GHMAR4hBXrAo5LvnIXdTn6schZDhiiPX4L3F5vbKrvtV/HF7ZGdq2TTMFHItIqAjfj/GGLyhOGOMUCFW3AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 49%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAAPNJREFUeNqdklmOhEAMQ+sebMW+bxKNuP/F0rxIJdFAzcd8WBGE2I6D2fddjuOQdV1lWRaZ51nrf8CsKctSqqoSa62EYShpmkocxxIEgT7/hSiKHjBd18kwDJIkidiilM/pGLW6rpUcIXp3IPoG07atZFmminGaKVHbNIIQPSrv+MYhz3MVwtGDsO97GcdRm/ZUJgfyxB2DuHlbzZHdSU1zupmmSRsMXx0VReF14sgeGZIfq7mD4A4RSDmYLytvhhzAEeIQV6wKOS75yF3U5+rHIWQ4Yoj1+C9xeb2yq77Vfxxe2Rnatk0zBRyLSKgI34/xhi8oThjjFAhVtwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
