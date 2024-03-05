@@ -1,4 +1,204 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 22 Feb 2024 13:10:19 GMT</lastBuildDate><item><title><![CDATA[Reactor 특징과 마블다이어그램]]></title><description><![CDATA[📘 스프링으로 시작하는 리액티브 프로그래밍 챕터 5~6 Reactor 특징 리액티브 스트림즈의 구현체인  는 리액티브 프로그래밍을 위한 라이브러리이며,
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 05 Mar 2024 12:13:53 GMT</lastBuildDate><item><title><![CDATA[Cold Sequence 와 Hot Sequence]]></title><description><![CDATA[📘 스프링으로 시작하는 리액티브 프로그래밍 챕터 7 Cold Sequence  Subscriber 가 구독할 때마다 데이터 흐름이 처음부터 다시 시작되는 sequence 이다. 마블 다이어그램을 보면 위쪽에 위치한 Subscriber A…]]></description><link>https://bingbingpa.github.io/cold-sequence-hot-sequence/</link><guid isPermaLink="false">https://bingbingpa.github.io/cold-sequence-hot-sequence/</guid><pubDate>Tue, 05 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;📘 스프링으로 시작하는 리액티브 프로그래밍 챕터 7&lt;/h1&gt;
+&lt;br&gt;
+&lt;h3&gt;Cold Sequence&lt;/h3&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/29d79491a56656bbfbba047f9b4af16c/44fd6/cold-sequence.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 789px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 52.5%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAACDUlEQVR42mVS227TQBT0//8BL7wh8VgJAihENC0gREvVkJZAc2lzt2PHjr32Xr3r4dhBJFGPdOTdI+9ozsx4SkgoY1Aslsip67MxGn6Y43G+g9EKWhvELMY0fIJSCorugqdg2xFE/V7pZs65gMfDCMo6xN0LrDqfwEsLayS+93ycfRwTIIeWJYbrP3h7c0ZAEkIasGSG+d0rpBmju0TBOZIkhVcJAUssDIASx+WoKzwbHZW2eFZe5geYr30E3Uv4n7+ioHWMFrj+uca77gRacShhMFwN0e59aNYquEKWLLB6aDUMObHL84IY7uAFiwUYDfh4AjYa7VlWFqutxOBxh6oqG6JMxvi9vIct97SsZoiX3xp96z0syVbr6AWbDbI0O3Cuqv2i2Q4QeTMyBLKJ1P9fMpFix7N/vzvI3IezGs5V8CQJWq/BiHK+jZsuCCB408Ki3YF0Fn6Q4MXrAZbrDTGz+PJwifbte5JCI00TzPsvEQVPiBMG70RRW8KpPZPapFPNTy079kuaI1PqHAlyWhCQoa8/m2FNUYqvrhHe9qCdwzZmaJ1PsaVYuNLhfn6Hm9EPMs+iKBj8yTlYGpJBBTxDQS7LElIqRJuQqAeQtDLr95H8GjRJKQqJi6tVI0td42BIoH2QfGSKRDTtoGBbwjCUw9oE6ho4jCLSK6Dw8kP03Gke9/fDuX578NPhLxeeSR5JTdISAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;cold-sequence&quot;
+        title=&quot;&quot;
+        src=&quot;/static/29d79491a56656bbfbba047f9b4af16c/44fd6/cold-sequence.png&quot;
+        srcset=&quot;/static/29d79491a56656bbfbba047f9b4af16c/772e8/cold-sequence.png 200w,
+/static/29d79491a56656bbfbba047f9b4af16c/e17e5/cold-sequence.png 400w,
+/static/29d79491a56656bbfbba047f9b4af16c/44fd6/cold-sequence.png 789w&quot;
+        sizes=&quot;(max-width: 789px) 100vw, 789px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Subscriber 가 구독할 때마다 데이터 흐름이 처음부터 다시 시작되는 sequence 이다.&lt;/li&gt;
+&lt;li&gt;마블 다이어그램을 보면 위쪽에 위치한 Subscriber A 가 구독을 하면 Publisher 는 네 개의 데이터를 emit 한다. 그리고 아래쪽에 위치한 Subscriber B
+가 구독을 해도 역시 네 개의 데이터를 emit 한다.&lt;/li&gt;
+&lt;li&gt;A, B 의 구독 시점이 다르지만 모두 동일한 데이터를 전달받는다.&lt;/li&gt;
+&lt;li&gt;이처럼 Subscriber 의 구독 시점이 달라도 구독을 할 때마다 Publisher 가 데이터를 emit 하는 과정을 처음부터 다시 시작하는 데이터의 흐름을
+Cold Sequence 라고 부른다.&lt;/li&gt;
+&lt;li&gt;예를 들면 현실 세계에서 오프라인으로 월간 잡지의 발행이 1월부터 시작되었고, 구독자가 5월부터 잡지를 구독했는데 1월달 잡지부터 모두 보내주는 경우와 같다고 할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; coldFlux &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; Flux
+        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;fromIterable&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;listOf&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;KOREA&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;JAPAN&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;CHINESE&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;String&lt;span class=&quot;token operator&quot;&gt;::&lt;/span&gt;lowercase&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+    coldFlux&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;subscribe&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; country &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; logger&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;# Subscriber1: &lt;span class=&quot;token interpolation variable&quot;&gt;$country&lt;/span&gt;&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token function&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;-------------------------&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    Thread&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;2000L&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    coldFlux&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;subscribe&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; country &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; logger&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;# Subscriber2: &lt;span class=&quot;token interpolation variable&quot;&gt;$country&lt;/span&gt;&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/075a76eb4341d344dfe01f7e992227c5/2d7ab/cold-sequnece-sample.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 526px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 29.500000000000004%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAz0lEQVR42mWRx40FMQxDXckAk3PO039fXDx++LQHQSZpUZIdzvPUvu9a19Vx37fmeRb8tm3O8Nd1aVkW5XmuYRiMj+Pwnb7vfU7TVAGDKFL4PI8LyXDoFIHJWZZpHEdjNBpi+H2f6rpWaNtWRNM0DrqTI991nYMicFEUqqrK9+DhyrJ0tuE0TRYpIMBcJIOZJmIya9EQjBYHQEuS5Lcyq/GOxPu+/1aGjyszIWZgnoqVMaYOLfBufAKXCEzoCo8xJmRM0fkUpokfgsaEGFP3B8VXuUTTINX3AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;cold-sequence-sample&quot;
+        title=&quot;&quot;
+        src=&quot;/static/075a76eb4341d344dfe01f7e992227c5/2d7ab/cold-sequnece-sample.png&quot;
+        srcset=&quot;/static/075a76eb4341d344dfe01f7e992227c5/772e8/cold-sequnece-sample.png 200w,
+/static/075a76eb4341d344dfe01f7e992227c5/e17e5/cold-sequnece-sample.png 400w,
+/static/075a76eb4341d344dfe01f7e992227c5/2d7ab/cold-sequnece-sample.png 526w&quot;
+        sizes=&quot;(max-width: 526px) 100vw, 526px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;코드 실행 결과를 보면 구독이 발생할 때마다 emit 된 데이터를 처음부터 다시 전달받고 있음을 확인할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Hot Sequence&lt;/h3&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/0f58a11cb64128f8cc27c1724d03ff5e/44fd6/hot-sequence.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 789px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 29.500000000000004%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABSklEQVR42lWRW2vcMBBG/f9/Ril96FPekxbyUpoQSKCQBsLa3ayz9jprZ23rYl2sk7FLIBkYNJLmjL4ZZc45Fp+spf19jT4e8TEyx8Bj0XH3tyFFj5sc2hpuNtf0qicsXEgMxwe6+h7nE0opMj0qbNdhjaU+v+C0r9ACe2f583Dg1+0zoX/FDiODVlze/+TYNkxti/XQ7W9pdjcoE+j7ngyxIInOO2zik6U5/A+WDiRnnhPvR9FovDBe9vMHJrPacChLdtsnyi9fafMCJQqDN1xe7Ti72OCHV57yf1RNzferbxxeKk51zbZ8oSl+sH88Z1CBVlRnZflMkedoKeylLS9q4jyLmpnJRYE7tkVBXdUEme1oRvZVRbHJ6Zf8acTo06o+yn1mjFmHOU0TMaUVCiGsPi+x9yit5cGlRS9jSFj5wIVZ1hjT6u/MG89kyZEFomwNAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;hot-sequence&quot;
+        title=&quot;&quot;
+        src=&quot;/static/0f58a11cb64128f8cc27c1724d03ff5e/44fd6/hot-sequence.png&quot;
+        srcset=&quot;/static/0f58a11cb64128f8cc27c1724d03ff5e/772e8/hot-sequence.png 200w,
+/static/0f58a11cb64128f8cc27c1724d03ff5e/e17e5/hot-sequence.png 400w,
+/static/0f58a11cb64128f8cc27c1724d03ff5e/44fd6/hot-sequence.png 789w&quot;
+        sizes=&quot;(max-width: 789px) 100vw, 789px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Cold Sequence 는 구독이 발생할 때마다 Sequence 의 타임라인이 처음부터 새로 시작하기 때문에 Subscriber 는 구독 시점과 상관없이
+데이터를 처음부터 다시 전달받을 수 있다.&lt;/li&gt;
+&lt;li&gt;반면에 Hot Sequence 는 구독이 발생한 시점 이전에 Publisher 로부터 emit 된 데이터는 Subscriber 가 전달받지 못하고
+구독이 발생한 시점 이후에 emit 된 데이터만 전달받을 수 있다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;마블 다이어그램을 보면 세 번의 구독이 발생했지만 타임라인은 하나밖에 생성되지 않은것을 볼 수 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Hot sequence 는 구독이 아무리 많이 발생해도 Publisher 가 데이터를 처음부터 emit 하지 않는다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;예를 들면 현실 세계에서 오프라인으로 월간 잡지의 발행이 1월부터 시작되었고, 구독자가 5월부터 잡지를 구독했다면 1월달 잡지부터 모두 보내주는 것이 아니라
+5월달 잡지부터 보내주는 경우와 같다고 할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; singers &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;arrayOf&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;Singer A&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Singer B&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Singer C&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Singer D&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Singer E&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    logger&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;# Begin concert:&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; concertFlux &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; Flux
+        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;fromArray&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;singers&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;delayElements&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;Duration&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;ofSeconds&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 데이터 소스로 입력된 각 데이터의 emit 을 일정시간 동안 지연시키는 오퍼레이터&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;share&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// cold sequence 를 hot sequence 로 동작하게 해주는 오퍼레이터&lt;/span&gt;
+
+    concertFlux&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;subscribe&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; singer &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; logger&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;# Subscriber1 is watching &lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token delimiter variable&quot;&gt;${&lt;/span&gt;singer&lt;span class=&quot;token delimiter variable&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&apos;s song&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    Thread&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;2500L&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+    concertFlux&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;subscribe&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; singer &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; logger&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;# Subscriber2 is watching &lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token delimiter variable&quot;&gt;${&lt;/span&gt;singer&lt;span class=&quot;token delimiter variable&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&apos;s song&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    Thread&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;3000L&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/9954941378bf365eee8f530135b3c47a/01dae/hot-sequence-sample.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 721px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 27.500000000000004%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAvUlEQVR42m2QVw6EQAxDuQoMTXQY+v3vldWLZMSu9iNKcex4Jtm2zWKMtiyLZ2Jd1yfGcbSu6xynZlbXtaVpamVZWp7nVhSF5yzLLEGQRQjUkCFJnBl9CMGmafJ+33cbhsHu+/b6PE/ngyeQKOZ5dgEE5ViuwXDDYR1qmsbFtdP3vXPdocR0Wa4IZmBVVfkePTgC13X5znEcjnHwcUj8OmRJmX/imBy2bfvlUH/998nUEtOT34LM34K4BIP7AXrlu8NTvCRkAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px transparent;&quot;
+        alt=&quot;hot-sequence-sample&quot;
+        title=&quot;&quot;
+        src=&quot;/static/9954941378bf365eee8f530135b3c47a/01dae/hot-sequence-sample.png&quot;
+        srcset=&quot;/static/9954941378bf365eee8f530135b3c47a/772e8/hot-sequence-sample.png 200w,
+/static/9954941378bf365eee8f530135b3c47a/e17e5/hot-sequence-sample.png 400w,
+/static/9954941378bf365eee8f530135b3c47a/01dae/hot-sequence-sample.png 721w&quot;
+        sizes=&quot;(max-width: 721px) 100vw, 721px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;코드 실행 결과를 보면 첫 번째 구독에서는 원본 Flux 에서 emit 한 데이터를 모두 전달받아서 출력하는 것을 볼 수 있다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;두 번째 구독의 경우, 원본 Flux 가 emit 한 데이터 중에서 Singer A, Singer B 는 전달받지 못하는 것을 확인할 수 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;sleep 2.5초 뒤에 두 번째 구독이 발생했기 때문에 2.5초의 지연 시간 동안 원본 Flux 가 이미 Singer A, Singer B 데이터를 emit 하기 때문이다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/bingbingpa/dev-book/tree/main/spring-reactive/src/main/kotlin/me/bingbingpa/ch07&quot;&gt;사용한 샘플 코드&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Reactor 특징과 마블다이어그램]]></title><description><![CDATA[📘 스프링으로 시작하는 리액티브 프로그래밍 챕터 5~6 Reactor 특징 리액티브 스트림즈의 구현체인  는 리액티브 프로그래밍을 위한 라이브러리이며,
 Reactor Core 라이브러리는 Spring WebFlux…]]></description><link>https://bingbingpa.github.io/reactor-marble-diagram/</link><guid isPermaLink="false">https://bingbingpa.github.io/reactor-marble-diagram/</guid><pubDate>Thu, 22 Feb 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;📘 스프링으로 시작하는 리액티브 프로그래밍 챕터 5~6&lt;/h1&gt;
 &lt;br&gt;
 &lt;h3&gt;Reactor 특징&lt;/h3&gt;
