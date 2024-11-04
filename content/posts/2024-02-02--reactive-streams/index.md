@@ -92,10 +92,15 @@ public interface Processor<T, R> extends Subscriber<T>, Publisher<R> {
   - **request 와 cancel 메서드는 Subscription 인터페이스 코드에 정의되지만 이 메서드들을 실제로 사용하는 주체는
   Subscriber 이므로 Subscriber 가 Publisher 에게 보내는 Signal 이라고 볼 수 있다.**
 - Demand
-  - Subscriber 가 Publisher 에게 요청하는 데이터로, Publisher 가 아직 Subscriber 에게 전달하지 않는 Subscriber 가 요청한 데이터를 말한다.
+  - Subscriber 가 Publisher 에게 요청하는 데이터로, Publisher 가 아직 Subscriber 에게 전달하지 않은 Subscriber 가 요청한 데이터를 말한다.
 - Emit
   - 우리말로 해석하면 '방출하다'의 의미인데, '데이터를 내보내다'정도로 이해하면 될 것 같다.
   - Publisher 가 emit 하는 Signal 중에서 데이터를 전달하기 위한 onNext Signal 을 데이터를 emit 한다고 표현하기도 한다.
+- Upstream/Downstream
+  - 현재 호출한 메서드에서 반환된 Flux 의 위치에서 자신보다 더 상위에 있는 Flux 는 Upstream, 하위에 있는 Flux 는 Downstream 이 된다라고 기억하자.
+- Sequence
+  - Publisher 가 emit 하는 데이터의 연속적인 흐름을 정의해 놓은 것 자체를 의미한다.
+  - 다양한 Operator 로 데이터의 연속적인 흐름을 정의한 것이라고 생각하자.
 
 ### webFlux + Reactor VS webFlux + coroutine
 - 웹플럭스를 공부하다보니 코틀린을 사용하면 코루틴을 사용하면 Reactor 를 안써도 되지 않을까?라는 생각이 들었다. Reactor 가 지원하는 Operator 가
