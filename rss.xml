@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 05 Mar 2024 12:13:53 GMT</lastBuildDate><item><title><![CDATA[Cold Sequence 와 Hot Sequence]]></title><description><![CDATA[📘 스프링으로 시작하는 리액티브 프로그래밍 챕터 7 Cold Sequence  Subscriber 가 구독할 때마다 데이터 흐름이 처음부터 다시 시작되는 sequence 이다. 마블 다이어그램을 보면 위쪽에 위치한 Subscriber A…]]></description><link>https://bingbingpa.github.io/cold-sequence-hot-sequence/</link><guid isPermaLink="false">https://bingbingpa.github.io/cold-sequence-hot-sequence/</guid><pubDate>Tue, 05 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;📘 스프링으로 시작하는 리액티브 프로그래밍 챕터 7&lt;/h1&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[삽질저장소]]></title><description><![CDATA[삽질한 내용들을 정리하는 블로그]]></description><link>https://bingbingpa.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 04 Nov 2024 13:18:31 GMT</lastBuildDate><item><title><![CDATA[Cold Sequence 와 Hot Sequence]]></title><description><![CDATA[📘 스프링으로 시작하는 리액티브 프로그래밍 챕터 7 Cold Sequence  Subscriber 가 구독할 때마다 데이터 흐름이 처음부터 다시 시작되는 sequence 이다. 마블 다이어그램을 보면 위쪽에 위치한 Subscriber A…]]></description><link>https://bingbingpa.github.io/cold-sequence-hot-sequence/</link><guid isPermaLink="false">https://bingbingpa.github.io/cold-sequence-hot-sequence/</guid><pubDate>Tue, 05 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;📘 스프링으로 시작하는 리액티브 프로그래밍 챕터 7&lt;/h1&gt;
 &lt;br&gt;
 &lt;h3&gt;Cold Sequence&lt;/h3&gt;
 &lt;p&gt;
@@ -613,7 +613,7 @@ Subscriber 이므로 Subscriber 가 Publisher 에게 보내는 Signal 이라고 
 &lt;li&gt;
 &lt;p&gt;Demand&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Subscriber 가 Publisher 에게 요청하는 데이터로, Publisher 가 아직 Subscriber 에게 전달하지 않는 Subscriber 가 요청한 데이터를 말한다.&lt;/li&gt;
+&lt;li&gt;Subscriber 가 Publisher 에게 요청하는 데이터로, Publisher 가 아직 Subscriber 에게 전달하지 않은 Subscriber 가 요청한 데이터를 말한다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;
@@ -621,6 +621,19 @@ Subscriber 이므로 Subscriber 가 Publisher 에게 보내는 Signal 이라고 
 &lt;ul&gt;
 &lt;li&gt;우리말로 해석하면 ‘방출하다’의 의미인데, ‘데이터를 내보내다’정도로 이해하면 될 것 같다.&lt;/li&gt;
 &lt;li&gt;Publisher 가 emit 하는 Signal 중에서 데이터를 전달하기 위한 onNext Signal 을 데이터를 emit 한다고 표현하기도 한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Upstream/Downstream&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;현재 호출한 메서드에서 반환된 Flux 의 위치에서 자신보다 더 상위에 있는 Flux 는 Upstream, 하위에 있는 Flux 는 Downstream 이 된다라고 기억하자.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Sequence&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Publisher 가 emit 하는 데이터의 연속적인 흐름을 정의해 놓은 것 자체를 의미한다.&lt;/li&gt;
+&lt;li&gt;다양한 Operator 로 데이터의 연속적인 흐름을 정의한 것이라고 생각하자.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
